@@ -1,0 +1,388 @@
+# Atlas ERP semantic layer.
+#
+# Everything the SQL generator must know that the raw schema does not say: what the tables
+# mean, which status values count for a metric, sign conventions, joins without FK
+# constraints, and business vocabulary. Sources: atlas-erp backend code
+# (finance/service/statements, ar_aging.py, sales/queries/dashboards.py,
+# procurement/queries.py, reporting/report_registry.py) and DECISIONS.md.
+
+global_rules:
+  - "Every view is already scoped to the current company (tenant). There is NO tenant_id column; never filter by tenant."
+  - "All ids are UUIDs. Always show human-readable names/codes (customer name, item name, vendor name, account code/name) instead of ids, unless the user asks for ids."
+  - "Status columns are VARCHAR with UPPER_SNAKE values. Use only the values listed for the column."
+  - "Money columns are NUMERIC. Round money outputs with ROUND(x, 2). All demo documents are in the functional currency (USD); sum document amounts directly unless the user asks about currencies."
+  - "Vocabulary: product / SKU / material / article = inv_items; supplier = proc_vendors; client / account (in a sales sense) = sales_customers; staff / worker = hr_employees; GL / ledger / bookkeeping = fin_journal_lines + fin_accounts."
+  - "Sales documents chain: quote (sales_quotes) -> sales order (sales_orders) -> delivery (sales_deliveries) -> billing (sales_billings) -> AR invoice (fin_customer_invoices) -> receipt (fin_customer_receipts). Procurement: requisition -> RFQ -> purchase order (proc_purchase_orders) -> goods receipt (proc_goods_receipts) -> invoice match -> AP bill (fin_vendor_bills) -> vendor payment (fin_vendor_payments)."
+  - "Pick the date column that matches the document: sales_orders.order_date, fin_customer_invoices.invoice_date, fin_journal_lines.posting_date, sales_deliveries.delivery_date, sales_billings.billing_date, proc_purchase_orders.order_date, proc_goods_receipts.receipt_date, fin_vendor_bills.bill_date, fin_customer_receipts.receipt_date, inv_stock_moves.move_date."
+  - "Year/period filters: use half-open date ranges (d >= 'YYYY-01-01' AND d < 'YYYY+1-01-01'). Relative periods (this year, last month, last quarter, YTD) are computed from TODAY given below, as calendar periods. Fiscal years equal calendar years."
+  - "For period comparisons (e.g. 2025 vs 2024, month over month) use conditional aggregation: SUM(x) FILTER (WHERE date in period) per period in one query, one column per period, and COALESCE missing periods to 0. Growth % = ROUND(100.0 * (new - old) / NULLIF(old, 0), 2)."
+  - "Monthly/quarterly trends: GROUP BY date_trunc('month', d)::date (or 'quarter'), ORDER BY the period ascending. Label the column month/quarter. Per-year breakdowns use EXTRACT(YEAR FROM d)::int AS year (an integer, not a date)."
+  - "Rankings (top/bottom N, highest, most): ORDER BY the measure DESC (ASC for bottom/lowest) with LIMIT N; for 'which X had the most/highest' return the single top row (LIMIT 1) including the measure."
+  - "Counting documents: COUNT(DISTINCT header.id) when joins to lines could duplicate headers."
+  - "When the user does not say whether they want quantity or money (e.g. 'what did they buy, by item', 'purchases per item'), return BOTH the quantity and the amount. When 'total X' could mean a count or a sum of amounts (e.g. 'total credit notes issued'), return BOTH the count and the amount."
+  - "Per-entity breakdowns cover only entities that have data for the metric; include entities with no activity (as 0, via a LEFT JOIN from the master table to a pre-filtered aggregate) ONLY when the user says all/every/including zero/even if none."
+  - "A per-document-type or per-account total of journal lines must not net debits against credits, because every entry is balanced and the result would be 0. Use SUM(functional_debit_amount) as the posted amount, or report debit and credit columns separately."
+  - "GL SIGNS, the single most common source of wrong answers. Compute every general-ledger figure as a SIGNED sum and ADD the parts; never flip a sign and then add. signed = SUM(functional_credit_amount - functional_debit_amount): naturally positive for REVENUE/LIABILITY/EQUITY, naturally negative for EXPENSE/ASSET. So: net income / profit / result = SUM(credit - debit) over account_type IN ('REVENUE','EXPENSE') (one sum, no CASE). Gross profit = revenue_signed + cogs_signed where cogs_signed is negative. To DISPLAY an expense, asset or COGS figure as a positive number use SUM(debit - credit) for that column alone, but never mix a display sign into a total."
+  - "Gross margin % = 100.0 * (revenue - cogs) / NULLIF(revenue, 0), where revenue = SUM(credit - debit) FILTER (account_type='REVENUE') and cogs = SUM(debit - credit) FILTER (account_id IN (SELECT cogs_account_id FROM inv_item_categories)). Both are positive magnitudes here, so SUBTRACT cogs."
+  - "NEVER filter on fin_journal_entries.status (or join to fin_journal_entries just to filter it). Posting is decided by fin_journal_lines.is_posted alone. A REVERSED entry stays posted and its reversal offsets it; filtering status='POSTED' drops the original but keeps the reversal, which silently corrupts every total."
+  - "Put filters in WHERE, not in the ON clause of a LEFT JOIN: a condition on the right-hand table inside ON does not remove rows, it only nulls the join, which turns sums into 0."
+  - "Never add a filter the user did not ask for, EXCEPT the metric's own mandatory status/posting rules defined below (e.g. excluding DRAFT/CANCELLED orders from sales)."
+  - "Per-employee compensation and personal data (an employee's salary, national id, tax id, date of birth, bank account) are deliberately NOT available; if asked, return SELECT 'not available: salary/PII data is restricted' AS message. Company-level salary/payroll cost IS available: GL salary expense accounts or hr_payroll_runs totals."
+
+metrics:
+  sales_order_value:
+    keywords: [sales, sold, sales amount, sales value, order value, bookings, booked, orders total, sales volume, customer sales, sell]
+    definition: >
+      Units / quantity sold = sales_order_lines.ordered_quantity on committed orders (use
+      delivered_quantity only when the user says delivered/shipped). Default meaning of "sales" /
+      "total sales" / "sales by customer/item/month": value of
+      committed sales orders. SUM(sales_orders.total_amount) over orders whose status is NOT IN
+      ('DRAFT','CANCELLED','CREDIT_BLOCKED'), dated by sales_orders.order_date. For per-item /
+      per-product sales use sales_order_lines.line_amount (and ordered_quantity for units) joined
+      to sales_orders with the same status rule. Customer name via sales_orders.customer_id ->
+      sales_customers.
+    tables: [sales_orders, sales_order_lines, sales_customers, inv_items]
+  revenue:
+    keywords: [revenue, income, turnover, top line, earned, recognized, recognised, p&l revenue, profit and loss]
+    definition: >
+      Accounting revenue = posted general-ledger revenue:
+      SUM(jl.functional_credit_amount - jl.functional_debit_amount) FROM fin_journal_lines jl JOIN
+      fin_accounts a ON a.id = jl.account_id WHERE jl.is_posted AND a.account_type = 'REVENUE',
+      dated by jl.posting_date. Do NOT filter on fin_journal_entries.status (a REVERSED entry and its
+      reversal are both posted and net to zero). Revenue per customer: use jl.partner_id with
+      jl.partner_type = 'CUSTOMER' joined to sales_customers; when the user asks revenue/invoiced
+      amount by customer and journal lines carry no partner, fall back to invoiced revenue below.
+    tables: [fin_journal_lines, fin_accounts, sales_customers, inv_item_categories]
+  invoiced_revenue:
+    keywords: [invoiced, billed, invoice amount, invoice total, invoiced sales, invoice value, billing]
+    definition: >
+      Invoiced (AR) amounts: fin_customer_invoices with status NOT IN ('DRAFT','REVERSED').
+      Credit notes live in the SAME table with invoice_number LIKE 'CN-%' and POSITIVE amounts;
+      subtract them: SUM(CASE WHEN invoice_number LIKE 'CN-%' THEN -net_amount ELSE net_amount END).
+      net_amount excludes tax, gross_amount = net + tax. Use net_amount for revenue-like questions,
+      gross_amount when the user says gross / including tax. Customer = partner_id -> sales_customers.id
+      (partner_name is a denormalized copy of the customer name). Dated by invoice_date.
+    tables: [fin_customer_invoices, fin_customer_invoice_lines, sales_customers]
+  accounts_receivable:
+    keywords: [receivable, receivables, outstanding, unpaid, owed, owes, open invoices, overdue, due, collections, AR, aging, ageing, debtors]
+    definition: >
+      Open receivables = fin_customer_invoices WHERE status IN ('POSTED','PARTIALLY_PAID') AND
+      open_amount > 0; outstanding amount = SUM(open_amount). Overdue = due_date < TODAY. Days
+      overdue = TODAY - due_date. Aging buckets by (TODAY - due_date), labelled EXACTLY 'current' (<= 0), '1-30',
+      '31-60', '61-90', '90+'. An "aging report" without further detail = totals per bucket.
+    tables: [fin_customer_invoices, sales_customers]
+  customer_payments:
+    keywords: [customer receipt, customer receipts, payment received, payments received, collected, collections, customer payment, cash collected, paid us]
+    definition: >
+      Money received from customers = fin_customer_receipts WHERE status = 'POSTED', SUM(amount),
+      dated by receipt_date. Which invoices a receipt paid: fin_customer_receipt_allocations
+      (receipt_id, customer_invoice_id, allocated_amount).
+    tables: [fin_customer_receipts, fin_customer_receipt_allocations, fin_customer_invoices]
+  accounts_payable:
+    keywords: [payable, payables, we owe, bills, vendor bills, supplier invoices, unpaid bills, AP, creditors]
+    definition: >
+      Vendor bills = fin_vendor_bills (partner_id -> proc_vendors.id, partner_name = vendor name).
+      Open payables: status IN ('POSTED','PARTIALLY_PAID') AND open_amount > 0, SUM(open_amount).
+      Spend on bills: status NOT IN ('DRAFT','REVERSED'), SUM(net_amount) dated by bill_date.
+      Vendor payments: fin_vendor_payments WHERE status = 'POSTED', SUM(amount), by payment_date.
+    tables: [fin_vendor_bills, fin_vendor_payments, proc_vendors]
+  purchases:
+    keywords: [purchase, purchases, purchasing, procurement, spend, bought, PO, purchase order, buy]
+    definition: >
+      Purchase order value = SUM(proc_purchase_orders.total_amount) over POs whose status is NOT IN
+      ('DRAFT','PENDING_APPROVAL','REJECTED','CANCELLED'), dated by order_date. Open POs = status IN
+      ('APPROVED','SENT','PARTIALLY_RECEIVED'). Per item: proc_purchase_order_lines (quantity,
+      unit_cost, line_amount, received_quantity). Vendor via vendor_id -> proc_vendors.
+    tables: [proc_purchase_orders, proc_purchase_order_lines, proc_vendors, inv_items]
+  open_sales_orders:
+    keywords: [open orders, open sales orders, backlog, pending orders, unfulfilled, not delivered]
+    definition: >
+      Open sales orders = sales_orders WHERE status IN ('CONFIRMED','PARTIALLY_DELIVERED').
+      Completed/fulfilled = status IN ('DELIVERED','INVOICED','CLOSED').
+      Open quantity on a line = ordered_quantity - delivered_quantity.
+    tables: [sales_orders, sales_order_lines]
+  inventory:
+    keywords: [stock, inventory, on hand, on-hand, quantity available, warehouse, stock level, stock value, inventory value, valuation, low stock, reorder]
+    definition: >
+      On-hand quantity per item per warehouse = inv_item_valuations.on_hand_qty (with avg_unit_cost
+      and total_value = stock value). Total inventory value = SUM(inv_item_valuations.total_value).
+      Per bin: inv_stock_quants.on_hand_qty (bin -> inv_bins.warehouse_id -> inv_warehouses).
+      Low stock: on-hand below inv_items.reorder_point (reorder_point may be NULL).
+    tables: [inv_item_valuations, inv_items, inv_warehouses, inv_stock_quants, inv_bins]
+  stock_movements:
+    keywords: [stock move, stock moves, movement, movements, stock receipt, stock receipts, stock issue, stock issues, received quantity, received into stock, issued, receipts of stock, transfers, adjustments, consumption, goods movement]
+    definition: >
+      inv_stock_moves: quantity is ALWAYS positive; direction comes from move_type
+      ('RECEIPT' adds, 'ISSUE' removes, 'TRANSFER' moves between bins, 'ADJUSTMENT' adds when to_bin_id
+      is set and removes when from_bin_id is set). Net change = SUM(CASE WHEN to_bin_id IS NOT NULL AND
+      from_bin_id IS NULL THEN quantity WHEN from_bin_id IS NOT NULL AND to_bin_id IS NULL THEN -quantity
+      ELSE 0 END). Movement value = quantity * unit_cost. Warehouse only via inv_bins.warehouse_id.
+      "Stock receipts" / "stock issues" = inv_stock_moves rows with move_type 'RECEIPT' / 'ISSUE'
+      (all stock moves are posted). proc_goods_receipts are purchasing GRN documents; use them only
+      when the user says goods receipt / GRN / receipts from suppliers.
+    tables: [inv_stock_moves, inv_items, inv_bins, inv_warehouses]
+  gl_balances:
+    keywords: [balance, trial balance, account balance, cash, bank balance, expenses, expense, cost, costs, cogs, cost of goods sold, gross margin, profit, net income, assets, liabilities, equity, journal, ledger]
+    definition: >
+      GL balances come from fin_journal_lines WHERE is_posted joined to fin_accounts.
+      Debit-positive balance = SUM(functional_debit_amount - functional_credit_amount); this is
+      the natural sign for ASSET and EXPENSE accounts. For REVENUE, LIABILITY and EQUITY present
+      SUM(functional_credit_amount - functional_debit_amount). Expenses total = accounts with
+      account_type = 'EXPENSE'. COGS accounts are the ones referenced by item categories:
+      a.id IN (SELECT cogs_account_id FROM inv_item_categories) (names differ per company, e.g.
+      'Cost of Goods Sold' or 'COGS'); operating expenses = other EXPENSE accounts. Gross profit = revenue - COGS. Net income = revenue - all expenses.
+      Cash balance = accounts WHERE is_cash_equivalent. A single named account's balance (e.g.
+      "the Accounts Payable account") is presented in the account's own natural direction: use
+      SUM(functional_debit_amount - functional_credit_amount) when its account_type is ASSET or
+      EXPENSE, and SUM(functional_credit_amount - functional_debit_amount) when it is LIABILITY,
+      EQUITY or REVENUE, so the figure comes out positive for a normal balance. Join posted lines
+      to that account with an INNER JOIN. Filter by posting_date for periods;
+      balance as of a date = all posted lines with posting_date <= that date. Never filter on
+      fin_journal_entries.status.
+    tables: [fin_journal_lines, fin_accounts, fin_journal_entries, fin_account_groups, inv_item_categories]
+  crm_pipeline:
+    keywords: [pipeline, opportunity, opportunities, deals, leads, win rate, won, lost, forecast]
+    definition: >
+      Open pipeline = crm_opportunities WHERE stage IN ('PROSPECTING','QUALIFICATION','PROPOSAL',
+      'NEGOTIATION'); value = SUM(estimated_value); weighted = SUM(estimated_value *
+      probability_percent / 100). Won = stage 'WON', lost = 'LOST'. Leads: crm_leads (status).
+    tables: [crm_opportunities, crm_leads]
+  headcount:
+    keywords: [employees, headcount, staff, workforce, hired, hires, department, position]
+    definition: >
+      Headcount = COUNT(*) FROM hr_employees WHERE status = 'ACTIVE' (unless the user asks for all
+      employees). Department via department_id -> hr_departments.name; position via position_id ->
+      hr_positions.title. Employee name = first_name || ' ' || last_name.
+    tables: [hr_employees, hr_departments, hr_positions]
+  payroll:
+    keywords: [payroll, wages, salaries, salary, salaries paid, salary cost, pay run]
+    definition: >
+      Payroll / salary cost totals: hr_payroll_runs WHERE status = 'POSTED' (total_gross, total_tax,
+      total_net, employee_count, period_start/period_end, pay_date), or the GL salary expense
+      account (fin_accounts name like '%Salar%', account_type EXPENSE). Per-employee pay is
+      restricted and not available.
+    tables: [hr_payroll_runs]
+  production:
+    keywords: [production, manufacturing, production order, work order, bom, bill of materials, mrp, work center]
+    definition: >
+      Production orders = mfg_production_orders (status, item, planned/produced quantities).
+      Components: mfg_production_order_components; BOM: mfg_boms + mfg_bom_components.
+    tables: [mfg_production_orders, mfg_boms, mfg_bom_components, inv_items]
+
+virtual_foreign_keys:
+  # Atlas stores these references without FK constraints (DECISIONS D-029 partners).
+  - {table: fin_customer_invoices, column: partner_id, ref_table: sales_customers, ref_column: id}
+  - {table: fin_customer_receipts, column: partner_id, ref_table: sales_customers, ref_column: id}
+  - {table: fin_vendor_bills, column: partner_id, ref_table: proc_vendors, ref_column: id}
+  - {table: fin_vendor_payments, column: partner_id, ref_table: proc_vendors, ref_column: id}
+  - {table: fin_journal_lines, column: partner_id, ref_table: sales_customers, ref_column: id, note: "only when partner_type = 'CUSTOMER'"}
+  - {table: fin_journal_lines, column: partner_id, ref_table: proc_vendors, ref_column: id, note: "only when partner_type = 'VENDOR'"}
+
+tables:
+  sales_customers:
+    description: "Customers (clients) of the company: code, name, status, group, credit limit, payment terms."
+    columns:
+      status: "ACTIVE, BLOCKED (no new orders), INACTIVE"
+      credit_limit: "maximum open exposure allowed"
+      payment_terms_days: "days until an invoice is due"
+  sales_customer_groups:
+    description: "Customer groups/segments (e.g. wholesale, retail)."
+  sales_orders:
+    description: "Sales order headers. One row per customer order; total_amount = order value (sum of lines, pre-tax)."
+    columns:
+      status: "DRAFT (not committed), CONFIRMED, CREDIT_BLOCKED (failed credit check, not confirmed), PARTIALLY_DELIVERED, DELIVERED, INVOICED, CLOSED, CANCELLED"
+      order_date: "date the order was placed; use for sales by period"
+      requested_date: "customer requested delivery date"
+      total_amount: "order value excluding tax"
+  sales_order_lines:
+    description: "Sales order lines: item, ordered/delivered/invoiced/returned quantity, unit_price, line_amount (value after discount)."
+    columns:
+      line_amount: "line value after discount, excluding tax"
+      ordered_quantity: "units ordered"
+  sales_quotes:
+    description: "Sales quotations to customers (may convert to sales orders)."
+  sales_quote_lines:
+    description: "Lines of sales quotations."
+  sales_deliveries:
+    description: "Outbound deliveries/shipments of sales orders to customers (POSTED = shipped)."
+  sales_delivery_lines:
+    description: "Delivered item quantities per delivery."
+  sales_billings:
+    description: "Billing documents created from delivered sales orders; posting one creates the AR invoice."
+  sales_billing_lines:
+    description: "Lines of billing documents."
+  sales_returns:
+    description: "Customer returns (RMA) of delivered goods."
+  sales_return_lines:
+    description: "Returned item quantities and values."
+  sales_price_lists:
+    description: "Sales price lists (per customer group, validity dates)."
+  sales_price_list_items:
+    description: "Item prices within a price list."
+  fin_customer_invoices:
+    description: "Accounts-receivable customer invoices AND credit notes (invoice_number 'INV-...' or 'CN-...'). Amounts: net_amount (excl. tax), tax_amount, gross_amount, open_amount (still unpaid)."
+    columns:
+      partner_id: "customer id -> sales_customers.id (no FK constraint)"
+      partner_name: "customer name (denormalized)"
+      status: "DRAFT, POSTED (unpaid), PARTIALLY_PAID, PAID, REVERSED"
+      open_amount: "amount still owed; 0 when PAID and for credit notes"
+      invoice_number: "INV-... for invoices, CN-... for credit notes (credit notes carry positive amounts and must be subtracted)"
+  fin_customer_invoice_lines:
+    description: "Revenue lines of customer invoices (GL account, net_amount, tax_amount)."
+  fin_customer_receipts:
+    description: "Payments received from customers (cash receipts)."
+    columns:
+      partner_id: "customer id -> sales_customers.id (no FK constraint)"
+  fin_customer_receipt_allocations:
+    description: "Links receipts to the invoices they paid, with allocated_amount."
+  fin_vendor_bills:
+    description: "Accounts-payable vendor bills (supplier invoices)."
+    columns:
+      partner_id: "vendor id -> proc_vendors.id (no FK constraint)"
+      partner_name: "vendor name (denormalized)"
+      status: "DRAFT, POSTED (unpaid), PARTIALLY_PAID, PAID, REVERSED"
+  fin_vendor_bill_lines:
+    description: "Expense/stock lines of vendor bills."
+  fin_vendor_payments:
+    description: "Payments made to vendors."
+    columns:
+      partner_id: "vendor id -> proc_vendors.id (no FK constraint)"
+  fin_vendor_payment_allocations:
+    description: "Links vendor payments to the bills they paid."
+  fin_journal_entries:
+    description: "General ledger journal entry headers (posting_date, document_type, status). Prefer fin_journal_lines for amounts."
+    columns:
+      document_type: "JOURNAL (manual), AR_INVOICE, AR_CREDIT_NOTE, AP_INVOICE, PAYMENT, COGS, FX_REVAL, DEPRECIATION, PAYROLL"
+      status: "DRAFT, POSTED, REVERSED (a reversed entry is still posted; its reversal offsets it)"
+  fin_journal_lines:
+    description: "General ledger lines: the source of truth for revenue, expenses and all account balances. One side per line (debit or credit). Carries is_posted, posting_date, account and dimensions."
+    columns:
+      functional_debit_amount: "debit in functional currency (use these, not transaction_*)"
+      functional_credit_amount: "credit in functional currency"
+      is_posted: "TRUE for posted lines; always filter is_posted for reporting"
+      partner_type: "CUSTOMER or VENDOR; partner_id then points to sales_customers or proc_vendors"
+      item_id: "item dimension (e.g. COGS by item)"
+  fin_accounts:
+    description: "Chart of accounts: code, name, account_type (ASSET, LIABILITY, EQUITY, REVENUE, EXPENSE), normal_balance, is_cash_equivalent."
+  fin_account_groups:
+    description: "Hierarchical grouping of GL accounts (parent_id)."
+  fin_fiscal_years:
+    description: "Fiscal years (calendar years) with status OPEN/CLOSED."
+  fin_fiscal_periods:
+    description: "Monthly fiscal periods within fiscal years."
+  fin_currencies:
+    description: "Currencies; is_functional marks the company's reporting currency."
+  fin_exchange_rates:
+    description: "Exchange rates by date (SPOT/CLOSING)."
+  fin_tax_codes:
+    description: "Tax codes and rates."
+  fin_cost_centers:
+    description: "Cost centers (controlling dimension)."
+  fin_profit_centers:
+    description: "Profit centers (controlling dimension)."
+  fin_assets:
+    description: "Fixed assets: acquisition cost, depreciation method, useful life, status."
+  fin_depreciation_entries:
+    description: "Depreciation amounts posted per asset per run."
+  fin_bank_statements:
+    description: "Imported bank statements."
+  fin_bank_statement_lines:
+    description: "Bank statement transactions and their reconciliation status."
+  inv_items:
+    description: "Items / products / materials master: item_code, name, item_type (STOCKED, NON_STOCKED, SERVICE), category, costing method, reorder point."
+  inv_item_categories:
+    description: "Item (product) categories."
+  inv_warehouses:
+    description: "Warehouses / stores / plants holding stock."
+  inv_bins:
+    description: "Storage bins inside a warehouse (warehouse_id)."
+  inv_stock_moves:
+    description: "Every stock movement (RECEIPT, ISSUE, TRANSFER, ADJUSTMENT). quantity is always positive; direction from move_type / from_bin_id / to_bin_id. move_date, unit_cost."
+  inv_stock_quants:
+    description: "Current on-hand quantity per item, bin and lot."
+  inv_item_valuations:
+    description: "Current on-hand quantity, average unit cost and total stock value per item per warehouse. Best source for stock levels and inventory value."
+  inv_cost_layers:
+    description: "FIFO cost layers (remaining quantity x unit cost)."
+  inv_uoms:
+    description: "Units of measure."
+  inv_lots:
+    description: "Lot / batch numbers."
+  inv_serials:
+    description: "Serial numbers."
+  inv_stock_counts:
+    description: "Physical stock counts (cycle counts)."
+  inv_stock_count_lines:
+    description: "Counted vs system quantities per item (variance_qty)."
+  proc_vendors:
+    description: "Vendors / suppliers master."
+  proc_purchase_orders:
+    description: "Purchase order headers to vendors (order_date, total_amount, status)."
+    columns:
+      status: "DRAFT, PENDING_APPROVAL, APPROVED, REJECTED, SENT, PARTIALLY_RECEIVED, RECEIVED, CLOSED, CANCELLED"
+  proc_purchase_order_lines:
+    description: "Purchase order lines: item, quantity, unit_cost, line_amount, received_quantity, billed_quantity."
+  proc_goods_receipts:
+    description: "Goods receipts (GRN) of purchased items into a warehouse."
+  proc_goods_receipt_lines:
+    description: "Received quantities per item on a goods receipt."
+  proc_requisitions:
+    description: "Internal purchase requisitions."
+  proc_rfqs:
+    description: "Requests for quotation sent to vendors."
+  proc_invoice_matches:
+    description: "3-way match of PO / goods receipt / vendor bill."
+  hr_employees:
+    description: "Employees: code, first_name, last_name, email, department, position, manager, status, employment_type, hire_date, termination_date. Salary/PII columns are not available."
+  hr_departments:
+    description: "Departments (org units)."
+  hr_positions:
+    description: "Job positions/titles."
+  hr_leave_requests:
+    description: "Employee leave (time-off) requests."
+  hr_leave_types:
+    description: "Leave types (vacation, sick...)."
+  hr_leave_balances:
+    description: "Leave balances per employee and type."
+  hr_timesheets:
+    description: "Weekly timesheets per employee (status)."
+  hr_time_entries:
+    description: "Hours worked per day/project in timesheets."
+  hr_payroll_runs:
+    description: "Payroll runs (period, totals, status)."
+  crm_leads:
+    description: "Sales leads (prospects) with status and estimated value."
+  crm_opportunities:
+    description: "Sales opportunities (deals) with stage, estimated value, probability, expected close date."
+  crm_opportunity_lines:
+    description: "Items on opportunities."
+  crm_activities:
+    description: "CRM activities (calls, meetings, tasks)."
+  ps_projects:
+    description: "Projects (customer projects, budget, dates, status)."
+  ps_wbs_elements:
+    description: "Project work breakdown structure elements."
+  mfg_production_orders:
+    description: "Manufacturing / production (work) orders."
+  mfg_boms:
+    description: "Bills of materials."
+  mfg_bom_components:
+    description: "Components of a bill of materials."
+  mfg_work_centers:
+    description: "Work centers (machines/lines)."
+  qm_inspection_lots:
+    description: "Quality inspection lots."
+  pm_equipment:
+    description: "Maintained equipment."
+  pm_maintenance_orders:
+    description: "Maintenance orders."
+  hsp_order_tickets:
+    description: "Restaurant (hospitality) order tickets; revenue recognised at SETTLED."
+  hsp_table_reservations:
+    description: "Restaurant table reservations."
+  core_documents:
+    description: "Registry of every business document (doc_type, doc_number, status) for document-flow tracing."
+  core_doc_links:
+    description: "Links between documents (predecessor -> successor), e.g. order -> delivery -> invoice."
+  tenants:
+    description: "The company (tenant) currently being reported on: id, slug, name."

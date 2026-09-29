@@ -1,0 +1,36 @@
+services:
+  odoo-db:
+    image: postgres:16-alpine
+    container_name: promptquery-odoo-db
+    environment:
+      POSTGRES_USER: odoo
+      POSTGRES_PASSWORD: odoo
+      POSTGRES_DB: postgres
+    ports:
+      - "55433:5432"
+    tmpfs:
+      - /var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U odoo"]
+      interval: 2s
+      timeout: 2s
+      retries: 30
+
+  odoo-init:
+    image: odoo:18
+    container_name: promptquery-odoo-init
+    depends_on:
+      odoo-db:
+        condition: service_healthy
+    environment:
+      HOST: odoo-db
+      USER: odoo
+      PASSWORD: odoo
+    command:
+      - odoo
+      - -d
+      - odoo_eval
+      - -i
+      - base,sale,purchase,stock,account,hr,crm,project,mrp,product,website,mail,calendar,contacts,fleet,survey
+      - --stop-after-init
+      - --without-demo=all

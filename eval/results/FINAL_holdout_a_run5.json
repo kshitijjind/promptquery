@@ -1,0 +1,853 @@
+{
+  "summary": {
+    "confidence": {
+      "high": 35,
+      "verified": 2
+    },
+    "avg_sql_candidates_per_turn": 1.05,
+    "turn_accuracy": "37/37 = 100.0%",
+    "by_category": {
+      "finance": "4/4",
+      "hr": "1/1",
+      "inventory": "3/3",
+      "multi_turn": "16/16",
+      "other": "1/1",
+      "procurement": "2/2",
+      "receivables": "4/4",
+      "sales": "6/6"
+    },
+    "multi_turn_by_position": {
+      "1": "4/4",
+      "2": "4/4",
+      "3": "4/4",
+      "4": "3/3",
+      "5": "1/1"
+    },
+    "multi_turn_conversations_fully_correct": "4/4",
+    "seconds": 117.1,
+    "model": "openai/gpt-6-luna"
+  },
+  "results": [
+    {
+      "id": "h_s01",
+      "tenant": "volume",
+      "kind": "single",
+      "category": "sales",
+      "turns": [
+        {
+          "turn": 1,
+          "question": "What did we sell in total during the first half of 2025?",
+          "resolved": "What were total sales from January 1 through June 30, 2025?",
+          "intent": "report",
+          "sql": "SELECT ROUND(COALESCE(SUM(so.total_amount), 0), 2) AS total_sales\nFROM sales_orders so\nWHERE so.status NOT IN ('DRAFT', 'CANCELLED', 'CREDIT_BLOCKED')\n  AND so.order_date >= DATE '2025-01-01'\n  AND so.order_date < DATE '2025-07-01'",
+          "error": null,
+          "row_count": 1,
+          "repairs": 0,
+          "confidence": "high",
+          "confidence_reasons": [],
+          "candidates": 1,
+          "seconds": 7.6,
+          "pass": true,
+          "reason": "match"
+        }
+      ],
+      "pass": true
+    },
+    {
+      "id": "h_s02",
+      "tenant": "volume",
+      "kind": "single",
+      "category": "sales",
+      "turns": [
+        {
+          "turn": 1,
+          "question": "Which customer generated the most sales last year?",
+          "resolved": "Which customer generated the most sales for Volume Perf from January 1, 2025 through December 31, 2025? Return the single top customer and their sales value.",
+          "intent": "report",
+          "sql": "SELECT\n    c.name AS customer,\n    ROUND(SUM(so.total_amount), 2) AS sales_value\nFROM sales_orders so\nJOIN sales_customers c ON c.id = so.customer_id\nWHERE so.status NOT IN ('DRAFT', 'CANCELLED', 'CREDIT_BLOCKED')\n  AND so.order_date >= DATE '2025-01-01'\n  AND so.order_date < DATE '2026-01-01'\nGROUP BY c.id, c.name\nORDER BY sales_value DESC\nLIMIT 1",
+          "error": null,
+          "row_count": 1,
+          "repairs": 0,
+          "confidence": "high",
+          "confidence_reasons": [],
+          "candidates": 1,
+          "seconds": 9.1,
+          "pass": true,
+          "reason": "match"
+        }
+      ],
+      "pass": true
+    },
+    {
+      "id": "h_s03",
+      "tenant": "volume",
+      "kind": "single",
+      "category": "sales",
+      "turns": [
+        {
+          "turn": 1,
+          "question": "Number of orders per quarter in 2024",
+          "resolved": "How many orders were there in each quarter from January 1 through December 31, 2024?",
+          "intent": "report",
+          "sql": "SELECT\n  date_trunc('quarter', so.order_date)::date AS quarter,\n  COUNT(*) AS order_count\nFROM sales_orders so\nWHERE so.status NOT IN ('DRAFT', 'CANCELLED', 'CREDIT_BLOCKED')\n  AND so.order_date >= DATE '2024-01-01'\n  AND so.order_date < DATE '2025-01-01'\nGROUP BY date_trunc('quarter', so.order_date)::date\nORDER BY quarter",
+          "error": null,
+          "row_count": 4,
+          "repairs": 0,
+          "confidence": "high",
+          "confidence_reasons": [],
+          "candidates": 1,
+          "seconds": 7.2,
+          "pass": true,
+          "reason": "match"
+        }
+      ],
+      "pass": true
+    },
+    {
+      "id": "h_s04",
+      "tenant": "volume",
+      "kind": "single",
+      "category": "sales",
+      "turns": [
+        {
+          "turn": 1,
+          "question": "What's the largest single sales order we've ever received?",
+          "resolved": "Identify the single largest sales order Volume Perf has ever received and report its order and value.",
+          "intent": "report",
+          "sql": "SELECT\n    so.order_number AS order_number,\n    ROUND(so.total_amount, 2) AS order_value\nFROM sales_orders so\nWHERE so.status NOT IN ('DRAFT', 'CANCELLED', 'CREDIT_BLOCKED')\nORDER BY so.total_amount DESC\nLIMIT 1",
+          "error": null,
+          "row_count": 1,
+          "repairs": 0,
+          "confidence": "high",
+          "confidence_reasons": [],
+          "candidates": 1,
+          "seconds": 7.5,
+          "pass": true,
+          "reason": "match"
+        }
+      ],
+      "pass": true
+    },
+    {
+      "id": "h_s05",
+      "tenant": "acme",
+      "kind": "single",
+      "category": "sales",
+      "turns": [
+        {
+          "turn": 1,
+          "question": "How much has Fabrikam ordered from us?",
+          "resolved": "What is the total value of sales orders placed by Fabrikam with Acme across all time?",
+          "intent": "report",
+          "sql": "SELECT\n  c.name AS customer,\n  ROUND(COALESCE(SUM(so.total_amount), 0), 2) AS total_sales_order_value\nFROM sales_orders so\nJOIN sales_customers c ON c.id = so.customer_id\nWHERE c.name ILIKE '%fabrikam%'\n  AND so.status NOT IN ('DRAFT', 'CANCELLED', 'CREDIT_BLOCKED')\nGROUP BY c.id, c.name",
+          "error": null,
+          "row_count": 1,
+          "repairs": 0,
+          "confidence": "high",
+          "confidence_reasons": [],
+          "candidates": 1,
+          "seconds": 7.5,
+          "pass": true,
+          "reason": "match"
+        }
+      ],
+      "pass": true
+    },
+    {
+      "id": "h_s06",
+      "tenant": "acme",
+      "kind": "single",
+      "category": "sales",
+      "turns": [
+        {
+          "turn": 1,
+          "question": "How many sales orders were delivered on or before the requested date?",
+          "resolved": "How many Acme sales orders were delivered on or before their requested date?",
+          "intent": "report",
+          "sql": "SELECT COUNT(DISTINCT so.id) AS sales_orders_delivered_on_or_before_requested_date\nFROM sales_orders so\nJOIN sales_deliveries sd ON sd.sales_order_id = so.id\nWHERE sd.status = 'POSTED'\n  AND sd.delivery_date <= so.requested_date",
+          "error": null,
+          "row_count": 1,
+          "repairs": 0,
+          "confidence": "high",
+          "confidence_reasons": [],
+          "candidates": 1,
+          "seconds": 7.8,
+          "pass": true,
+          "reason": "match"
+        }
+      ],
+      "pass": true
+    },
+    {
+      "id": "h_f01",
+      "tenant": "volume",
+      "kind": "single",
+      "category": "finance",
+      "turns": [
+        {
+          "turn": 1,
+          "question": "Show monthly revenue for the first quarter of 2026",
+          "resolved": "Show monthly revenue for Volume Perf from January 1 through March 31, 2026.",
+          "intent": "report",
+          "sql": "SELECT date_trunc('month', jl.posting_date)::date AS month,\n       ROUND(SUM(jl.functional_credit_amount - jl.functional_debit_amount), 2) AS revenue\nFROM fin_journal_lines jl\nJOIN fin_accounts a ON a.id = jl.account_id\nWHERE jl.is_posted\n  AND a.account_type = 'REVENUE'\n  AND jl.posting_date >= DATE '2026-01-01'\n  AND jl.posting_date < DATE '2026-04-01'\nGROUP BY 1\nORDER BY 1",
+          "error": null,
+          "row_count": 3,
+          "repairs": 0,
+          "confidence": "high",
+          "confidence_reasons": [],
+          "candidates": 1,
+          "seconds": 6.2,
+          "pass": true,
+          "reason": "match"
+        }
+      ],
+      "pass": true
+    },
+    {
+      "id": "h_f02",
+      "tenant": "volume",
+      "kind": "single",
+      "category": "finance",
+      "turns": [
+        {
+          "turn": 1,
+          "question": "What's the balance of accounts receivable in the ledger?",
+          "resolved": "What is the balance of accounts receivable in the ledger for Volume Perf as of 2026-09-27?",
+          "intent": "report",
+          "sql": "SELECT a.code AS account_code,\n       a.name AS account,\n       ROUND(SUM(\n         CASE\n           WHEN a.account_type IN ('ASSET', 'EXPENSE')\n             THEN jl.functional_debit_amount - jl.functional_credit_amount\n           ELSE jl.functional_credit_amount - jl.functional_debit_amount\n         END\n       ), 2) AS balance\nFROM fin_journal_lines jl\nJOIN fin_accounts a ON a.id = jl.account_id\nWHERE jl.is_posted\n  AND jl.posting_date <= DATE '2026-09-27'\n  AND a.name ILIKE '%receivable%'\nGROUP BY a.id, a.code, a.name, a.account_type\nORDER BY a.code",
+          "error": null,
+          "row_count": 1,
+          "repairs": 0,
+          "confidence": "high",
+          "confidence_reasons": [],
+          "candidates": 1,
+          "seconds": 14.2,
+          "pass": true,
+          "reason": "match"
+        }
+      ],
+      "pass": true
+    },
+    {
+      "id": "h_f03",
+      "tenant": "acme",
+      "kind": "single",
+      "category": "finance",
+      "turns": [
+        {
+          "turn": 1,
+          "question": "How much did we spend on salaries?",
+          "resolved": "How much did Acme spend on salaries across all available payroll runs?",
+          "intent": "report",
+          "sql": "SELECT ROUND(COALESCE(SUM(pr.total_gross), 0), 2) AS total_salary_spend\nFROM hr_payroll_runs pr\nWHERE pr.status = 'POSTED'",
+          "error": null,
+          "row_count": 1,
+          "repairs": 0,
+          "confidence": "high",
+          "confidence_reasons": [],
+          "candidates": 1,
+          "seconds": 6.5,
+          "pass": true,
+          "reason": "match"
+        }
+      ],
+      "pass": true
+    },
+    {
+      "id": "h_f04",
+      "tenant": "retail",
+      "kind": "single",
+      "category": "finance",
+      "turns": [
+        {
+          "turn": 1,
+          "question": "What is our gross profit?",
+          "resolved": "What is our gross profit across all available history?",
+          "intent": "report",
+          "sql": "SELECT ROUND(\n         COALESCE(SUM(jl.functional_credit_amount - jl.functional_debit_amount)\n                  FILTER (WHERE a.account_type = 'REVENUE'), 0)\n         - COALESCE(SUM(jl.functional_debit_amount - jl.functional_credit_amount)\n                    FILTER (WHERE a.id IN (\n                      SELECT ic.cogs_account_id\n                      FROM inv_item_categories ic\n                    )), 0),\n         2\n       ) AS gross_profit\nFROM fin_journal_lines jl\nJOIN fin_accounts a ON a.id = jl.account_id\nWHERE jl.is_posted",
+          "error": null,
+          "row_count": 1,
+          "repairs": 0,
+          "confidence": "high",
+          "confidence_reasons": [],
+          "candidates": 1,
+          "seconds": 7.3,
+          "pass": true,
+          "reason": "match"
+        }
+      ],
+      "pass": true
+    },
+    {
+      "id": "h_r01",
+      "tenant": "acme",
+      "kind": "single",
+      "category": "receivables",
+      "turns": [
+        {
+          "turn": 1,
+          "question": "Which customer has the largest unpaid balance?",
+          "resolved": "Which customer of Acme has the largest current unpaid balance?",
+          "intent": "report",
+          "sql": "SELECT sc.customer_code, sc.name AS customer_name,\n       ROUND(SUM(ci.open_amount), 2) AS unpaid_balance\nFROM fin_customer_invoices ci\nJOIN sales_customers sc ON sc.id = ci.partner_id\nWHERE ci.status IN ('POSTED', 'PARTIALLY_PAID')\n  AND ci.open_amount > 0\nGROUP BY sc.id, sc.customer_code, sc.name\nORDER BY unpaid_balance DESC\nLIMIT 1",
+          "error": null,
+          "row_count": 1,
+          "repairs": 0,
+          "confidence": "high",
+          "confidence_reasons": [],
+          "candidates": 1,
+          "seconds": 7.5,
+          "pass": true,
+          "reason": "match"
+        }
+      ],
+      "pass": true
+    },
+    {
+      "id": "h_r02",
+      "tenant": "acme",
+      "kind": "single",
+      "category": "receivables",
+      "turns": [
+        {
+          "turn": 1,
+          "question": "How much money did we collect from customers in July 2026?",
+          "resolved": "How much money did Acme collect from customers from 2026-07-01 through 2026-07-31?",
+          "intent": "report",
+          "sql": "SELECT ROUND(COALESCE(SUM(r.amount), 0), 2) AS money_collected\nFROM fin_customer_receipts r\nWHERE r.status = 'POSTED'\n  AND r.receipt_date >= DATE '2026-07-01'\n  AND r.receipt_date < DATE '2026-08-01'",
+          "error": null,
+          "row_count": 1,
+          "repairs": 0,
+          "confidence": "high",
+          "confidence_reasons": [],
+          "candidates": 1,
+          "seconds": 5.1,
+          "pass": true,
+          "reason": "match"
+        }
+      ],
+      "pass": true
+    },
+    {
+      "id": "h_r03",
+      "tenant": "acme",
+      "kind": "single",
+      "category": "receivables",
+      "turns": [
+        {
+          "turn": 1,
+          "question": "How many invoices are more than 90 days past due?",
+          "resolved": "For Acme, how many customer invoices had an outstanding balance and were due before 2026-06-29, making them more than 90 days past due as of 2026-09-27?",
+          "intent": "report",
+          "sql": "SELECT COUNT(*) AS invoice_count\nFROM fin_customer_invoices ci\nWHERE ci.status IN ('POSTED', 'PARTIALLY_PAID')\n  AND ci.open_amount > 0\n  AND ci.due_date < DATE '2026-06-29'\n  AND ci.invoice_number ILIKE 'INV-%'",
+          "error": null,
+          "row_count": 1,
+          "repairs": 0,
+          "confidence": "high",
+          "confidence_reasons": [],
+          "candidates": 1,
+          "seconds": 17.5,
+          "pass": true,
+          "reason": "match"
+        }
+      ],
+      "pass": true
+    },
+    {
+      "id": "h_r04",
+      "tenant": "healthcare",
+      "kind": "single",
+      "category": "receivables",
+      "turns": [
+        {
+          "turn": 1,
+          "question": "Total invoiced amount by customer",
+          "resolved": "What is the total invoiced amount by customer for Riverbend Clinic, across all available dates?",
+          "intent": "report",
+          "sql": "SELECT c.name AS customer,\n       ROUND(SUM(CASE WHEN ci.invoice_number LIKE 'CN-%' THEN -ci.net_amount ELSE ci.net_amount END), 2) AS total_invoiced_amount\nFROM fin_customer_invoices ci\nJOIN sales_customers c ON c.id = ci.partner_id\nWHERE ci.status NOT IN ('DRAFT', 'REVERSED')\nGROUP BY c.id, c.name\nORDER BY total_invoiced_amount DESC",
+          "error": null,
+          "row_count": 3,
+          "repairs": 0,
+          "confidence": "high",
+          "confidence_reasons": [],
+          "candidates": 1,
+          "seconds": 6.6,
+          "pass": true,
+          "reason": "match"
+        }
+      ],
+      "pass": true
+    },
+    {
+      "id": "h_c01",
+      "tenant": "manufacturing",
+      "kind": "single",
+      "category": "procurement",
+      "turns": [
+        {
+          "turn": 1,
+          "question": "Which supplier have we bought the most from?",
+          "resolved": "Which supplier has Vertex Manufacturing bought the most from across all time, and what is the total purchase amount?",
+          "intent": "report",
+          "sql": "SELECT v.name AS supplier,\n       v.vendor_code AS supplier_code,\n       ROUND(COALESCE(SUM(po.total_amount), 0), 2) AS total_purchase_amount\nFROM proc_purchase_orders po\nJOIN proc_vendors v ON v.id = po.vendor_id\nWHERE po.status NOT IN ('DRAFT', 'PENDING_APPROVAL', 'REJECTED', 'CANCELLED')\nGROUP BY v.id, v.name, v.vendor_code\nORDER BY total_purchase_amount DESC\nLIMIT 1",
+          "error": null,
+          "row_count": 1,
+          "repairs": 0,
+          "confidence": "high",
+          "confidence_reasons": [],
+          "candidates": 1,
+          "seconds": 7.4,
+          "pass": true,
+          "reason": "match"
+        }
+      ],
+      "pass": true
+    },
+    {
+      "id": "h_c02",
+      "tenant": "acme",
+      "kind": "single",
+      "category": "procurement",
+      "turns": [
+        {
+          "turn": 1,
+          "question": "How many purchase orders does each vendor have?",
+          "resolved": "How many purchase orders does each vendor have?",
+          "intent": "report",
+          "sql": "SELECT\n    v.vendor_code AS vendor_code,\n    v.name AS vendor_name,\n    COUNT(po.id) AS purchase_order_count\nFROM proc_vendors v\nJOIN proc_purchase_orders po ON po.vendor_id = v.id\nGROUP BY v.id, v.vendor_code, v.name\nORDER BY purchase_order_count DESC, v.name",
+          "error": null,
+          "row_count": 2,
+          "repairs": 0,
+          "confidence": "high",
+          "confidence_reasons": [],
+          "candidates": 1,
+          "seconds": 9.8,
+          "pass": true,
+          "reason": "match"
+        }
+      ],
+      "pass": true
+    },
+    {
+      "id": "h_i01",
+      "tenant": "acme",
+      "kind": "single",
+      "category": "inventory",
+      "turns": [
+        {
+          "turn": 1,
+          "question": "How many Steel Bolts do we have in stock?",
+          "resolved": "How many Steel Bolts do we currently have in stock across all warehouses?",
+          "intent": "report",
+          "sql": "SELECT i.name AS item_name,\n       SUM(iv.on_hand_qty) AS on_hand_quantity\nFROM inv_item_valuations iv\nJOIN inv_items i ON i.id = iv.item_id\nWHERE i.name ILIKE '%steel bolt%'\nGROUP BY i.id, i.name\nORDER BY i.name",
+          "error": null,
+          "row_count": 1,
+          "repairs": 0,
+          "confidence": "high",
+          "confidence_reasons": [],
+          "candidates": 1,
+          "seconds": 7.2,
+          "pass": true,
+          "reason": "match"
+        }
+      ],
+      "pass": true
+    },
+    {
+      "id": "h_i02",
+      "tenant": "volume",
+      "kind": "single",
+      "category": "inventory",
+      "turns": [
+        {
+          "turn": 1,
+          "question": "How many stock receipts were posted in 2024?",
+          "resolved": "How many stock receipts were posted from 2024-01-01 through 2024-12-31?",
+          "intent": "report",
+          "sql": "SELECT COUNT(*) AS stock_receipt_count\nFROM inv_stock_moves sm\nWHERE sm.move_type = 'RECEIPT'\n  AND sm.posted = TRUE\n  AND sm.move_date >= DATE '2024-01-01'\n  AND sm.move_date < DATE '2025-01-01'",
+          "error": null,
+          "row_count": 1,
+          "repairs": 0,
+          "confidence": "high",
+          "confidence_reasons": [],
+          "candidates": 1,
+          "seconds": 7.2,
+          "pass": true,
+          "reason": "match"
+        }
+      ],
+      "pass": true
+    },
+    {
+      "id": "h_i03",
+      "tenant": "construction",
+      "kind": "single",
+      "category": "inventory",
+      "turns": [
+        {
+          "turn": 1,
+          "question": "What's the value of inventory in each warehouse?",
+          "resolved": "What is the current value of inventory in each warehouse for Stonebridge Construction?",
+          "intent": "report",
+          "sql": "SELECT w.code AS warehouse_code,\n       w.name AS warehouse_name,\n       ROUND(SUM(iv.total_value), 2) AS inventory_value\nFROM inv_item_valuations iv\nJOIN inv_warehouses w ON w.id = iv.warehouse_id\nGROUP BY w.id, w.code, w.name\nORDER BY w.code",
+          "error": null,
+          "row_count": 1,
+          "repairs": 0,
+          "confidence": "high",
+          "confidence_reasons": [],
+          "candidates": 1,
+          "seconds": 5.5,
+          "pass": true,
+          "reason": "match"
+        }
+      ],
+      "pass": true
+    },
+    {
+      "id": "h_h01",
+      "tenant": "acme",
+      "kind": "single",
+      "category": "hr",
+      "turns": [
+        {
+          "turn": 1,
+          "question": "When was Carol hired?",
+          "resolved": "What is the hire date of employee(s) named Carol at Acme?",
+          "intent": "report",
+          "sql": "SELECT\n  e.first_name || ' ' || e.last_name AS employee_name,\n  e.hire_date\nFROM hr_employees e\nWHERE e.first_name ILIKE '%carol%'\nORDER BY employee_name, e.hire_date",
+          "error": null,
+          "row_count": 1,
+          "repairs": 0,
+          "confidence": "high",
+          "confidence_reasons": [],
+          "candidates": 1,
+          "seconds": 5.9,
+          "pass": true,
+          "reason": "match"
+        }
+      ],
+      "pass": true
+    },
+    {
+      "id": "h_m01",
+      "tenant": "acme",
+      "kind": "single",
+      "category": "other",
+      "turns": [
+        {
+          "turn": 1,
+          "question": "List our active projects with their budgets",
+          "resolved": "List Acme's active projects with their budgets.",
+          "intent": "report",
+          "sql": "SELECT\n  p.code AS project_code,\n  p.name AS project_name,\n  ROUND(p.budget_amount, 2) AS budget_amount\nFROM ps_projects p\nWHERE p.status = 'ACTIVE'\nORDER BY p.code",
+          "error": null,
+          "row_count": 2,
+          "repairs": 0,
+          "confidence": "verified",
+          "confidence_reasons": [
+            "request asks for a per-group breakdown but the query does not aggregate (returned 2 detail rows)"
+          ],
+          "candidates": 2,
+          "seconds": 8.1,
+          "pass": true,
+          "reason": "match"
+        }
+      ],
+      "pass": true
+    },
+    {
+      "id": "h_mt01",
+      "tenant": "volume",
+      "kind": "multi",
+      "category": "multi_turn",
+      "turns": [
+        {
+          "turn": 1,
+          "question": "How many orders did we receive in 2025?",
+          "resolved": "How many sales orders did Volume Perf receive from customers from January 1 through December 31, 2025?",
+          "intent": "report",
+          "sql": "SELECT COUNT(*) AS sales_orders_received\nFROM sales_orders so\nWHERE so.status NOT IN ('DRAFT', 'CANCELLED', 'CREDIT_BLOCKED')\n  AND so.order_date >= DATE '2025-01-01'\n  AND so.order_date < DATE '2026-01-01'",
+          "error": null,
+          "row_count": 1,
+          "repairs": 0,
+          "confidence": "high",
+          "confidence_reasons": [],
+          "candidates": 1,
+          "seconds": 5.2,
+          "pass": true,
+          "reason": "match"
+        },
+        {
+          "turn": 2,
+          "question": "And their total value?",
+          "resolved": "What was the total value of sales orders Volume Perf received from customers from January 1 through December 31, 2025, excluding orders with status DRAFT, CANCELLED, or CREDIT_BLOCKED?",
+          "intent": "report",
+          "sql": "SELECT ROUND(COALESCE(SUM(so.total_amount), 0), 2) AS total_sales_order_value\nFROM sales_orders so\nWHERE so.status NOT IN ('DRAFT', 'CANCELLED', 'CREDIT_BLOCKED')\n  AND so.order_date >= DATE '2025-01-01'\n  AND so.order_date < DATE '2026-01-01'",
+          "error": null,
+          "row_count": 1,
+          "repairs": 0,
+          "confidence": "high",
+          "confidence_reasons": [],
+          "candidates": 1,
+          "seconds": 6.7,
+          "pass": true,
+          "reason": "match"
+        },
+        {
+          "turn": 3,
+          "question": "Show that per month",
+          "resolved": "Show the total value of sales orders Volume Perf received from customers, grouped by month from January 1 through December 31, 2025, excluding orders with status DRAFT, CANCELLED, or CREDIT_BLOCKED.",
+          "intent": "report",
+          "sql": "SELECT\n  DATE_TRUNC('month', so.order_date)::date AS month,\n  ROUND(COALESCE(SUM(so.total_amount), 0), 2) AS total_sales_order_value\nFROM sales_orders so\nWHERE so.status NOT IN ('DRAFT', 'CANCELLED', 'CREDIT_BLOCKED')\n  AND so.order_date >= DATE '2025-01-01'\n  AND so.order_date < DATE '2026-01-01'\nGROUP BY DATE_TRUNC('month', so.order_date)::date\nORDER BY month",
+          "error": null,
+          "row_count": 12,
+          "repairs": 0,
+          "confidence": "high",
+          "confidence_reasons": [],
+          "candidates": 1,
+          "seconds": 6.0,
+          "pass": true,
+          "reason": "match"
+        },
+        {
+          "turn": 4,
+          "question": "Which month was the lowest?",
+          "resolved": "Which month had the lowest total value of sales orders Volume Perf received from customers from January 1 through December 31, 2025, excluding orders with status DRAFT, CANCELLED, or CREDIT_BLOCKED?",
+          "intent": "report",
+          "sql": "SELECT\n  DATE_TRUNC('month', so.order_date)::date AS month,\n  ROUND(COALESCE(SUM(so.total_amount), 0), 2) AS total_sales_order_value\nFROM sales_orders so\nWHERE so.status NOT IN ('DRAFT', 'CANCELLED', 'CREDIT_BLOCKED')\n  AND so.order_date >= DATE '2025-01-01'\n  AND so.order_date < DATE '2026-01-01'\nGROUP BY DATE_TRUNC('month', so.order_date)::date\nORDER BY total_sales_order_value ASC\nLIMIT 1",
+          "error": null,
+          "row_count": 1,
+          "repairs": 0,
+          "confidence": "high",
+          "confidence_reasons": [],
+          "candidates": 1,
+          "seconds": 6.8,
+          "pass": true,
+          "reason": "match"
+        },
+        {
+          "turn": 5,
+          "question": "Compare that month with the same month in 2024",
+          "resolved": "Compare the total value of sales orders Volume Perf received from customers in February 2025 and February 2024, excluding orders with status DRAFT, CANCELLED, or CREDIT_BLOCKED.",
+          "intent": "report",
+          "sql": "SELECT\n  ROUND(COALESCE(SUM(so.total_amount) FILTER (\n    WHERE so.order_date >= DATE '2024-02-01' AND so.order_date < DATE '2024-03-01'\n  ), 0), 2) AS sales_order_value_feb_2024,\n  ROUND(COALESCE(SUM(so.total_amount) FILTER (\n    WHERE so.order_date >= DATE '2025-02-01' AND so.order_date < DATE '2025-03-01'\n  ), 0), 2) AS sales_order_value_feb_2025\nFROM sales_orders so\nWHERE so.status NOT IN ('DRAFT', 'CANCELLED', 'CREDIT_BLOCKED')\n  AND (\n    (so.order_date >= DATE '2024-02-01' AND so.order_date < DATE '2024-03-01')\n    OR (so.order_date >= DATE '2025-02-01' AND so.order_date < DATE '2025-03-01')\n  )",
+          "error": null,
+          "row_count": 1,
+          "repairs": 0,
+          "confidence": "high",
+          "confidence_reasons": [],
+          "candidates": 1,
+          "seconds": 8.1,
+          "pass": true,
+          "reason": "match"
+        }
+      ],
+      "pass": true
+    },
+    {
+      "id": "h_mt02",
+      "tenant": "acme",
+      "kind": "multi",
+      "category": "multi_turn",
+      "turns": [
+        {
+          "turn": 1,
+          "question": "List all our customers",
+          "resolved": "List all customers for Acme.",
+          "intent": "report",
+          "sql": "SELECT\n  c.customer_code AS customer_code,\n  c.name AS customer_name\nFROM sales_customers c\nORDER BY c.name",
+          "error": null,
+          "row_count": 3,
+          "repairs": 0,
+          "confidence": "high",
+          "confidence_reasons": [],
+          "candidates": 1,
+          "seconds": 6.2,
+          "pass": true,
+          "reason": "match"
+        },
+        {
+          "turn": 2,
+          "question": "What's the total order value for each of them?",
+          "resolved": "What is the total order value for each of these Acme customers: Contoso Retail (C-CONTOSO), Fabrikam Inc (C-FABRIKAM), and Northwind Traders (C-NORTH)?",
+          "intent": "report",
+          "sql": "WITH order_totals AS (\n  SELECT\n    so.customer_id,\n    SUM(so.total_amount) AS total_order_value\n  FROM sales_orders so\n  WHERE so.status NOT IN ('DRAFT', 'CANCELLED', 'CREDIT_BLOCKED')\n  GROUP BY so.customer_id\n)\nSELECT\n  c.customer_code AS customer_code,\n  c.name AS customer_name,\n  ROUND(COALESCE(ot.total_order_value, 0), 2) AS total_order_value\nFROM sales_customers c\nLEFT JOIN order_totals ot ON ot.customer_id = c.id\nWHERE c.customer_code IN ('C-CONTOSO', 'C-FABRIKAM', 'C-NORTH')\nORDER BY c.name",
+          "error": null,
+          "row_count": 3,
+          "repairs": 0,
+          "confidence": "high",
+          "confidence_reasons": [],
+          "candidates": 1,
+          "seconds": 9.0,
+          "pass": true,
+          "reason": "match"
+        },
+        {
+          "turn": 3,
+          "question": "And how much does each still owe?",
+          "resolved": "How much does each of these Acme customers still owe: Contoso Retail (C-CONTOSO), Fabrikam Inc (C-FABRIKAM), and Northwind Traders (C-NORTH)?",
+          "intent": "report",
+          "sql": "WITH outstanding_by_customer AS (\n  SELECT\n    ci.partner_id,\n    SUM(ci.open_amount) AS amount_owed\n  FROM fin_customer_invoices ci\n  WHERE ci.status IN ('POSTED', 'PARTIALLY_PAID')\n    AND ci.open_amount > 0\n  GROUP BY ci.partner_id\n)\nSELECT\n  c.customer_code AS customer_code,\n  c.name AS customer_name,\n  ROUND(COALESCE(obc.amount_owed, 0), 2) AS amount_owed\nFROM sales_customers c\nLEFT JOIN outstanding_by_customer obc ON obc.partner_id = c.id\nWHERE c.customer_code IN ('C-CONTOSO', 'C-FABRIKAM', 'C-NORTH')\nORDER BY c.name",
+          "error": null,
+          "row_count": 3,
+          "repairs": 0,
+          "confidence": "high",
+          "confidence_reasons": [],
+          "candidates": 1,
+          "seconds": 8.1,
+          "pass": true,
+          "reason": "match"
+        },
+        {
+          "turn": 4,
+          "question": "Who has paid us anything so far?",
+          "resolved": "Which of these Acme customers have paid us anything so far: Contoso Retail (C-CONTOSO), Fabrikam Inc (C-FABRIKAM), and Northwind Traders (C-NORTH)?",
+          "intent": "report",
+          "sql": "SELECT\n  c.customer_code AS customer_code,\n  c.name AS customer_name,\n  ROUND(SUM(r.amount), 2) AS amount_received\nFROM sales_customers c\nJOIN fin_customer_receipts r ON r.partner_id = c.id\nWHERE c.customer_code IN ('C-CONTOSO', 'C-FABRIKAM', 'C-NORTH')\n  AND r.status = 'POSTED'\nGROUP BY c.id, c.customer_code, c.name\nHAVING SUM(r.amount) > 0\nORDER BY c.name",
+          "error": null,
+          "row_count": 2,
+          "repairs": 0,
+          "confidence": "high",
+          "confidence_reasons": [],
+          "candidates": 1,
+          "seconds": 9.8,
+          "pass": true,
+          "reason": "match"
+        }
+      ],
+      "pass": true
+    },
+    {
+      "id": "h_mt03",
+      "tenant": "volume",
+      "kind": "multi",
+      "category": "multi_turn",
+      "turns": [
+        {
+          "turn": 1,
+          "question": "What was our revenue in 2025?",
+          "resolved": "What was our revenue from 2025-01-01 through 2025-12-31?",
+          "intent": "report",
+          "sql": "SELECT ROUND(SUM(jl.functional_credit_amount - jl.functional_debit_amount), 2) AS revenue\nFROM fin_journal_lines jl\nJOIN fin_accounts a ON a.id = jl.account_id\nWHERE jl.is_posted\n  AND a.account_type = 'REVENUE'\n  AND jl.posting_date >= DATE '2025-01-01'\n  AND jl.posting_date < DATE '2026-01-01'",
+          "error": null,
+          "row_count": 1,
+          "repairs": 0,
+          "confidence": "high",
+          "confidence_reasons": [],
+          "candidates": 1,
+          "seconds": 5.6,
+          "pass": true,
+          "reason": "match"
+        },
+        {
+          "turn": 2,
+          "question": "And the cost of goods sold?",
+          "resolved": "What was our cost of goods sold from 2025-01-01 through 2025-12-31?",
+          "intent": "report",
+          "sql": "SELECT ROUND(SUM(jl.functional_debit_amount - jl.functional_credit_amount), 2) AS cost_of_goods_sold\nFROM fin_journal_lines jl\nJOIN fin_accounts a ON a.id = jl.account_id\nWHERE jl.is_posted\n  AND a.id IN (SELECT iic.cogs_account_id FROM inv_item_categories iic)\n  AND jl.posting_date >= DATE '2025-01-01'\n  AND jl.posting_date < DATE '2026-01-01'",
+          "error": null,
+          "row_count": 1,
+          "repairs": 0,
+          "confidence": "high",
+          "confidence_reasons": [],
+          "candidates": 1,
+          "seconds": 5.3,
+          "pass": true,
+          "reason": "match"
+        },
+        {
+          "turn": 3,
+          "question": "So what's the gross profit?",
+          "resolved": "What was our gross profit from 2025-01-01 through 2025-12-31?",
+          "intent": "report",
+          "sql": "SELECT ROUND(\n         COALESCE(SUM(jl.functional_credit_amount - jl.functional_debit_amount)\n                  FILTER (WHERE a.account_type = 'REVENUE'), 0)\n         - COALESCE(SUM(jl.functional_debit_amount - jl.functional_credit_amount)\n                    FILTER (WHERE a.id IN (SELECT iic.cogs_account_id FROM inv_item_categories iic)), 0),\n         2\n       ) AS gross_profit\nFROM fin_journal_lines jl\nJOIN fin_accounts a ON a.id = jl.account_id\nWHERE jl.is_posted\n  AND jl.posting_date >= DATE '2025-01-01'\n  AND jl.posting_date < DATE '2026-01-01'",
+          "error": null,
+          "row_count": 1,
+          "repairs": 0,
+          "confidence": "high",
+          "confidence_reasons": [],
+          "candidates": 1,
+          "seconds": 7.9,
+          "pass": true,
+          "reason": "match"
+        },
+        {
+          "turn": 4,
+          "question": "How does that compare with 2024?",
+          "resolved": "Compare our gross profit for 2025-01-01 through 2025-12-31 with our gross profit for 2024-01-01 through 2024-12-31.",
+          "intent": "report",
+          "sql": "SELECT\n  ROUND(\n    COALESCE(SUM(jl.functional_credit_amount - jl.functional_debit_amount)\n             FILTER (WHERE a.account_type = 'REVENUE'\n                       AND jl.posting_date >= DATE '2024-01-01'\n                       AND jl.posting_date < DATE '2025-01-01'), 0)\n    - COALESCE(SUM(jl.functional_debit_amount - jl.functional_credit_amount)\n               FILTER (WHERE a.id IN (SELECT iic.cogs_account_id FROM inv_item_categories iic)\n                         AND jl.posting_date >= DATE '2024-01-01'\n                         AND jl.posting_date < DATE '2025-01-01'), 0),\n    2\n  ) AS gross_profit_2024,\n  ROUND(\n    COALESCE(SUM(jl.functional_credit_amount - jl.functional_debit_amount)\n             FILTER (WHERE a.account_type = 'REVENUE'\n                       AND jl.posting_date >= DATE '2025-01-01'\n                       AND jl.posting_date < DATE '2026-01-01'), 0)\n    - COALESCE(SUM(jl.functional_debit_amount - jl.functional_credit_amount)\n               FILTER (WHERE a.id IN (SELECT iic.cogs_account_id FROM inv_item_categories iic)\n                         AND jl.posting_date >= DATE '2025-01-01'\n                         AND jl.posting_date < DATE '2026-01-01'), 0),\n    2\n  ) AS gross_profit_2025\nFROM fin_journal_lines jl\nJOIN fin_accounts a ON a.id = jl.account_id\nWHERE jl.is_posted\n  AND jl.posting_date >= DATE '2024-01-01'\n  AND jl.posting_date < DATE '2026-01-01'",
+          "error": null,
+          "row_count": 1,
+          "repairs": 0,
+          "confidence": "high",
+          "confidence_reasons": [],
+          "candidates": 1,
+          "seconds": 8.7,
+          "pass": true,
+          "reason": "match"
+        }
+      ],
+      "pass": true
+    },
+    {
+      "id": "h_mt04",
+      "tenant": "acme",
+      "kind": "multi",
+      "category": "multi_turn",
+      "turns": [
+        {
+          "turn": 1,
+          "question": "Which items did we purchase?",
+          "resolved": "Which items did Acme purchase across all available history?",
+          "intent": "report",
+          "sql": "SELECT i.item_code,\n       i.name AS item_name,\n       COALESCE(SUM(pol.quantity), 0) AS purchased_quantity,\n       ROUND(COALESCE(SUM(pol.line_amount), 0), 2) AS purchase_amount\nFROM proc_purchase_order_lines pol\nJOIN proc_purchase_orders po ON po.id = pol.po_id\nJOIN inv_items i ON i.id = pol.item_id\nWHERE po.status NOT IN ('DRAFT', 'PENDING_APPROVAL', 'REJECTED', 'CANCELLED')\nGROUP BY i.id, i.item_code, i.name\nORDER BY i.item_code",
+          "error": null,
+          "row_count": 2,
+          "repairs": 0,
+          "confidence": "high",
+          "confidence_reasons": [],
+          "candidates": 1,
+          "seconds": 8.2,
+          "pass": true,
+          "reason": "match"
+        },
+        {
+          "turn": 2,
+          "question": "How much did we spend on each?",
+          "resolved": "How much did Acme spend on each of these items across all available history: Steel Bolt M6 (ITM-BOLT) and Plastic Casing (ITM-CASING)?",
+          "intent": "report",
+          "sql": "SELECT i.item_code,\n       i.name AS item_name,\n       ROUND(COALESCE(SUM(pol.line_amount), 0), 2) AS purchase_spend\nFROM proc_purchase_order_lines pol\nJOIN proc_purchase_orders po ON po.id = pol.po_id\nJOIN inv_items i ON i.id = pol.item_id\nWHERE po.status NOT IN ('DRAFT', 'PENDING_APPROVAL', 'REJECTED', 'CANCELLED')\n  AND i.item_code IN ('ITM-BOLT', 'ITM-CASING')\nGROUP BY i.id, i.item_code, i.name\nORDER BY i.item_code",
+          "error": null,
+          "row_count": 2,
+          "repairs": 0,
+          "confidence": "high",
+          "confidence_reasons": [],
+          "candidates": 1,
+          "seconds": 7.6,
+          "pass": true,
+          "reason": "match"
+        },
+        {
+          "turn": 3,
+          "question": "Which vendor supplied the most expensive one?",
+          "resolved": "Which vendor or vendors supplied Plastic Casing (ITM-CASING), the item with the highest purchase spend among the items previously reported, across all available history?",
+          "intent": "report",
+          "sql": "SELECT DISTINCT\n       v.vendor_code,\n       v.name AS vendor_name\nFROM proc_purchase_order_lines pol\nJOIN proc_purchase_orders po ON po.id = pol.po_id\nJOIN inv_items i ON i.id = pol.item_id\nJOIN proc_vendors v ON v.id = po.vendor_id\nWHERE po.status NOT IN ('DRAFT', 'PENDING_APPROVAL', 'REJECTED', 'CANCELLED')\n  AND i.item_code = 'ITM-CASING'\nORDER BY v.vendor_code",
+          "error": null,
+          "row_count": 2,
+          "repairs": 0,
+          "confidence": "verified",
+          "confidence_reasons": [
+            "request asks for a per-group breakdown but the query does not aggregate (returned 2 detail rows)"
+          ],
+          "candidates": 2,
+          "seconds": 13.4,
+          "pass": true,
+          "reason": "match"
+        }
+      ],
+      "pass": true
+    }
+  ]
+}

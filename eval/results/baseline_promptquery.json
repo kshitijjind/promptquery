@@ -1,0 +1,327 @@
+{
+  "summary": {
+    "baseline_turn_accuracy": "28/64 = 43.8%"
+  },
+  "results": [
+    [
+      "s01",
+      false,
+      "gold column(s) [0] not found in prediction"
+    ],
+    [
+      "s02",
+      true,
+      "match"
+    ],
+    [
+      "s03",
+      false,
+      "row count 0 != gold 10"
+    ],
+    [
+      "s04",
+      false,
+      "row count 0 != gold 4"
+    ],
+    [
+      "s05",
+      false,
+      "gold column(s) [0, 1] not found in prediction"
+    ],
+    [
+      "s06",
+      true,
+      "match"
+    ],
+    [
+      "s07",
+      false,
+      "row count 0 != gold 3"
+    ],
+    [
+      "s08",
+      false,
+      "gold column(s) [0] not found in prediction"
+    ],
+    [
+      "s09",
+      false,
+      "gold column(s) [0, 1] not found in prediction"
+    ],
+    [
+      "s10",
+      true,
+      "match"
+    ],
+    [
+      "s11",
+      false,
+      "row count 0 != gold 5"
+    ],
+    [
+      "s12",
+      true,
+      "match"
+    ],
+    [
+      "s13",
+      false,
+      "gold column(s) [0] not found in prediction"
+    ],
+    [
+      "s14",
+      false,
+      "gold column(s) [0] not found in prediction"
+    ],
+    [
+      "s15",
+      false,
+      "gold column(s) [0] not found in prediction"
+    ],
+    [
+      "s16",
+      false,
+      "gold column(s) [1] not found in prediction"
+    ],
+    [
+      "s17",
+      false,
+      "gold column(s) [0] not found in prediction"
+    ],
+    [
+      "s18",
+      false,
+      "gold column(s) [0] not found in prediction"
+    ],
+    [
+      "s19",
+      true,
+      "match"
+    ],
+    [
+      "s20",
+      true,
+      "match"
+    ],
+    [
+      "f01",
+      false,
+      "gold column(s) [0] not found in prediction"
+    ],
+    [
+      "f02",
+      false,
+      "row count 1 != gold 3"
+    ],
+    [
+      "f03",
+      false,
+      "gold column(s) [0] not found in prediction"
+    ],
+    [
+      "f04",
+      false,
+      "gold column(s) [0] not found in prediction"
+    ],
+    [
+      "f05",
+      false,
+      "gold column(s) [0] not found in prediction"
+    ],
+    [
+      "f06",
+      false,
+      "gold column(s) [0] not found in prediction"
+    ],
+    [
+      "f07",
+      false,
+      "row count 1 != gold 3"
+    ],
+    [
+      "f08",
+      false,
+      "gold column(s) [0] not found in prediction"
+    ],
+    [
+      "f09",
+      false,
+      "gold column(s) [0] not found in prediction"
+    ],
+    [
+      "f10",
+      true,
+      "match"
+    ],
+    [
+      "f11",
+      true,
+      "match"
+    ],
+    [
+      "f12",
+      false,
+      "row count 1 != gold 4"
+    ],
+    [
+      "f13",
+      true,
+      "match"
+    ],
+    [
+      "r01",
+      true,
+      "match"
+    ],
+    [
+      "r02",
+      true,
+      "match"
+    ],
+    [
+      "r03",
+      true,
+      "match"
+    ],
+    [
+      "r04",
+      false,
+      "gold column(s) [0] not found in prediction"
+    ],
+    [
+      "r05",
+      false,
+      "gold column(s) [0] not found in prediction"
+    ],
+    [
+      "r06",
+      false,
+      "row count 1 != gold 3"
+    ],
+    [
+      "r07",
+      false,
+      "row count 1 != gold 3"
+    ],
+    [
+      "r08",
+      false,
+      "gold column(s) [0] not found in prediction"
+    ],
+    [
+      "r09",
+      true,
+      "match"
+    ],
+    [
+      "r10",
+      false,
+      "gold column(s) [0, 1] not found in prediction"
+    ],
+    [
+      "p01",
+      true,
+      "match"
+    ],
+    [
+      "p02",
+      true,
+      "match"
+    ],
+    [
+      "p03",
+      true,
+      "match"
+    ],
+    [
+      "c01",
+      true,
+      "match"
+    ],
+    [
+      "c02",
+      true,
+      "match"
+    ],
+    [
+      "c03",
+      true,
+      "match"
+    ],
+    [
+      "c04",
+      true,
+      "match"
+    ],
+    [
+      "i01",
+      true,
+      "match"
+    ],
+    [
+      "i02",
+      true,
+      "match"
+    ],
+    [
+      "i03",
+      true,
+      "match"
+    ],
+    [
+      "i04",
+      true,
+      "match"
+    ],
+    [
+      "i05",
+      false,
+      "gold column(s) [0] not found in prediction"
+    ],
+    [
+      "i06",
+      false,
+      "gold column(s) [0] not found in prediction"
+    ],
+    [
+      "i07",
+      true,
+      "match"
+    ],
+    [
+      "h01",
+      true,
+      "match"
+    ],
+    [
+      "h02",
+      true,
+      "match"
+    ],
+    [
+      "h03",
+      false,
+      "gold column(s) [0] not found in prediction"
+    ],
+    [
+      "m01",
+      false,
+      "gold column(s) [0] not found in prediction"
+    ],
+    [
+      "m02",
+      true,
+      "match"
+    ],
+    [
+      "m03",
+      false,
+      "gold column(s) [0] not found in prediction"
+    ],
+    [
+      "m04",
+      false,
+      "gold column(s) [0] not found in prediction"
+    ]
+  ]
+}

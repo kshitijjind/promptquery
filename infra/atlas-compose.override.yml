@@ -1,0 +1,9 @@
+# Remaps Atlas' host ports so they do not clash with other local services.
+# Postgres -> 55433, backend API -> 18000. Container-internal ports are unchanged.
+services:
+  db:
+    ports: !override
+      - "55433:5432"
+  backend:
+    ports: !override
+      - "18000:8000"

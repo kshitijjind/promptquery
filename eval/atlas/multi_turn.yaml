@@ -1,0 +1,306 @@
+# Multi-turn evaluation conversations (up to six sequential prompts each).
+# Later prompts depend on earlier prompts AND on earlier results. TODAY = 2026-09-27.
+# `gold_sql` may be a list: any listed interpretation is accepted.
+
+- id: mt01
+  tenant: volume
+  turns:
+    - question: Show me total sales in 2025
+      gold_sql: |
+        SELECT ROUND(SUM(total_amount),2) FROM sales_orders
+        WHERE status NOT IN ('DRAFT','CANCELLED','CREDIT_BLOCKED') AND order_date >= '2025-01-01' AND order_date < '2026-01-01'
+    - question: Break that down by customer
+      gold_sql: |
+        SELECT c.name, ROUND(SUM(so.total_amount),2) FROM sales_orders so JOIN sales_customers c ON c.id=so.customer_id
+        WHERE so.status NOT IN ('DRAFT','CANCELLED','CREDIT_BLOCKED') AND so.order_date >= '2025-01-01' AND so.order_date < '2026-01-01'
+        GROUP BY c.id, c.name
+    - question: Only show top 5
+      ordered: true
+      gold_sql: |
+        SELECT c.name, ROUND(SUM(so.total_amount),2) s FROM sales_orders so JOIN sales_customers c ON c.id=so.customer_id
+        WHERE so.status NOT IN ('DRAFT','CANCELLED','CREDIT_BLOCKED') AND so.order_date >= '2025-01-01' AND so.order_date < '2026-01-01'
+        GROUP BY c.id, c.name ORDER BY s DESC LIMIT 5
+    - question: What about last year?
+      ordered: true
+      gold_sql: |
+        SELECT c.name, ROUND(SUM(so.total_amount),2) s FROM sales_orders so JOIN sales_customers c ON c.id=so.customer_id
+        WHERE so.status NOT IN ('DRAFT','CANCELLED','CREDIT_BLOCKED') AND so.order_date >= '2024-01-01' AND so.order_date < '2025-01-01'
+        GROUP BY c.id, c.name ORDER BY s DESC LIMIT 5
+    - question: Compare it with 2025
+      gold_sql:
+        - |
+          WITH top24 AS (SELECT so.customer_id FROM sales_orders so
+            WHERE so.status NOT IN ('DRAFT','CANCELLED','CREDIT_BLOCKED') AND so.order_date >= '2024-01-01' AND so.order_date < '2025-01-01'
+            GROUP BY so.customer_id ORDER BY SUM(so.total_amount) DESC LIMIT 5)
+          SELECT c.name,
+            ROUND(SUM(so.total_amount) FILTER (WHERE so.order_date >= '2024-01-01' AND so.order_date < '2025-01-01'),2),
+            ROUND(SUM(so.total_amount) FILTER (WHERE so.order_date >= '2025-01-01' AND so.order_date < '2026-01-01'),2)
+          FROM sales_orders so JOIN sales_customers c ON c.id=so.customer_id
+          WHERE so.customer_id IN (SELECT customer_id FROM top24) AND so.status NOT IN ('DRAFT','CANCELLED','CREDIT_BLOCKED')
+          GROUP BY c.id, c.name
+    - question: Which customer had the biggest increase?
+      gold_sql:
+        - |
+          WITH top24 AS (SELECT so.customer_id FROM sales_orders so
+            WHERE so.status NOT IN ('DRAFT','CANCELLED','CREDIT_BLOCKED') AND so.order_date >= '2024-01-01' AND so.order_date < '2025-01-01'
+            GROUP BY so.customer_id ORDER BY SUM(so.total_amount) DESC LIMIT 5)
+          SELECT c.name FROM sales_orders so JOIN sales_customers c ON c.id=so.customer_id
+          WHERE so.customer_id IN (SELECT customer_id FROM top24) AND so.status NOT IN ('DRAFT','CANCELLED','CREDIT_BLOCKED')
+          GROUP BY c.id, c.name
+          ORDER BY COALESCE(SUM(so.total_amount) FILTER (WHERE so.order_date >= '2025-01-01' AND so.order_date < '2026-01-01'),0)
+                 - COALESCE(SUM(so.total_amount) FILTER (WHERE so.order_date >= '2024-01-01' AND so.order_date < '2025-01-01'),0) DESC LIMIT 1
+        - |
+          SELECT c.name FROM sales_orders so JOIN sales_customers c ON c.id=so.customer_id
+          WHERE so.status NOT IN ('DRAFT','CANCELLED','CREDIT_BLOCKED')
+          GROUP BY c.id, c.name
+          ORDER BY COALESCE(SUM(so.total_amount) FILTER (WHERE so.order_date >= '2025-01-01' AND so.order_date < '2026-01-01'),0)
+                 - COALESCE(SUM(so.total_amount) FILTER (WHERE so.order_date >= '2024-01-01' AND so.order_date < '2025-01-01'),0) DESC LIMIT 1
+
+- id: mt02
+  tenant: volume
+  turns:
+    - question: Monthly sales for 2025
+      ordered: true
+      gold_sql: |
+        SELECT date_trunc('month', order_date)::date, ROUND(SUM(total_amount),2) FROM sales_orders
+        WHERE status NOT IN ('DRAFT','CANCELLED','CREDIT_BLOCKED') AND order_date >= '2025-01-01' AND order_date < '2026-01-01'
+        GROUP BY 1 ORDER BY 1
+    - question: Which month was the best?
+      gold_sql: |
+        SELECT date_trunc('month', order_date)::date FROM sales_orders
+        WHERE status NOT IN ('DRAFT','CANCELLED','CREDIT_BLOCKED') AND order_date >= '2025-01-01' AND order_date < '2026-01-01'
+        GROUP BY 1 ORDER BY SUM(total_amount) DESC LIMIT 1
+    - question: How many orders were placed that month?
+      gold_sql: |
+        WITH m AS (SELECT date_trunc('month', order_date) m FROM sales_orders
+          WHERE status NOT IN ('DRAFT','CANCELLED','CREDIT_BLOCKED') AND order_date >= '2025-01-01' AND order_date < '2026-01-01'
+          GROUP BY 1 ORDER BY SUM(total_amount) DESC LIMIT 1)
+        SELECT COUNT(*) FROM sales_orders, m WHERE status NOT IN ('DRAFT','CANCELLED','CREDIT_BLOCKED')
+          AND order_date >= m.m AND order_date < m.m + INTERVAL '1 month'
+    - question: Who was the top customer in that month?
+      gold_sql: |
+        WITH m AS (SELECT date_trunc('month', order_date) m FROM sales_orders
+          WHERE status NOT IN ('DRAFT','CANCELLED','CREDIT_BLOCKED') AND order_date >= '2025-01-01' AND order_date < '2026-01-01'
+          GROUP BY 1 ORDER BY SUM(total_amount) DESC LIMIT 1)
+        SELECT c.name FROM sales_orders so JOIN sales_customers c ON c.id=so.customer_id, m
+        WHERE so.status NOT IN ('DRAFT','CANCELLED','CREDIT_BLOCKED') AND so.order_date >= m.m AND so.order_date < m.m + INTERVAL '1 month'
+        GROUP BY c.id, c.name ORDER BY SUM(so.total_amount) DESC LIMIT 1
+    - question: What was that customer's total sales for the whole of 2025?
+      gold_sql: |
+        WITH m AS (SELECT date_trunc('month', order_date) m FROM sales_orders
+          WHERE status NOT IN ('DRAFT','CANCELLED','CREDIT_BLOCKED') AND order_date >= '2025-01-01' AND order_date < '2026-01-01'
+          GROUP BY 1 ORDER BY SUM(total_amount) DESC LIMIT 1),
+        top AS (SELECT so.customer_id FROM sales_orders so, m
+          WHERE so.status NOT IN ('DRAFT','CANCELLED','CREDIT_BLOCKED') AND so.order_date >= m.m AND so.order_date < m.m + INTERVAL '1 month'
+          GROUP BY so.customer_id ORDER BY SUM(so.total_amount) DESC LIMIT 1)
+        SELECT ROUND(SUM(total_amount),2) FROM sales_orders WHERE customer_id=(SELECT customer_id FROM top)
+          AND status NOT IN ('DRAFT','CANCELLED','CREDIT_BLOCKED') AND order_date >= '2025-01-01' AND order_date < '2026-01-01'
+
+- id: mt03
+  tenant: acme
+  turns:
+    - question: How much do customers owe us?
+      gold_sql: |
+        SELECT ROUND(SUM(open_amount),2) FROM fin_customer_invoices WHERE status IN ('POSTED','PARTIALLY_PAID') AND open_amount > 0
+    - question: Split it by customer
+      gold_sql: |
+        SELECT partner_name, ROUND(SUM(open_amount),2) FROM fin_customer_invoices WHERE status IN ('POSTED','PARTIALLY_PAID') AND open_amount > 0
+        GROUP BY partner_id, partner_name
+    - question: Which of those invoices are overdue?
+      gold_sql: |
+        SELECT invoice_number FROM fin_customer_invoices
+        WHERE status IN ('POSTED','PARTIALLY_PAID') AND open_amount > 0 AND due_date < '2026-09-27'
+    - question: How many days overdue is each one?
+      gold_sql: |
+        SELECT invoice_number, DATE '2026-09-27' - due_date FROM fin_customer_invoices
+        WHERE status IN ('POSTED','PARTIALLY_PAID') AND open_amount > 0 AND due_date < '2026-09-27'
+    - question: Only show the ones for Contoso
+      gold_sql: |
+        SELECT invoice_number, DATE '2026-09-27' - due_date FROM fin_customer_invoices
+        WHERE status IN ('POSTED','PARTIALLY_PAID') AND open_amount > 0 AND due_date < '2026-09-27' AND partner_name ILIKE '%contoso%'
+    - question: How much has Contoso paid us so far?
+      gold_sql: |
+        SELECT ROUND(SUM(r.amount),2) FROM fin_customer_receipts r JOIN sales_customers c ON c.id=r.partner_id
+        WHERE c.name ILIKE '%contoso%' AND r.status='POSTED'
+
+- id: mt04
+  tenant: acme
+  turns:
+    - question: What's our stock value per item?
+      gold_sql:   # stocked items only, or every item with 0 for the service item
+      - SELECT i.name, ROUND(SUM(iv.total_value),2) FROM inv_item_valuations iv JOIN inv_items i ON i.id=iv.item_id GROUP BY i.id, i.name
+      - |
+        SELECT i.name, ROUND(COALESCE(SUM(iv.total_value),0),2) FROM inv_items i
+        LEFT JOIN inv_item_valuations iv ON iv.item_id=i.id GROUP BY i.id, i.name
+    - question: Which one is the most valuable?
+      gold_sql: |
+        SELECT i.name FROM inv_item_valuations iv JOIN inv_items i ON i.id=iv.item_id GROUP BY i.id, i.name ORDER BY SUM(iv.total_value) DESC LIMIT 1
+    - question: How many units of it have we sold?
+      gold_sql:   # Red Gadget is manufactured, never sold: NULL, 0 or "no rows" are all correct
+        - SELECT NULL::numeric
+        - SELECT 0
+        - SELECT 1 WHERE false
+        - SELECT 'Red Gadget', 0
+    - question: And how many did we buy from suppliers?
+      gold_sql:   # never purchased either
+        - SELECT NULL::numeric
+        - SELECT 0
+        - SELECT 1 WHERE false
+        - SELECT 'Red Gadget', 0
+    - question: Show its stock movements by type
+      gold_sql: |
+        WITH top AS (SELECT iv.item_id FROM inv_item_valuations iv GROUP BY iv.item_id ORDER BY SUM(iv.total_value) DESC LIMIT 1)
+        SELECT move_type, SUM(quantity) FROM inv_stock_moves WHERE item_id=(SELECT item_id FROM top) GROUP BY move_type
+
+- id: mt05
+  tenant: volume
+  turns:
+    - question: What was revenue in 2024?
+      gold_sql: |
+        SELECT ROUND(SUM(jl.functional_credit_amount-jl.functional_debit_amount),2) FROM fin_journal_lines jl JOIN fin_accounts a ON a.id=jl.account_id
+        WHERE jl.is_posted AND a.account_type='REVENUE' AND jl.posting_date >= '2024-01-01' AND jl.posting_date < '2025-01-01'
+    - question: And in 2025?
+      gold_sql: |
+        SELECT ROUND(SUM(jl.functional_credit_amount-jl.functional_debit_amount),2) FROM fin_journal_lines jl JOIN fin_accounts a ON a.id=jl.account_id
+        WHERE jl.is_posted AND a.account_type='REVENUE' AND jl.posting_date >= '2025-01-01' AND jl.posting_date < '2026-01-01'
+    - question: What's the growth rate?
+      gold_sql: |
+        SELECT ROUND(100.0*(SUM(jl.functional_credit_amount-jl.functional_debit_amount) FILTER (WHERE jl.posting_date >= '2025-01-01' AND jl.posting_date < '2026-01-01')
+          - SUM(jl.functional_credit_amount-jl.functional_debit_amount) FILTER (WHERE jl.posting_date >= '2024-01-01' AND jl.posting_date < '2025-01-01'))
+          / NULLIF(SUM(jl.functional_credit_amount-jl.functional_debit_amount) FILTER (WHERE jl.posting_date >= '2024-01-01' AND jl.posting_date < '2025-01-01'),0),2)
+        FROM fin_journal_lines jl JOIN fin_accounts a ON a.id=jl.account_id WHERE jl.is_posted AND a.account_type='REVENUE'
+    - question: Show 2025 revenue by quarter
+      ordered: true
+      gold_sql: |
+        SELECT date_trunc('quarter', jl.posting_date)::date, ROUND(SUM(jl.functional_credit_amount-jl.functional_debit_amount),2) FROM fin_journal_lines jl JOIN fin_accounts a ON a.id=jl.account_id
+        WHERE jl.is_posted AND a.account_type='REVENUE' AND jl.posting_date >= '2025-01-01' AND jl.posting_date < '2026-01-01' GROUP BY 1 ORDER BY 1
+    - question: Which quarter was the weakest?
+      gold_sql: |
+        SELECT date_trunc('quarter', jl.posting_date)::date FROM fin_journal_lines jl JOIN fin_accounts a ON a.id=jl.account_id
+        WHERE jl.is_posted AND a.account_type='REVENUE' AND jl.posting_date >= '2025-01-01' AND jl.posting_date < '2026-01-01'
+        GROUP BY 1 ORDER BY SUM(jl.functional_credit_amount-jl.functional_debit_amount) ASC LIMIT 1
+    - question: What was the cost of goods sold in that quarter?
+      gold_sql: |
+        WITH q AS (SELECT date_trunc('quarter', jl.posting_date) q FROM fin_journal_lines jl JOIN fin_accounts a ON a.id=jl.account_id
+          WHERE jl.is_posted AND a.account_type='REVENUE' AND jl.posting_date >= '2025-01-01' AND jl.posting_date < '2026-01-01'
+          GROUP BY 1 ORDER BY SUM(jl.functional_credit_amount-jl.functional_debit_amount) ASC LIMIT 1)
+        SELECT ROUND(SUM(jl.functional_debit_amount-jl.functional_credit_amount),2) FROM fin_journal_lines jl, q
+        WHERE jl.is_posted AND jl.account_id IN (SELECT cogs_account_id FROM inv_item_categories)
+          AND jl.posting_date >= q.q AND jl.posting_date < q.q + INTERVAL '3 months'
+
+- id: mt06
+  tenant: acme
+  turns:
+    - question: Which products do we sell the most of?
+      gold_sql: |
+        SELECT i.name, SUM(sol.ordered_quantity) FROM sales_order_lines sol JOIN sales_orders so ON so.id=sol.order_id JOIN inv_items i ON i.id=sol.item_id
+        WHERE so.status NOT IN ('DRAFT','CANCELLED','CREDIT_BLOCKED') GROUP BY i.id, i.name
+    - question: Who buys the top one the most?
+      gold_sql: |
+        WITH top AS (SELECT sol.item_id FROM sales_order_lines sol JOIN sales_orders so ON so.id=sol.order_id
+          WHERE so.status NOT IN ('DRAFT','CANCELLED','CREDIT_BLOCKED') GROUP BY sol.item_id ORDER BY SUM(sol.ordered_quantity) DESC LIMIT 1)
+        SELECT c.name FROM sales_order_lines sol JOIN sales_orders so ON so.id=sol.order_id JOIN sales_customers c ON c.id=so.customer_id
+        WHERE sol.item_id=(SELECT item_id FROM top) AND so.status NOT IN ('DRAFT','CANCELLED','CREDIT_BLOCKED')
+        GROUP BY c.id, c.name ORDER BY SUM(sol.ordered_quantity) DESC LIMIT 1
+    - question: What's that customer's total order value?
+      gold_sql: |
+        SELECT ROUND(SUM(so.total_amount),2) FROM sales_orders so JOIN sales_customers c ON c.id=so.customer_id
+        WHERE c.name='Northwind Traders' AND so.status NOT IN ('DRAFT','CANCELLED','CREDIT_BLOCKED')
+    - question: How much do they still owe us?
+      gold_sql: |
+        SELECT ROUND(SUM(open_amount),2) FROM fin_customer_invoices WHERE partner_name='Northwind Traders'
+          AND status IN ('POSTED','PARTIALLY_PAID') AND open_amount > 0
+    - question: List those open invoices with their due dates
+      gold_sql: |
+        SELECT invoice_number, due_date FROM fin_customer_invoices WHERE partner_name='Northwind Traders'
+          AND status IN ('POSTED','PARTIALLY_PAID') AND open_amount > 0
+
+- id: mt07
+  tenant: volume
+  turns:
+    - question: How many customers do we have?
+      gold_sql: SELECT COUNT(*) FROM sales_customers
+    - question: How many of them placed orders in 2026?
+      gold_sql: |
+        SELECT COUNT(DISTINCT customer_id) FROM sales_orders WHERE status NOT IN ('DRAFT','CANCELLED','CREDIT_BLOCKED')
+          AND order_date >= '2026-01-01' AND order_date < '2027-01-01'
+    - question: List the top 3 of them by 2026 sales
+      ordered: true
+      gold_sql: |
+        SELECT c.name, ROUND(SUM(so.total_amount),2) s FROM sales_orders so JOIN sales_customers c ON c.id=so.customer_id
+        WHERE so.status NOT IN ('DRAFT','CANCELLED','CREDIT_BLOCKED') AND so.order_date >= '2026-01-01' AND so.order_date < '2027-01-01'
+        GROUP BY c.id, c.name ORDER BY s DESC LIMIT 3
+    - question: What percentage of total 2026 sales do these three account for together?
+      gold_sql: |
+        WITH s AS (SELECT so.customer_id, SUM(so.total_amount) v FROM sales_orders so
+          WHERE so.status NOT IN ('DRAFT','CANCELLED','CREDIT_BLOCKED') AND so.order_date >= '2026-01-01' AND so.order_date < '2027-01-01'
+          GROUP BY so.customer_id)
+        SELECT ROUND(100.0 * (SELECT SUM(v) FROM (SELECT v FROM s ORDER BY v DESC LIMIT 3) t) / (SELECT SUM(v) FROM s), 2)
+
+- id: mt08
+  tenant: acme
+  turns:
+    - question: Show purchase order spend by vendor
+      gold_sql: |
+        SELECT v.name, ROUND(SUM(po.total_amount),2) FROM proc_purchase_orders po JOIN proc_vendors v ON v.id=po.vendor_id
+        WHERE po.status NOT IN ('DRAFT','PENDING_APPROVAL','REJECTED','CANCELLED') GROUP BY v.id, v.name
+    - question: Which vendor is the biggest?
+      gold_sql: |
+        SELECT v.name FROM proc_purchase_orders po JOIN proc_vendors v ON v.id=po.vendor_id
+        WHERE po.status NOT IN ('DRAFT','PENDING_APPROVAL','REJECTED','CANCELLED') GROUP BY v.id, v.name ORDER BY SUM(po.total_amount) DESC LIMIT 1
+    - question: How many purchase orders did we place with them?
+      gold_sql: |
+        SELECT COUNT(*) FROM proc_purchase_orders po JOIN proc_vendors v ON v.id=po.vendor_id
+        WHERE v.name='Acme Supplies Co' AND po.status NOT IN ('DRAFT','PENDING_APPROVAL','REJECTED','CANCELLED')
+    - question: How much do we still owe them?
+      gold_sql: |
+        SELECT ROUND(COALESCE(SUM(open_amount),0),2) FROM fin_vendor_bills WHERE partner_name='Acme Supplies Co'
+          AND status IN ('POSTED','PARTIALLY_PAID') AND open_amount > 0
+    - question: And how much have we paid them in total?
+      gold_sql: |
+        SELECT ROUND(COALESCE(SUM(amount),0),2) FROM fin_vendor_payments WHERE partner_name='Acme Supplies Co' AND status='POSTED'
+
+- id: mt09
+  tenant: volume
+  turns:
+    - question: Total sales in 2024 by month
+      ordered: true
+      gold_sql: |
+        SELECT date_trunc('month', order_date)::date, ROUND(SUM(total_amount),2) FROM sales_orders
+        WHERE status NOT IN ('DRAFT','CANCELLED','CREDIT_BLOCKED') AND order_date >= '2024-01-01' AND order_date < '2025-01-01'
+        GROUP BY 1 ORDER BY 1
+    - question: Now, how many units were issued from stock in 2024?
+      gold_sql: |
+        SELECT SUM(quantity) FROM inv_stock_moves WHERE move_type='ISSUE' AND posted AND move_date >= '2024-01-01' AND move_date < '2025-01-01'
+    - question: Break that down by quarter
+      ordered: true
+      gold_sql: |
+        SELECT date_trunc('quarter', move_date)::date, SUM(quantity) FROM inv_stock_moves
+        WHERE move_type='ISSUE' AND posted AND move_date >= '2024-01-01' AND move_date < '2025-01-01' GROUP BY 1 ORDER BY 1
+    - question: How many items are in our catalogue?
+      gold_sql: SELECT COUNT(*) FROM inv_items
+
+- id: mt10
+  tenant: acme
+  turns:
+    - question: Show me this year's expenses by account
+      gold_sql: |
+        SELECT a.name, ROUND(SUM(jl.functional_debit_amount-jl.functional_credit_amount),2) FROM fin_journal_lines jl JOIN fin_accounts a ON a.id=jl.account_id
+        WHERE jl.is_posted AND a.account_type='EXPENSE' AND jl.posting_date >= '2026-01-01' AND jl.posting_date < '2027-01-01' GROUP BY a.id, a.name
+    - question: What's the total?
+      gold_sql: |
+        SELECT ROUND(SUM(jl.functional_debit_amount-jl.functional_credit_amount),2) FROM fin_journal_lines jl JOIN fin_accounts a ON a.id=jl.account_id
+        WHERE jl.is_posted AND a.account_type='EXPENSE' AND jl.posting_date >= '2026-01-01' AND jl.posting_date < '2027-01-01'
+    - question: And revenue for the same period?
+      gold_sql: |
+        SELECT ROUND(SUM(jl.functional_credit_amount-jl.functional_debit_amount),2) FROM fin_journal_lines jl JOIN fin_accounts a ON a.id=jl.account_id
+        WHERE jl.is_posted AND a.account_type='REVENUE' AND jl.posting_date >= '2026-01-01' AND jl.posting_date < '2027-01-01'
+    - question: So what's our net income?
+      gold_sql: |
+        SELECT ROUND(SUM(jl.functional_credit_amount-jl.functional_debit_amount),2) FROM fin_journal_lines jl JOIN fin_accounts a ON a.id=jl.account_id
+        WHERE jl.is_posted AND a.account_type IN ('REVENUE','EXPENSE') AND jl.posting_date >= '2026-01-01' AND jl.posting_date < '2027-01-01'
+    - question: Show revenue by month for that period
+      ordered: true
+      gold_sql: |
+        SELECT date_trunc('month', jl.posting_date)::date, ROUND(SUM(jl.functional_credit_amount-jl.functional_debit_amount),2) FROM fin_journal_lines jl JOIN fin_accounts a ON a.id=jl.account_id
+        WHERE jl.is_posted AND a.account_type='REVENUE' AND jl.posting_date >= '2026-01-01' AND jl.posting_date < '2027-01-01' GROUP BY 1 ORDER BY 1

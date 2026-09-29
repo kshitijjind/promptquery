@@ -1,0 +1,2919 @@
+{
+  "summary": {
+    "schema_name": "rnacentral",
+    "n_tables": 216,
+    "encoding": "o200k_base",
+    "token_model": "gpt-4o",
+    "selector_model": "gpt-4o-mini",
+    "params": {
+      "top_k": 50,
+      "select_n": 15,
+      "max_tables": 25
+    },
+    "total_questions": 50,
+    "avg_tokens_naive": 28175.0,
+    "avg_tokens_pq_v1": 2594.7,
+    "avg_tokens_pq_v2": 1621.5,
+    "factor_naive_over_v1": 10.86,
+    "factor_naive_over_v2": 17.38,
+    "min_tokens_pq_v2": 214,
+    "max_tokens_pq_v2": 3610
+  },
+  "raw": [
+    {
+      "question": "show me the latest blog posts",
+      "must_retrieve": [
+        "blog"
+      ],
+      "naive": {
+        "tables": 216,
+        "prompt_tokens": 28175
+      },
+      "pq_v1": {
+        "tables": 1,
+        "table_names": [
+          "rnacen.blog"
+        ],
+        "prompt_tokens": 214
+      },
+      "pq_v2": {
+        "tables": 1,
+        "table_names": [
+          "rnacen.blog"
+        ],
+        "prompt_tokens": 214
+      }
+    },
+    {
+      "question": "list all source databases that contribute to RNAcentral",
+      "must_retrieve": [
+        "rnc_database"
+      ],
+      "naive": {
+        "tables": 216,
+        "prompt_tokens": 28175
+      },
+      "pq_v1": {
+        "tables": 25,
+        "table_names": [
+          "rnacen.rnc_release",
+          "rnacen.rnc_database",
+          "rnacen.rnc_related_sequences",
+          "rnacen.pipeline_tracking_qa_scan",
+          "rnacen.rnc_chemical_components",
+          "rnacen_django_test.rnc_chemical_components",
+          "rnacen.r2dt_models",
+          "rnacen.validate_layout_hits",
+          "rnacen.r2dt_models_backup",
+          "rnacen.rnc_database_references",
+          "rnacen.rnc_database_json_stats",
+          "rnacen_django_test.rnc_database_json_stats",
+          "rnacen.xref",
+          "rnacen_django_test.rnc_database",
+          "rnacen_django_test.xref",
+          "rnacen.rnc_feedback_target_assemblies",
+          "rnacen_django_test.rnc_release",
+          "rnacen.publications",
+          "rnacen.xref_p10_deleted",
+          "rnacen.xref_p11_deleted",
+          "rnacen.xref_p12_deleted",
+          "rnacen.xref_p13_deleted",
+          "rnacen.xref_p14_deleted",
+          "rnacen.xref_p15_deleted",
+          "rnacen.xref_p16_deleted"
+        ],
+        "prompt_tokens": 3056
+      },
+      "pq_v2": {
+        "tables": 7,
+        "table_names": [
+          "rnacen_django_test.rnc_database",
+          "rnacen.rnc_database_references",
+          "rnacen_django_test.rnc_database_json_stats",
+          "rnacen.rnc_database",
+          "rnacen.rnc_references",
+          "rnacen_django_test.rnc_release",
+          "rnacen_django_test.xref"
+        ],
+        "prompt_tokens": 1043
+      }
+    },
+    {
+      "question": "show me the available ontology terms",
+      "must_retrieve": [
+        "ontology_terms"
+      ],
+      "naive": {
+        "tables": 216,
+        "prompt_tokens": 28175
+      },
+      "pq_v1": {
+        "tables": 25,
+        "table_names": [
+          "rnacen.ontology_terms",
+          "rnacen.go_term_annotations",
+          "rnacen.rfam_go_terms",
+          "rnacen.insdc_so_term_mapping",
+          "rnacen.rnc_rna_precomputed",
+          "rnacen.go_term_publication_map",
+          "rnacen.r2dt_models",
+          "rnacen.rnc_accessions",
+          "rnacen.rfam_models",
+          "rnacen.r2dt_models_backup",
+          "rnacen.rnc_release",
+          "rnacen.rnc_references",
+          "rnacen.rfam_clans",
+          "rnacen.cpat_results",
+          "rnacen.ensembl_compara",
+          "rnacen.pipeline_tracking_genome_mapping",
+          "rnacen.r2dt_model_extra_data",
+          "rnacen.r2dt_results",
+          "rnacen.rfam_model_hits",
+          "rnacen.rnc_accession_sequence_feature",
+          "rnacen.rnc_accession_sequence_region",
+          "rnacen.rnc_feedback_overlap",
+          "rnacen.rnc_gene_status",
+          "rnacen.rnc_interactions",
+          "rnacen.rnc_locus_members"
+        ],
+        "prompt_tokens": 2732
+      },
+      "pq_v2": {
+        "tables": 25,
+        "table_names": [
+          "rnacen.ontology_terms",
+          "rnacen.go_term_annotations",
+          "rnacen.rfam_go_terms",
+          "rnacen.insdc_so_term_mapping",
+          "rnacen.rnc_rna_precomputed",
+          "rnacen.go_term_publication_map",
+          "rnacen.r2dt_models",
+          "rnacen.rnc_accessions",
+          "rnacen.rfam_models",
+          "rnacen.r2dt_models_backup",
+          "rnacen.rnc_release",
+          "rnacen.rnc_references",
+          "rnacen.rfam_clans",
+          "rnacen.cpat_results",
+          "rnacen.ensembl_compara",
+          "rnacen.pipeline_tracking_genome_mapping",
+          "rnacen.r2dt_model_extra_data",
+          "rnacen.r2dt_results",
+          "rnacen.rfam_model_hits",
+          "rnacen.rnc_accession_sequence_feature",
+          "rnacen.rnc_accession_sequence_region",
+          "rnacen.rnc_feedback_overlap",
+          "rnacen.rnc_gene_status",
+          "rnacen.rnc_interactions",
+          "rnacen.rnc_locus_members"
+        ],
+        "prompt_tokens": 2732
+      }
+    },
+    {
+      "question": "list every Rfam clan",
+      "must_retrieve": [
+        "rfam_clans"
+      ],
+      "naive": {
+        "tables": 216,
+        "prompt_tokens": 28175
+      },
+      "pq_v1": {
+        "tables": 9,
+        "table_names": [
+          "rnacen.rfam_clans",
+          "rnacen.rfam_models",
+          "rnacen.rfam_go_terms",
+          "rnacen.rfam_analyzed_sequences",
+          "rnacen.rfam_model_hits",
+          "rnacen.qa_status",
+          "rnacen.ontology_terms",
+          "rnacen.rna",
+          "rnacen.rnc_sequence_features"
+        ],
+        "prompt_tokens": 1145
+      },
+      "pq_v2": {
+        "tables": 9,
+        "table_names": [
+          "rnacen.rfam_clans",
+          "rnacen.rfam_models",
+          "rnacen.rfam_go_terms",
+          "rnacen.rfam_analyzed_sequences",
+          "rnacen.rfam_model_hits",
+          "rnacen.qa_status",
+          "rnacen.ontology_terms",
+          "rnacen.rna",
+          "rnacen.rnc_sequence_features"
+        ],
+        "prompt_tokens": 1145
+      }
+    },
+    {
+      "question": "show me all Rfam family models",
+      "must_retrieve": [
+        "rfam_models"
+      ],
+      "naive": {
+        "tables": 216,
+        "prompt_tokens": 28175
+      },
+      "pq_v1": {
+        "tables": 17,
+        "table_names": [
+          "rnacen.rfam_models",
+          "rnacen.rfam_model_hits",
+          "rnacen.rfam_clans",
+          "rnacen.rfam_go_terms",
+          "rnacen.rfam_analyzed_sequences",
+          "rnacen.r2dt_models",
+          "rnacen.r2dt_models_backup",
+          "rnacen.r2dt_model_extra_data",
+          "rnacen.validate_layout_hits",
+          "rnacen.r2dt_results",
+          "rnacen_django_test.django_content_type",
+          "rnacen.qa_status",
+          "rnacen.pipeline_tracking_qa_scan",
+          "rnacen.ontology_terms",
+          "rnacen.rnc_sequence_features",
+          "rnacen.rna",
+          "rnacen_django_test.auth_permission"
+        ],
+        "prompt_tokens": 1722
+      },
+      "pq_v2": {
+        "tables": 17,
+        "table_names": [
+          "rnacen.rfam_models",
+          "rnacen.rfam_model_hits",
+          "rnacen.rfam_clans",
+          "rnacen.rfam_go_terms",
+          "rnacen.rfam_analyzed_sequences",
+          "rnacen.r2dt_models",
+          "rnacen.r2dt_models_backup",
+          "rnacen.r2dt_model_extra_data",
+          "rnacen.validate_layout_hits",
+          "rnacen.r2dt_results",
+          "rnacen_django_test.django_content_type",
+          "rnacen.qa_status",
+          "rnacen.pipeline_tracking_qa_scan",
+          "rnacen.ontology_terms",
+          "rnacen.rnc_sequence_features",
+          "rnacen.rna",
+          "rnacen_django_test.auth_permission"
+        ],
+        "prompt_tokens": 1722
+      }
+    },
+    {
+      "question": "list the Ensembl assemblies",
+      "must_retrieve": [
+        "ensembl_assembly"
+      ],
+      "naive": {
+        "tables": 216,
+        "prompt_tokens": 28175
+      },
+      "pq_v1": {
+        "tables": 23,
+        "table_names": [
+          "rnacen.ensembl_assembly",
+          "rnacen.rnc_feedback_target_assemblies",
+          "rnacen.ensembl_pseudogene_regions",
+          "rnacen.ensembl_coordinate_systems",
+          "rnacen.ensembl_compara",
+          "rnacen.litscan_ensembl_ids",
+          "rnacen.ensembl_pseudogene_exons",
+          "rnacen.ensembl_import_tracking",
+          "rnacen.rnc_gene_status",
+          "rnacen.rnc_sequence_regions",
+          "rnacen.ensembl_stable_prefixes",
+          "rnacen.rnc_feedback_overlap",
+          "rnacen.rnc_locus",
+          "rnacen.pipeline_tracking_genome_mapping",
+          "rnacen.rnc_sequence_regions_active",
+          "rnacen.sequence_region_urs_counts",
+          "rnacen.rnc_sequence_regions_active_provided",
+          "rnacen.rnc_sequence_regions_active_mapped",
+          "rnacen.rnc_database",
+          "rnacen.rnc_rna_precomputed",
+          "rnacen.rnc_accession_sequence_region",
+          "rnacen.rnc_locus_members",
+          "rnacen.rnc_sequence_exons"
+        ],
+        "prompt_tokens": 2128
+      },
+      "pq_v2": {
+        "tables": 8,
+        "table_names": [
+          "rnacen.ensembl_assembly",
+          "rnacen.ensembl_coordinate_systems",
+          "rnacen.ensembl_pseudogene_regions",
+          "rnacen.rnc_feedback_overlap",
+          "rnacen.rnc_feedback_target_assemblies",
+          "rnacen.rnc_gene_status",
+          "rnacen.rnc_locus",
+          "rnacen.rnc_sequence_regions"
+        ],
+        "prompt_tokens": 1018
+      }
+    },
+    {
+      "question": "show me the registered R2DT models",
+      "must_retrieve": [
+        "r2dt_models"
+      ],
+      "naive": {
+        "tables": 216,
+        "prompt_tokens": 28175
+      },
+      "pq_v1": {
+        "tables": 15,
+        "table_names": [
+          "rnacen.r2dt_models",
+          "rnacen.r2dt_models_backup",
+          "rnacen.rfam_model_hits",
+          "rnacen.r2dt_model_extra_data",
+          "rnacen.validate_layout_hits",
+          "rnacen.r2dt_results",
+          "rnacen.rfam_models",
+          "rnacen.rfam_go_terms",
+          "rnacen_django_test.django_content_type",
+          "rnacen.pipeline_tracking_qa_scan",
+          "rnacen.ontology_terms",
+          "rnacen.rnc_sequence_features",
+          "rnacen.rna",
+          "rnacen.rfam_clans",
+          "rnacen_django_test.auth_permission"
+        ],
+        "prompt_tokens": 1524
+      },
+      "pq_v2": {
+        "tables": 15,
+        "table_names": [
+          "rnacen.r2dt_models",
+          "rnacen.r2dt_models_backup",
+          "rnacen.rfam_model_hits",
+          "rnacen.r2dt_model_extra_data",
+          "rnacen.validate_layout_hits",
+          "rnacen.r2dt_results",
+          "rnacen.rfam_models",
+          "rnacen.rfam_go_terms",
+          "rnacen_django_test.django_content_type",
+          "rnacen.pipeline_tracking_qa_scan",
+          "rnacen.ontology_terms",
+          "rnacen.rnc_sequence_features",
+          "rnacen.rna",
+          "rnacen.rfam_clans",
+          "rnacen_django_test.auth_permission"
+        ],
+        "prompt_tokens": 1524
+      }
+    },
+    {
+      "question": "how many taxonomy records are there",
+      "must_retrieve": [
+        "rnc_taxonomy"
+      ],
+      "naive": {
+        "tables": 216,
+        "prompt_tokens": 28175
+      },
+      "pq_v1": {
+        "tables": 9,
+        "table_names": [
+          "rnacen.rnc_taxonomy",
+          "rnacen.rnc_sequence_features",
+          "pg_stat_statements",
+          "rnacen.rnc_sequence_feature_providers",
+          "rnacen.rnc_sequence_feature_types",
+          "rnacen.rnc_accessions",
+          "rnacen.rna",
+          "rnacen.rfam_model_hits",
+          "rnacen.rnc_accession_sequence_feature"
+        ],
+        "prompt_tokens": 1416
+      },
+      "pq_v2": {
+        "tables": 9,
+        "table_names": [
+          "rnacen.rnc_taxonomy",
+          "rnacen.rnc_sequence_features",
+          "pg_stat_statements",
+          "rnacen.rnc_sequence_feature_providers",
+          "rnacen.rnc_sequence_feature_types",
+          "rnacen.rnc_accessions",
+          "rnacen.rna",
+          "rnacen.rfam_model_hits",
+          "rnacen.rnc_accession_sequence_feature"
+        ],
+        "prompt_tokens": 1416
+      }
+    },
+    {
+      "question": "show release statistics for the most recent release",
+      "must_retrieve": [
+        "release_stats"
+      ],
+      "naive": {
+        "tables": 216,
+        "prompt_tokens": 28175
+      },
+      "pq_v1": {
+        "tables": 25,
+        "table_names": [
+          "rnacen.litscan_statistics",
+          "rnacen.rnc_release",
+          "rnacen_django_test.rnc_release",
+          "rnacen.release_stats",
+          "rnacen_django_test.xref",
+          "rnacen.xref_p10_deleted",
+          "rnacen.xref_p11_deleted",
+          "rnacen.xref_p12_deleted",
+          "rnacen.xref_p13_deleted",
+          "rnacen.xref_p14_deleted",
+          "rnacen.xref_p15_deleted",
+          "rnacen.xref_p16_deleted",
+          "rnacen.xref_p17_deleted",
+          "rnacen.xref_p18_deleted",
+          "rnacen.xref_p19_deleted",
+          "rnacen.xref_p1_deleted",
+          "rnacen.xref_p20_deleted",
+          "rnacen.xref_p21_deleted",
+          "rnacen.xref_p22_deleted",
+          "rnacen.xref_p23_deleted",
+          "rnacen.xref_p24_deleted",
+          "rnacen.xref_p25_deleted",
+          "rnacen.xref_p26_deleted",
+          "rnacen.xref_p27_deleted",
+          "rnacen.xref_p28_deleted"
+        ],
+        "prompt_tokens": 4169
+      },
+      "pq_v2": {
+        "tables": 4,
+        "table_names": [
+          "rnacen.release_stats",
+          "rnacen_django_test.rnc_release",
+          "rnacen_django_test.rnc_database",
+          "rnacen_django_test.xref"
+        ],
+        "prompt_tokens": 855
+      }
+    },
+    {
+      "question": "list all the cpat protein-coding predictions",
+      "must_retrieve": [
+        "cpat_results"
+      ],
+      "naive": {
+        "tables": 216,
+        "prompt_tokens": 28175
+      },
+      "pq_v1": {
+        "tables": 25,
+        "table_names": [
+          "rnacen.cpat_results",
+          "rnacen.protein_info",
+          "rnacen.rna",
+          "rnacen_django_test.rnc_accessions",
+          "rnacen.rnc_accessions",
+          "rnacen.rnc_rna_precomputed",
+          "rnacen.ontology_terms",
+          "rnacen.pipeline_tracking_qa_scan",
+          "rnacen.pipeline_tracking_traveler",
+          "rnacen.precompute_urs",
+          "rnacen.precompute_urs_taxid",
+          "rnacen.qa_status",
+          "rnacen.r2dt_results",
+          "rnacen.rfam_analyzed_sequences",
+          "rnacen.rfam_model_hits",
+          "rnacen.rnc_accession_sequence_feature",
+          "rnacen.rnc_accession_sequence_region",
+          "rnacen.rnc_modifications",
+          "rnacen.rnc_related_sequences",
+          "rnacen.rnc_sequence_features",
+          "rnacen.validate_layout_counts",
+          "rnacen.xref_p10_deleted",
+          "rnacen.xref_p10_not_deleted",
+          "rnacen.xref_p11_deleted",
+          "rnacen.xref_p11_not_deleted"
+        ],
+        "prompt_tokens": 3373
+      },
+      "pq_v2": {
+        "tables": 25,
+        "table_names": [
+          "rnacen.cpat_results",
+          "rnacen.protein_info",
+          "rnacen.rna",
+          "rnacen_django_test.rnc_accessions",
+          "rnacen.rnc_accessions",
+          "rnacen.rnc_rna_precomputed",
+          "rnacen.ontology_terms",
+          "rnacen.pipeline_tracking_qa_scan",
+          "rnacen.pipeline_tracking_traveler",
+          "rnacen.precompute_urs",
+          "rnacen.precompute_urs_taxid",
+          "rnacen.qa_status",
+          "rnacen.r2dt_results",
+          "rnacen.rfam_analyzed_sequences",
+          "rnacen.rfam_model_hits",
+          "rnacen.rnc_accession_sequence_feature",
+          "rnacen.rnc_accession_sequence_region",
+          "rnacen.rnc_modifications",
+          "rnacen.rnc_related_sequences",
+          "rnacen.rnc_sequence_features",
+          "rnacen.validate_layout_counts",
+          "rnacen.xref_p10_deleted",
+          "rnacen.xref_p10_not_deleted",
+          "rnacen.xref_p11_deleted",
+          "rnacen.xref_p11_not_deleted"
+        ],
+        "prompt_tokens": 3373
+      }
+    },
+    {
+      "question": "list Ensembl assemblies together with their reference chromosomes",
+      "must_retrieve": [
+        "ensembl_assembly",
+        "ensembl_coordinate_systems"
+      ],
+      "naive": {
+        "tables": 216,
+        "prompt_tokens": 28175
+      },
+      "pq_v1": {
+        "tables": 25,
+        "table_names": [
+          "rnacen.ensembl_assembly",
+          "rnacen.rnc_database_references",
+          "rnacen.rnc_references",
+          "rnacen.rnc_reference_map",
+          "rnacen.rnc_feedback_target_assemblies",
+          "rnacen.ensembl_coordinate_systems",
+          "rnacen_django_test.rnc_reference_map",
+          "rnacen.ensembl_pseudogene_regions",
+          "rnacen_django_test.rnc_references",
+          "rnacen.ensembl_compara",
+          "rnacen.litscan_ensembl_ids",
+          "rnacen.xref",
+          "rnacen.rnc_sequence_regions",
+          "rnacen.rnc_locus",
+          "rnacen.ensembl_pseudogene_exons",
+          "rnacen.ensembl_import_tracking",
+          "rnacen.rnc_gene_status",
+          "rnacen.ensembl_stable_prefixes",
+          "rnacen.rnc_feedback_overlap",
+          "rnacen.rnc_sequence_regions_active",
+          "rnacen.rnc_sequence_regions_active_provided",
+          "rnacen.rnc_sequence_regions_active_mapped",
+          "rnacen.go_term_publication_map",
+          "rnacen.rnc_database",
+          "rnacen.pipeline_tracking_genome_mapping"
+        ],
+        "prompt_tokens": 2264
+      },
+      "pq_v2": {
+        "tables": 8,
+        "table_names": [
+          "rnacen.ensembl_assembly",
+          "rnacen.ensembl_coordinate_systems",
+          "rnacen.ensembl_pseudogene_regions",
+          "rnacen.rnc_feedback_overlap",
+          "rnacen.rnc_feedback_target_assemblies",
+          "rnacen.rnc_gene_status",
+          "rnacen.rnc_locus",
+          "rnacen.rnc_sequence_regions"
+        ],
+        "prompt_tokens": 1018
+      }
+    },
+    {
+      "question": "show Rfam family models with their clan name",
+      "must_retrieve": [
+        "rfam_models",
+        "rfam_clans"
+      ],
+      "naive": {
+        "tables": 216,
+        "prompt_tokens": 28175
+      },
+      "pq_v1": {
+        "tables": 25,
+        "table_names": [
+          "rnacen.rfam_clans",
+          "rnacen.rfam_models",
+          "rnacen.rfam_model_hits",
+          "rnacen.rfam_go_terms",
+          "rnacen.r2dt_models",
+          "rnacen.rfam_analyzed_sequences",
+          "rnacen.r2dt_models_backup",
+          "rnacen.r2dt_model_extra_data",
+          "rnacen.validate_layout_hits",
+          "rnacen.r2dt_results",
+          "rnacen.rnc_references",
+          "rnacen_django_test.django_content_type",
+          "rnacen.qa_status",
+          "rnacen.rnc_sequence_feature_types",
+          "rnacen.rnc_taxonomy",
+          "rnacen.ensembl_import_tracking",
+          "rnacen_django_test.auth_user",
+          "rnacen.rnc_accessions",
+          "rnacen.pipeline_tracking_qa_scan",
+          "rnacen.rnc_locus",
+          "rnacen.ensembl_assembly",
+          "rnacen.precompute_urs_accession",
+          "rnacen_django_test.auth_group",
+          "rnacen.rnc_interactions",
+          "rnacen.auth_permission"
+        ],
+        "prompt_tokens": 2676
+      },
+      "pq_v2": {
+        "tables": 5,
+        "table_names": [
+          "rnacen.rfam_models",
+          "rnacen.rfam_clans",
+          "rnacen.ontology_terms",
+          "rnacen.rfam_go_terms",
+          "rnacen.rfam_model_hits"
+        ],
+        "prompt_tokens": 715
+      }
+    },
+    {
+      "question": "GO annotations with their ontology term name",
+      "must_retrieve": [
+        "go_term_annotations",
+        "ontology_terms"
+      ],
+      "naive": {
+        "tables": 216,
+        "prompt_tokens": 28175
+      },
+      "pq_v1": {
+        "tables": 25,
+        "table_names": [
+          "rnacen.go_term_annotations",
+          "rnacen.go_term_publication_map",
+          "rnacen.ontology_terms",
+          "rnacen.rfam_go_terms",
+          "rnacen.insdc_so_term_mapping",
+          "rnacen.rnc_rna_precomputed",
+          "rnacen.r2dt_models",
+          "rnacen.rnc_accessions",
+          "rnacen.rnc_references",
+          "rnacen.rfam_models",
+          "rnacen.rnc_sequence_feature_types",
+          "rnacen.r2dt_models_backup",
+          "rnacen.rnc_taxonomy",
+          "rnacen.ensembl_import_tracking",
+          "rnacen_django_test.auth_user",
+          "rnacen.rnc_locus",
+          "rnacen.ensembl_assembly",
+          "rnacen.precompute_urs_accession",
+          "rnacen_django_test.auth_group",
+          "rnacen.rnc_interactions",
+          "rnacen.auth_permission",
+          "rnacen_django_test.django_site",
+          "rnacen_django_test.django_migrations",
+          "rnacen.rnc_sequence_feature_providers",
+          "rnacen_django_test.auth_permission"
+        ],
+        "prompt_tokens": 2508
+      },
+      "pq_v2": {
+        "tables": 9,
+        "table_names": [
+          "rnacen.go_term_annotations",
+          "rnacen.ontology_terms",
+          "rnacen.go_term_publication_map",
+          "rnacen.insdc_so_term_mapping",
+          "rnacen.r2dt_models",
+          "rnacen.rfam_go_terms",
+          "rnacen.rfam_models",
+          "rnacen.rnc_accessions",
+          "rnacen.rnc_rna_precomputed"
+        ],
+        "prompt_tokens": 1287
+      }
+    },
+    {
+      "question": "Rfam-to-GO mappings with the Rfam model name",
+      "must_retrieve": [
+        "rfam_go_terms",
+        "rfam_models"
+      ],
+      "naive": {
+        "tables": 216,
+        "prompt_tokens": 28175
+      },
+      "pq_v1": {
+        "tables": 25,
+        "table_names": [
+          "rnacen.rfam_go_terms",
+          "rnacen.rfam_models",
+          "rnacen.rfam_model_hits",
+          "rnacen.rfam_clans",
+          "rnacen.rfam_analyzed_sequences",
+          "rnacen.go_term_publication_map",
+          "rnacen.r2dt_models",
+          "rnacen.r2dt_models_backup",
+          "rnacen.r2dt_model_extra_data",
+          "rnacen.validate_layout_hits",
+          "rnacen.go_term_annotations",
+          "rnacen.pipeline_tracking_genome_mapping",
+          "rnacen.r2dt_results",
+          "rnacen.insdc_so_term_mapping",
+          "rnacen.qa_status",
+          "rnacen.ensembl_assembly",
+          "rnacen_django_test.django_content_type",
+          "rnacen.rnc_sequence_feature_types",
+          "rnacen.rnc_taxonomy",
+          "rnacen.ensembl_import_tracking",
+          "rnacen_django_test.auth_user",
+          "rnacen.rnc_accessions",
+          "rnacen.pipeline_tracking_qa_scan",
+          "rnacen.rnc_locus",
+          "rnacen.precompute_urs_accession"
+        ],
+        "prompt_tokens": 2698
+      },
+      "pq_v2": {
+        "tables": 8,
+        "table_names": [
+          "rnacen.rfam_models",
+          "rnacen.go_term_publication_map",
+          "rnacen.go_term_annotations",
+          "rnacen.rfam_clans",
+          "rnacen.ontology_terms",
+          "rnacen.rnc_references",
+          "rnacen.rfam_go_terms",
+          "rnacen.rfam_model_hits"
+        ],
+        "prompt_tokens": 1018
+      }
+    },
+    {
+      "question": "R2DT secondary-structure results with the model name they matched",
+      "must_retrieve": [
+        "r2dt_results",
+        "r2dt_models"
+      ],
+      "naive": {
+        "tables": 216,
+        "prompt_tokens": 28175
+      },
+      "pq_v1": {
+        "tables": 25,
+        "table_names": [
+          "rnacen.rnc_secondary_structure",
+          "rnacen.r2dt_results",
+          "rnacen.r2dt_models",
+          "rnacen.r2dt_models_backup",
+          "rnacen.r2dt_model_extra_data",
+          "rnacen.rfam_model_hits",
+          "rnacen.validate_layout_hits",
+          "rnacen.cpat_results",
+          "rnacen.rfam_models",
+          "rnacen.publications",
+          "rnacen.rfam_go_terms",
+          "rnacen_django_test.django_content_type",
+          "rnacen.rnc_sequence_feature_types",
+          "rnacen.rnc_taxonomy",
+          "rnacen.old_summaries",
+          "rnacen.ensembl_import_tracking",
+          "rnacen_django_test.auth_user",
+          "rnacen.litsumm_summaries",
+          "rnacen.rnc_accessions",
+          "rnacen.pipeline_tracking_qa_scan",
+          "rnacen.rnc_locus",
+          "rnacen.ensembl_assembly",
+          "rnacen.precompute_urs_accession",
+          "rnacen_django_test.auth_group",
+          "rnacen.rnc_interactions"
+        ],
+        "prompt_tokens": 2575
+      },
+      "pq_v2": {
+        "tables": 5,
+        "table_names": [
+          "rnacen.r2dt_results",
+          "rnacen.r2dt_models",
+          "rnacen.rna",
+          "rnacen.ontology_terms",
+          "rnacen.r2dt_model_extra_data"
+        ],
+        "prompt_tokens": 555
+      }
+    },
+    {
+      "question": "Rfam model hits with the Rfam model details",
+      "must_retrieve": [
+        "rfam_model_hits",
+        "rfam_models"
+      ],
+      "naive": {
+        "tables": 216,
+        "prompt_tokens": 28175
+      },
+      "pq_v1": {
+        "tables": 18,
+        "table_names": [
+          "rnacen.rfam_model_hits",
+          "rnacen.rfam_models",
+          "rnacen.rfam_go_terms",
+          "rnacen.r2dt_models",
+          "rnacen.validate_layout_hits",
+          "rnacen.r2dt_models_backup",
+          "rnacen.rfam_clans",
+          "rnacen.rfam_analyzed_sequences",
+          "rnacen.r2dt_model_extra_data",
+          "rnacen.r2dt_results",
+          "rnacen_django_test.django_content_type",
+          "rnacen.qa_status",
+          "rnacen.pipeline_tracking_qa_scan",
+          "pg_stat_statements",
+          "rnacen.rnc_sequence_features",
+          "rnacen.rna",
+          "rnacen.ontology_terms",
+          "rnacen_django_test.auth_permission"
+        ],
+        "prompt_tokens": 2013
+      },
+      "pq_v2": {
+        "tables": 18,
+        "table_names": [
+          "rnacen.rfam_model_hits",
+          "rnacen.rfam_models",
+          "rnacen.rfam_go_terms",
+          "rnacen.r2dt_models",
+          "rnacen.validate_layout_hits",
+          "rnacen.r2dt_models_backup",
+          "rnacen.rfam_clans",
+          "rnacen.rfam_analyzed_sequences",
+          "rnacen.r2dt_model_extra_data",
+          "rnacen.r2dt_results",
+          "rnacen_django_test.django_content_type",
+          "rnacen.qa_status",
+          "rnacen.pipeline_tracking_qa_scan",
+          "pg_stat_statements",
+          "rnacen.rnc_sequence_features",
+          "rnacen.rna",
+          "rnacen.ontology_terms",
+          "rnacen_django_test.auth_permission"
+        ],
+        "prompt_tokens": 2013
+      }
+    },
+    {
+      "question": "Ensembl coordinate systems with the assembly they belong to",
+      "must_retrieve": [
+        "ensembl_coordinate_systems",
+        "ensembl_assembly"
+      ],
+      "naive": {
+        "tables": 216,
+        "prompt_tokens": 28175
+      },
+      "pq_v1": {
+        "tables": 25,
+        "table_names": [
+          "rnacen.ensembl_coordinate_systems",
+          "rnacen.ensembl_assembly",
+          "rnacen.rnc_feedback_target_assemblies",
+          "rnacen.ensembl_pseudogene_regions",
+          "rnacen_django_test.rnc_coordinates",
+          "rnacen.ensembl_compara",
+          "rnacen.litscan_ensembl_ids",
+          "rnacen.ensembl_pseudogene_exons",
+          "rnacen.ensembl_import_tracking",
+          "rnacen.rnc_gene_status",
+          "rnacen.rnc_sequence_regions",
+          "rnacen.ensembl_stable_prefixes",
+          "rnacen.rnc_feedback_overlap",
+          "rnacen.rnc_locus",
+          "rnacen_django_test.rnc_rna_precomputed_data",
+          "rnacen.rnc_rna_precomputed",
+          "rnacen.pipeline_tracking_genome_mapping",
+          "rnacen.rnc_sequence_regions_active",
+          "rnacen.sequence_region_urs_counts",
+          "rnacen.rnc_sequence_regions_active_provided",
+          "rnacen.rnc_sequence_regions_active_mapped",
+          "rnacen.rnc_database",
+          "rnacen_django_test.rnc_accessions",
+          "rnacen_django_test.rna",
+          "rnacen.ontology_terms"
+        ],
+        "prompt_tokens": 2706
+      },
+      "pq_v2": {
+        "tables": 8,
+        "table_names": [
+          "rnacen.ensembl_coordinate_systems",
+          "rnacen.ensembl_assembly",
+          "rnacen.ensembl_pseudogene_regions",
+          "rnacen.rnc_feedback_overlap",
+          "rnacen.rnc_feedback_target_assemblies",
+          "rnacen.rnc_gene_status",
+          "rnacen.rnc_locus",
+          "rnacen.rnc_sequence_regions"
+        ],
+        "prompt_tokens": 1018
+      }
+    },
+    {
+      "question": "R2DT results joined to the RNA upi they describe",
+      "must_retrieve": [
+        "r2dt_results",
+        "rna"
+      ],
+      "naive": {
+        "tables": 216,
+        "prompt_tokens": 28175
+      },
+      "pq_v1": {
+        "tables": 25,
+        "table_names": [
+          "rnacen.cpat_results",
+          "rnacen.r2dt_results",
+          "rnacen.publications",
+          "rnacen_django_test.auth_user",
+          "rnacen_django_test.rnc_rna_precomputed",
+          "rnacen.old_summaries",
+          "rnacen.litsumm_summaries",
+          "rnacen_django_test.rna",
+          "rnacen.rnc_rna_precomputed",
+          "rnacen.rna",
+          "rnacen_django_test.xref",
+          "rnacen_django_test.rnc_rna_precomputed_data",
+          "rnacen.xref_p10_deleted",
+          "rnacen.xref_p11_deleted",
+          "rnacen.xref_p12_deleted",
+          "rnacen.xref_p13_deleted",
+          "rnacen.xref_p14_deleted",
+          "rnacen.xref_p15_deleted",
+          "rnacen.xref_p16_deleted",
+          "rnacen.xref_p17_deleted",
+          "rnacen.xref_p18_deleted",
+          "rnacen.xref_p19_deleted",
+          "rnacen.xref_p1_deleted",
+          "rnacen.xref_p20_deleted",
+          "rnacen.xref_p21_deleted"
+        ],
+        "prompt_tokens": 3628
+      },
+      "pq_v2": {
+        "tables": 25,
+        "table_names": [
+          "rnacen.r2dt_results",
+          "rnacen.rna",
+          "rnacen.r2dt_models",
+          "rnacen.pipeline_tracking_qa_scan",
+          "rnacen.pipeline_tracking_traveler",
+          "rnacen.precompute_urs",
+          "rnacen.precompute_urs_taxid",
+          "rnacen.qa_status",
+          "rnacen.rfam_analyzed_sequences",
+          "rnacen.rfam_model_hits",
+          "rnacen.rnc_sequence_features",
+          "rnacen.validate_layout_counts",
+          "rnacen.xref_p10_deleted",
+          "rnacen.xref_p10_not_deleted",
+          "rnacen.xref_p11_deleted",
+          "rnacen.xref_p11_not_deleted",
+          "rnacen.xref_p12_deleted",
+          "rnacen.xref_p12_not_deleted",
+          "rnacen.xref_p13_deleted",
+          "rnacen.xref_p13_not_deleted",
+          "rnacen.xref_p14_deleted",
+          "rnacen.xref_p14_not_deleted",
+          "rnacen.xref_p15_deleted",
+          "rnacen.xref_p15_not_deleted",
+          "rnacen.xref_p16_deleted"
+        ],
+        "prompt_tokens": 3534
+      }
+    },
+    {
+      "question": "Rfam-analyzed sequences with the RNA they were run against",
+      "must_retrieve": [
+        "rfam_analyzed_sequences",
+        "rna"
+      ],
+      "naive": {
+        "tables": 216,
+        "prompt_tokens": 28175
+      },
+      "pq_v1": {
+        "tables": 25,
+        "table_names": [
+          "rnacen.rfam_analyzed_sequences",
+          "rnacen.rfam_models",
+          "rnacen.rfam_model_hits",
+          "rnacen.rfam_go_terms",
+          "rnacen.rfam_clans",
+          "rnacen.rnc_accession_sequence_feature",
+          "rnacen.rnc_sequence_exons",
+          "rnacen.rnc_sequence_features",
+          "rnacen.rnc_accession_sequence_region",
+          "rnacen.rna",
+          "rnacen.sequence_region_urs_counts",
+          "rnacen.rnc_sequence_feature_providers",
+          "rnacen.rnc_sequence_feature_types",
+          "rnacen.qa_status",
+          "rnacen.rnc_sequence_regions",
+          "rnacen.rnc_related_sequences",
+          "rnacen.rnc_sequence_regions_active",
+          "rnacen.pipeline_tracking_traveler",
+          "rnacen.rnc_sequence_regions_active_provided",
+          "rnacen.rnc_sequence_regions_active_mapped",
+          "rnacen.r2dt_results",
+          "rnacen.pipeline_tracking_genome_mapping",
+          "rnacen.pipeline_tracking_qa_scan",
+          "rnacen.validate_layout_hits",
+          "rnacen_django_test.rnc_rna_precomputed"
+        ],
+        "prompt_tokens": 2412
+      },
+      "pq_v2": {
+        "tables": 7,
+        "table_names": [
+          "rnacen.rfam_analyzed_sequences",
+          "rnacen_django_test.rna",
+          "rnacen.rna",
+          "rnacen_django_test.rnc_modifications",
+          "rnacen_django_test.rnc_rna_precomputed",
+          "rnacen_django_test.rnc_rna_precomputed_data",
+          "rnacen_django_test.xref"
+        ],
+        "prompt_tokens": 961
+      }
+    },
+    {
+      "question": "QA-flagged RNAs with their upi",
+      "must_retrieve": [
+        "qa_status",
+        "rna"
+      ],
+      "naive": {
+        "tables": 216,
+        "prompt_tokens": 28175
+      },
+      "pq_v1": {
+        "tables": 25,
+        "table_names": [
+          "rnacen.qa_status",
+          "rnacen.pipeline_tracking_qa_scan",
+          "rnacen.rnc_references",
+          "rnacen_django_test.rnc_rna_precomputed",
+          "rnacen_django_test.rna",
+          "rnacen.rnc_rna_precomputed",
+          "rnacen.rna",
+          "rnacen_django_test.xref",
+          "rnacen_django_test.rnc_rna_precomputed_data",
+          "rnacen.xref_p10_deleted",
+          "rnacen.xref_p11_deleted",
+          "rnacen.xref_p12_deleted",
+          "rnacen.xref_p13_deleted",
+          "rnacen.xref_p14_deleted",
+          "rnacen.xref_p15_deleted",
+          "rnacen.xref_p16_deleted",
+          "rnacen.xref_p17_deleted",
+          "rnacen.xref_p18_deleted",
+          "rnacen.xref_p19_deleted",
+          "rnacen.xref_p1_deleted",
+          "rnacen.xref_p20_deleted",
+          "rnacen.xref_p21_deleted",
+          "rnacen.xref_p22_deleted",
+          "rnacen.xref_p23_deleted",
+          "rnacen.xref_p24_deleted"
+        ],
+        "prompt_tokens": 3893
+      },
+      "pq_v2": {
+        "tables": 25,
+        "table_names": [
+          "rnacen.qa_status",
+          "rnacen.rna",
+          "rnacen.rnc_rna_precomputed",
+          "rnacen.ontology_terms",
+          "rnacen.rnc_release",
+          "rnacen.cpat_results",
+          "rnacen.ensembl_compara",
+          "rnacen.pipeline_tracking_genome_mapping",
+          "rnacen.pipeline_tracking_qa_scan",
+          "rnacen.pipeline_tracking_traveler",
+          "rnacen.precompute_urs",
+          "rnacen.precompute_urs_taxid",
+          "rnacen.r2dt_results",
+          "rnacen.rfam_analyzed_sequences",
+          "rnacen.rfam_model_hits",
+          "rnacen.rnc_feedback_overlap",
+          "rnacen.rnc_gene_status",
+          "rnacen.rnc_interactions",
+          "rnacen.rnc_locus_members",
+          "rnacen.rnc_related_sequences",
+          "rnacen.rnc_sequence_features",
+          "rnacen.rnc_sequence_regions",
+          "rnacen.validate_layout_counts",
+          "rnacen.xref_p10_deleted",
+          "rnacen.xref_p10_not_deleted"
+        ],
+        "prompt_tokens": 2797
+      }
+    },
+    {
+      "question": "Ensembl compara homology entries with the precomputed RNA they belong to",
+      "must_retrieve": [
+        "ensembl_compara",
+        "rnc_rna_precomputed"
+      ],
+      "naive": {
+        "tables": 216,
+        "prompt_tokens": 28175
+      },
+      "pq_v1": {
+        "tables": 25,
+        "table_names": [
+          "rnacen.ensembl_compara",
+          "rnacen_django_test.rnc_rna_precomputed",
+          "rnacen.litscan_ensembl_ids",
+          "rnacen.rnc_rna_precomputed",
+          "rnacen_django_test.rnc_rna_precomputed_data",
+          "rnacen.ensembl_pseudogene_regions",
+          "rnacen.ensembl_pseudogene_exons",
+          "rnacen.ensembl_import_tracking",
+          "rnacen.ensembl_coordinate_systems",
+          "rnacen.ensembl_assembly",
+          "rnacen.ensembl_stable_prefixes",
+          "rnacen.rnc_gene_status",
+          "rnacen.rnc_related_sequences",
+          "rnacen.rnc_sequence_regions",
+          "rnacen.rnc_feedback_overlap",
+          "rnacen.rnc_interactions",
+          "rnacen.cpat_results",
+          "rnacen.rnc_locus_members",
+          "rnacen.pipeline_tracking_genome_mapping",
+          "rnacen.rnc_feedback_target_assemblies",
+          "rnacen.rnc_locus",
+          "rnacen_django_test.rna",
+          "rnacen.rna",
+          "rnacen_django_test.xref",
+          "rnacen.validate_layout_hits"
+        ],
+        "prompt_tokens": 2518
+      },
+      "pq_v2": {
+        "tables": 14,
+        "table_names": [
+          "rnacen.ensembl_compara",
+          "rnacen.rnc_rna_precomputed",
+          "rnacen.rnc_related_sequences",
+          "rnacen.ontology_terms",
+          "rnacen.rnc_release",
+          "rnacen.rnc_relationship_types",
+          "rnacen.rnc_accessions",
+          "rnacen.cpat_results",
+          "rnacen.pipeline_tracking_genome_mapping",
+          "rnacen.rnc_feedback_overlap",
+          "rnacen.rnc_gene_status",
+          "rnacen.rnc_interactions",
+          "rnacen.rnc_locus_members",
+          "rnacen.rnc_sequence_regions"
+        ],
+        "prompt_tokens": 1710
+      }
+    },
+    {
+      "question": "cpat protein-coding predictions joined to the precomputed RNA",
+      "must_retrieve": [
+        "cpat_results",
+        "rnc_rna_precomputed"
+      ],
+      "naive": {
+        "tables": 216,
+        "prompt_tokens": 28175
+      },
+      "pq_v1": {
+        "tables": 25,
+        "table_names": [
+          "rnacen.cpat_results",
+          "rnacen.protein_info",
+          "rnacen_django_test.rnc_rna_precomputed",
+          "rnacen.rna",
+          "rnacen.rnc_rna_precomputed",
+          "rnacen_django_test.rnc_rna_precomputed_data",
+          "rnacen_django_test.auth_user",
+          "rnacen.rnc_related_sequences",
+          "rnacen.rnc_interactions",
+          "rnacen.ensembl_compara",
+          "rnacen_django_test.rnc_accessions",
+          "rnacen.rnc_accessions",
+          "rnacen.rnc_gene_status",
+          "rnacen.rnc_sequence_regions",
+          "rnacen.rnc_locus_members",
+          "rnacen.pipeline_tracking_genome_mapping",
+          "rnacen.rnc_feedback_overlap",
+          "rnacen_django_test.rna",
+          "rnacen_django_test.xref",
+          "rnacen.validate_layout_hits",
+          "rnacen.rfam_models",
+          "rnacen.qa_status",
+          "rnacen.validate_layout_counts",
+          "rnacen.xref_p10_deleted",
+          "rnacen.xref_p11_deleted"
+        ],
+        "prompt_tokens": 3508
+      },
+      "pq_v2": {
+        "tables": 17,
+        "table_names": [
+          "rnacen.cpat_results",
+          "rnacen_django_test.rna",
+          "rnacen.rnc_rna_precomputed",
+          "rnacen.ontology_terms",
+          "rnacen.rnc_release",
+          "rnacen.ensembl_compara",
+          "rnacen.pipeline_tracking_genome_mapping",
+          "rnacen.rnc_feedback_overlap",
+          "rnacen.rnc_gene_status",
+          "rnacen.rnc_interactions",
+          "rnacen.rnc_locus_members",
+          "rnacen.rnc_related_sequences",
+          "rnacen.rnc_sequence_regions",
+          "rnacen_django_test.rnc_modifications",
+          "rnacen_django_test.rnc_rna_precomputed",
+          "rnacen_django_test.rnc_rna_precomputed_data",
+          "rnacen_django_test.xref"
+        ],
+        "prompt_tokens": 2008
+      }
+    },
+    {
+      "question": "precomputed RNA records with their assigned ontology term name",
+      "must_retrieve": [
+        "rnc_rna_precomputed",
+        "ontology_terms"
+      ],
+      "naive": {
+        "tables": 216,
+        "prompt_tokens": 28175
+      },
+      "pq_v1": {
+        "tables": 25,
+        "table_names": [
+          "rnacen.ontology_terms",
+          "rnacen.rnc_rna_precomputed",
+          "rnacen.go_term_annotations",
+          "rnacen_django_test.rnc_rna_precomputed",
+          "rnacen.rfam_go_terms",
+          "rnacen.insdc_so_term_mapping",
+          "rnacen.go_term_publication_map",
+          "rnacen_django_test.rnc_rna_precomputed_data",
+          "rnacen.r2dt_models",
+          "rnacen.rnc_accessions",
+          "rnacen.rfam_models",
+          "rnacen.rnc_references",
+          "rnacen.rnc_interactions",
+          "rnacen.rnc_related_sequences",
+          "rnacen.rnc_modifications",
+          "rnacen.rnc_sequence_regions",
+          "rnacen_django_test.rnc_modifications",
+          "rnacen.r2dt_models_backup",
+          "rnacen.ensembl_compara",
+          "rnacen.rnc_sequence_feature_types",
+          "rnacen.rnc_taxonomy",
+          "rnacen.rnc_gene_status",
+          "rnacen.r2dt_results",
+          "rnacen.ensembl_import_tracking",
+          "rnacen.cpat_results"
+        ],
+        "prompt_tokens": 2781
+      },
+      "pq_v2": {
+        "tables": 11,
+        "table_names": [
+          "rnacen_django_test.rnc_rna_precomputed",
+          "rnacen.ontology_terms",
+          "rnacen.go_term_annotations",
+          "rnacen_django_test.rna",
+          "rnacen.go_term_publication_map",
+          "rnacen.insdc_so_term_mapping",
+          "rnacen.r2dt_models",
+          "rnacen.rfam_go_terms",
+          "rnacen.rfam_models",
+          "rnacen.rnc_accessions",
+          "rnacen.rnc_rna_precomputed"
+        ],
+        "prompt_tokens": 1483
+      }
+    },
+    {
+      "question": "Rfam models with the SO ontology term they map to",
+      "must_retrieve": [
+        "rfam_models",
+        "ontology_terms"
+      ],
+      "naive": {
+        "tables": 216,
+        "prompt_tokens": 28175
+      },
+      "pq_v1": {
+        "tables": 25,
+        "table_names": [
+          "rnacen.rfam_go_terms",
+          "rnacen.rfam_models",
+          "rnacen.ontology_terms",
+          "rnacen.r2dt_models",
+          "rnacen.insdc_so_term_mapping",
+          "rnacen.rfam_model_hits",
+          "rnacen.r2dt_models_backup",
+          "rnacen.go_term_annotations",
+          "rnacen.rnc_rna_precomputed",
+          "rnacen.go_term_publication_map",
+          "rnacen.rfam_clans",
+          "rnacen.validate_layout_hits",
+          "rnacen.rfam_analyzed_sequences",
+          "rnacen.r2dt_model_extra_data",
+          "rnacen.rnc_reference_map",
+          "rnacen_django_test.rnc_reference_map",
+          "rnacen.r2dt_results",
+          "rnacen.rnc_accessions",
+          "rnacen.rnc_references",
+          "rnacen_django_test.django_content_type",
+          "rnacen.qa_status",
+          "rnacen_django_test.rnc_accessions",
+          "rnacen.pipeline_tracking_qa_scan",
+          "rnacen.precompute_urs_accession",
+          "rnacen.rnc_sequence_features"
+        ],
+        "prompt_tokens": 3129
+      },
+      "pq_v2": {
+        "tables": 10,
+        "table_names": [
+          "rnacen.rfam_models",
+          "rnacen.insdc_so_term_mapping",
+          "rnacen.ontology_terms",
+          "rnacen.rfam_clans",
+          "rnacen.go_term_annotations",
+          "rnacen.r2dt_models",
+          "rnacen.rfam_go_terms",
+          "rnacen.rfam_model_hits",
+          "rnacen.rnc_accessions",
+          "rnacen.rnc_rna_precomputed"
+        ],
+        "prompt_tokens": 1461
+      }
+    },
+    {
+      "question": "R2DT models with their SO ontology term name",
+      "must_retrieve": [
+        "r2dt_models",
+        "ontology_terms"
+      ],
+      "naive": {
+        "tables": 216,
+        "prompt_tokens": 28175
+      },
+      "pq_v1": {
+        "tables": 25,
+        "table_names": [
+          "rnacen.ontology_terms",
+          "rnacen.r2dt_models",
+          "rnacen.insdc_so_term_mapping",
+          "rnacen.r2dt_models_backup",
+          "rnacen.rfam_go_terms",
+          "rnacen.go_term_annotations",
+          "rnacen.rnc_rna_precomputed",
+          "rnacen.rfam_models",
+          "rnacen.validate_layout_hits",
+          "rnacen.r2dt_model_extra_data",
+          "rnacen.rfam_model_hits",
+          "rnacen.r2dt_results",
+          "rnacen.go_term_publication_map",
+          "rnacen.rnc_accessions",
+          "rnacen.rnc_references",
+          "rnacen.precompute_urs_accession",
+          "rnacen_django_test.django_content_type",
+          "rnacen.rnc_sequence_feature_types",
+          "rnacen.rnc_taxonomy",
+          "rnacen.ensembl_import_tracking",
+          "rnacen_django_test.auth_user",
+          "rnacen.pipeline_tracking_qa_scan",
+          "rnacen.rnc_locus",
+          "rnacen.ensembl_assembly",
+          "rnacen_django_test.auth_group"
+        ],
+        "prompt_tokens": 2730
+      },
+      "pq_v2": {
+        "tables": 10,
+        "table_names": [
+          "rnacen.r2dt_models",
+          "rnacen.insdc_so_term_mapping",
+          "rnacen.ontology_terms",
+          "rnacen.go_term_annotations",
+          "rnacen.r2dt_model_extra_data",
+          "rnacen.r2dt_results",
+          "rnacen.rfam_go_terms",
+          "rnacen.rfam_models",
+          "rnacen.rnc_accessions",
+          "rnacen.rnc_rna_precomputed"
+        ],
+        "prompt_tokens": 1398
+      }
+    },
+    {
+      "question": "Rfam models with their clan name and any GO terms",
+      "must_retrieve": [
+        "rfam_models",
+        "rfam_clans",
+        "rfam_go_terms",
+        "ontology_terms"
+      ],
+      "naive": {
+        "tables": 216,
+        "prompt_tokens": 28175
+      },
+      "pq_v1": {
+        "tables": 25,
+        "table_names": [
+          "rnacen.rfam_go_terms",
+          "rnacen.rfam_clans",
+          "rnacen.rfam_models",
+          "rnacen.go_term_publication_map",
+          "rnacen.go_term_annotations",
+          "rnacen.rfam_model_hits",
+          "rnacen.r2dt_models",
+          "rnacen.r2dt_models_backup",
+          "rnacen.ontology_terms",
+          "rnacen.r2dt_model_extra_data",
+          "rnacen.rfam_analyzed_sequences",
+          "rnacen.validate_layout_hits",
+          "rnacen.insdc_so_term_mapping",
+          "rnacen.r2dt_results",
+          "rnacen.rnc_references",
+          "rnacen.rnc_rna_precomputed",
+          "rnacen.rnc_accessions",
+          "rnacen_django_test.django_content_type",
+          "rnacen.qa_status",
+          "rnacen.rnc_sequence_feature_types",
+          "rnacen.rnc_taxonomy",
+          "rnacen.ensembl_import_tracking",
+          "rnacen_django_test.auth_user",
+          "rnacen.pipeline_tracking_qa_scan",
+          "rnacen.rnc_locus"
+        ],
+        "prompt_tokens": 2643
+      },
+      "pq_v2": {
+        "tables": 11,
+        "table_names": [
+          "rnacen.rfam_models",
+          "rnacen.rfam_clans",
+          "rnacen.rfam_go_terms",
+          "rnacen.go_term_annotations",
+          "rnacen.ontology_terms",
+          "rnacen.go_term_publication_map",
+          "rnacen.insdc_so_term_mapping",
+          "rnacen.r2dt_models",
+          "rnacen.rfam_model_hits",
+          "rnacen.rnc_accessions",
+          "rnacen.rnc_rna_precomputed"
+        ],
+        "prompt_tokens": 1535
+      }
+    },
+    {
+      "question": "for each Ensembl assembly, the number of coordinate systems",
+      "must_retrieve": [
+        "ensembl_assembly",
+        "ensembl_coordinate_systems"
+      ],
+      "naive": {
+        "tables": 216,
+        "prompt_tokens": 28175
+      },
+      "pq_v1": {
+        "tables": 25,
+        "table_names": [
+          "rnacen.ensembl_coordinate_systems",
+          "rnacen.ensembl_assembly",
+          "rnacen.rnc_feedback_target_assemblies",
+          "rnacen.ensembl_pseudogene_regions",
+          "rnacen_django_test.rnc_coordinates",
+          "rnacen.ensembl_compara",
+          "rnacen.litscan_ensembl_ids",
+          "rnacen.ensembl_pseudogene_exons",
+          "rnacen.ensembl_import_tracking",
+          "rnacen.rnc_gene_status",
+          "rnacen.rnc_sequence_regions",
+          "rnacen.ensembl_stable_prefixes",
+          "rnacen.rnc_feedback_overlap",
+          "rnacen.rnc_locus",
+          "rnacen_django_test.rnc_rna_precomputed_data",
+          "rnacen.rnc_rna_precomputed",
+          "rnacen.pipeline_tracking_genome_mapping",
+          "rnacen.rnc_sequence_regions_active",
+          "rnacen.sequence_region_urs_counts",
+          "rnacen.rnc_sequence_regions_active_provided",
+          "rnacen.rnc_sequence_regions_active_mapped",
+          "rnacen.rnc_database",
+          "rnacen_django_test.rnc_accessions",
+          "rnacen_django_test.rna",
+          "rnacen.ontology_terms"
+        ],
+        "prompt_tokens": 2706
+      },
+      "pq_v2": {
+        "tables": 8,
+        "table_names": [
+          "rnacen.ensembl_coordinate_systems",
+          "rnacen.ensembl_assembly",
+          "rnacen.ensembl_pseudogene_regions",
+          "rnacen.rnc_feedback_overlap",
+          "rnacen.rnc_feedback_target_assemblies",
+          "rnacen.rnc_gene_status",
+          "rnacen.rnc_locus",
+          "rnacen.rnc_sequence_regions"
+        ],
+        "prompt_tokens": 1018
+      }
+    },
+    {
+      "question": "count GO term annotations grouped by ontology term name",
+      "must_retrieve": [
+        "go_term_annotations",
+        "ontology_terms"
+      ],
+      "naive": {
+        "tables": 216,
+        "prompt_tokens": 28175
+      },
+      "pq_v1": {
+        "tables": 25,
+        "table_names": [
+          "rnacen.go_term_annotations",
+          "rnacen.go_term_publication_map",
+          "rnacen.ontology_terms",
+          "rnacen.rfam_go_terms",
+          "rnacen.insdc_so_term_mapping",
+          "rnacen.rnc_rna_precomputed",
+          "rnacen.xref_count",
+          "rnacen.r2dt_models",
+          "rnacen.rfam_models",
+          "rnacen.rnc_accessions",
+          "rnacen.validate_layout_counts",
+          "rnacen.litscan_sentence_id_counts",
+          "rnacen.sequence_region_urs_counts",
+          "rnacen.r2dt_models_backup",
+          "rnacen_django_test.rnc_rna_precomputed_data",
+          "rnacen.rnc_locus",
+          "rnacen.rfam_clans",
+          "rnacen.rnc_sequence_feature_types",
+          "rnacen.rnc_sequence_regions",
+          "rnacen.rnc_taxonomy",
+          "rnacen.rnc_sequence_regions_active",
+          "rnacen.r2dt_results",
+          "rnacen.ensembl_import_tracking",
+          "rnacen.ensembl_pseudogene_regions",
+          "rnacen_django_test.auth_user"
+        ],
+        "prompt_tokens": 2542
+      },
+      "pq_v2": {
+        "tables": 9,
+        "table_names": [
+          "rnacen.go_term_annotations",
+          "rnacen.ontology_terms",
+          "rnacen.go_term_publication_map",
+          "rnacen.insdc_so_term_mapping",
+          "rnacen.r2dt_models",
+          "rnacen.rfam_go_terms",
+          "rnacen.rfam_models",
+          "rnacen.rnc_accessions",
+          "rnacen.rnc_rna_precomputed"
+        ],
+        "prompt_tokens": 1287
+      }
+    },
+    {
+      "question": "Rfam model hits together with the Rfam model and the RNA upi",
+      "must_retrieve": [
+        "rfam_model_hits",
+        "rfam_models",
+        "rna"
+      ],
+      "naive": {
+        "tables": 216,
+        "prompt_tokens": 28175
+      },
+      "pq_v1": {
+        "tables": 25,
+        "table_names": [
+          "rnacen.rfam_model_hits",
+          "rnacen.rfam_models",
+          "rnacen.rfam_go_terms",
+          "rnacen.r2dt_models",
+          "rnacen.validate_layout_hits",
+          "rnacen.r2dt_models_backup",
+          "rnacen.rfam_clans",
+          "rnacen.rfam_analyzed_sequences",
+          "rnacen.r2dt_model_extra_data",
+          "rnacen.r2dt_results",
+          "rnacen.qa_status",
+          "rnacen_django_test.django_content_type",
+          "rnacen.pipeline_tracking_qa_scan",
+          "rnacen_django_test.rnc_rna_precomputed",
+          "rnacen_django_test.rna",
+          "rnacen.rnc_rna_precomputed",
+          "rnacen.rna",
+          "rnacen_django_test.xref",
+          "rnacen_django_test.rnc_rna_precomputed_data",
+          "pg_stat_statements",
+          "rnacen.xref_p10_deleted",
+          "rnacen.xref_p11_deleted",
+          "rnacen.xref_p12_deleted",
+          "rnacen.xref_p13_deleted",
+          "rnacen.xref_p14_deleted"
+        ],
+        "prompt_tokens": 3256
+      },
+      "pq_v2": {
+        "tables": 25,
+        "table_names": [
+          "rnacen.rfam_model_hits",
+          "rnacen.rfam_models",
+          "rnacen.rna",
+          "rnacen.rnc_sequence_features",
+          "rnacen.rfam_clans",
+          "rnacen.ontology_terms",
+          "rnacen.pipeline_tracking_qa_scan",
+          "rnacen.pipeline_tracking_traveler",
+          "rnacen.precompute_urs",
+          "rnacen.precompute_urs_taxid",
+          "rnacen.qa_status",
+          "rnacen.r2dt_results",
+          "rnacen.rfam_analyzed_sequences",
+          "rnacen.rfam_go_terms",
+          "rnacen.validate_layout_counts",
+          "rnacen.xref_p10_deleted",
+          "rnacen.xref_p10_not_deleted",
+          "rnacen.xref_p11_deleted",
+          "rnacen.xref_p11_not_deleted",
+          "rnacen.xref_p12_deleted",
+          "rnacen.xref_p12_not_deleted",
+          "rnacen.xref_p13_deleted",
+          "rnacen.xref_p13_not_deleted",
+          "rnacen.xref_p14_deleted",
+          "rnacen.xref_p14_not_deleted"
+        ],
+        "prompt_tokens": 3296
+      }
+    },
+    {
+      "question": "for each Rfam clan, the number of Rfam models in it",
+      "must_retrieve": [
+        "rfam_clans",
+        "rfam_models"
+      ],
+      "naive": {
+        "tables": 216,
+        "prompt_tokens": 28175
+      },
+      "pq_v1": {
+        "tables": 17,
+        "table_names": [
+          "rnacen.rfam_models",
+          "rnacen.rfam_clans",
+          "rnacen.rfam_model_hits",
+          "rnacen.rfam_go_terms",
+          "rnacen.rfam_analyzed_sequences",
+          "rnacen.r2dt_models",
+          "rnacen.r2dt_models_backup",
+          "rnacen.r2dt_model_extra_data",
+          "rnacen.validate_layout_hits",
+          "rnacen.r2dt_results",
+          "rnacen.qa_status",
+          "rnacen_django_test.django_content_type",
+          "rnacen.pipeline_tracking_qa_scan",
+          "rnacen.ontology_terms",
+          "rnacen.rnc_sequence_features",
+          "rnacen.rna",
+          "rnacen_django_test.auth_permission"
+        ],
+        "prompt_tokens": 1722
+      },
+      "pq_v2": {
+        "tables": 17,
+        "table_names": [
+          "rnacen.rfam_models",
+          "rnacen.rfam_clans",
+          "rnacen.rfam_model_hits",
+          "rnacen.rfam_go_terms",
+          "rnacen.rfam_analyzed_sequences",
+          "rnacen.r2dt_models",
+          "rnacen.r2dt_models_backup",
+          "rnacen.r2dt_model_extra_data",
+          "rnacen.validate_layout_hits",
+          "rnacen.r2dt_results",
+          "rnacen.qa_status",
+          "rnacen_django_test.django_content_type",
+          "rnacen.pipeline_tracking_qa_scan",
+          "rnacen.ontology_terms",
+          "rnacen.rnc_sequence_features",
+          "rnacen.rna",
+          "rnacen_django_test.auth_permission"
+        ],
+        "prompt_tokens": 1722
+      }
+    },
+    {
+      "question": "GO term annotations with the ontology term name and the publication they cite",
+      "must_retrieve": [
+        "go_term_annotations",
+        "ontology_terms",
+        "go_term_publication_map",
+        "rnc_references"
+      ],
+      "naive": {
+        "tables": 216,
+        "prompt_tokens": 28175
+      },
+      "pq_v1": {
+        "tables": 25,
+        "table_names": [
+          "rnacen.go_term_annotations",
+          "rnacen.go_term_publication_map",
+          "rnacen.ontology_terms",
+          "rnacen.rfam_go_terms",
+          "rnacen.insdc_so_term_mapping",
+          "rnacen.publications",
+          "rnacen.rnc_rna_precomputed",
+          "rnacen.r2dt_models",
+          "rnacen.rnc_accessions",
+          "rnacen.rfam_models",
+          "rnacen.r2dt_models_backup",
+          "rnacen.rnc_sequence_feature_types",
+          "rnacen.rnc_taxonomy",
+          "rnacen.ensembl_import_tracking",
+          "rnacen_django_test.auth_user",
+          "rnacen.rnc_locus",
+          "rnacen.ensembl_assembly",
+          "rnacen.precompute_urs_accession",
+          "rnacen_django_test.auth_group",
+          "rnacen.rnc_interactions",
+          "rnacen.auth_permission",
+          "rnacen_django_test.django_site",
+          "rnacen_django_test.django_migrations",
+          "rnacen.rnc_sequence_feature_providers",
+          "rnacen_django_test.auth_permission"
+        ],
+        "prompt_tokens": 2437
+      },
+      "pq_v2": {
+        "tables": 11,
+        "table_names": [
+          "rnacen.go_term_annotations",
+          "rnacen.ontology_terms",
+          "rnacen.go_term_publication_map",
+          "rnacen.publications",
+          "rnacen.rnc_references",
+          "rnacen.insdc_so_term_mapping",
+          "rnacen.r2dt_models",
+          "rnacen.rfam_go_terms",
+          "rnacen.rfam_models",
+          "rnacen.rnc_accessions",
+          "rnacen.rnc_rna_precomputed"
+        ],
+        "prompt_tokens": 1448
+      }
+    },
+    {
+      "question": "R2DT 2D-structure results with the model name and the matching RNA upi",
+      "must_retrieve": [
+        "r2dt_results",
+        "r2dt_models",
+        "rna"
+      ],
+      "naive": {
+        "tables": 216,
+        "prompt_tokens": 28175
+      },
+      "pq_v1": {
+        "tables": 25,
+        "table_names": [
+          "rnacen.r2dt_results",
+          "rnacen.rnc_secondary_structure",
+          "rnacen.r2dt_models",
+          "rnacen.r2dt_models_backup",
+          "rnacen.r2dt_model_extra_data",
+          "rnacen.validate_layout_hits",
+          "rnacen.rfam_model_hits",
+          "rnacen.cpat_results",
+          "rnacen.rfam_models",
+          "rnacen.publications",
+          "rnacen_django_test.rnc_rna_precomputed",
+          "rnacen.rfam_go_terms",
+          "rnacen_django_test.django_content_type",
+          "rnacen.rnc_sequence_feature_types",
+          "rnacen.old_summaries",
+          "rnacen.rnc_taxonomy",
+          "rnacen.litsumm_summaries",
+          "rnacen.rnc_accessions",
+          "rnacen.ensembl_import_tracking",
+          "rnacen_django_test.auth_user",
+          "rnacen.pipeline_tracking_qa_scan",
+          "rnacen_django_test.rna",
+          "rnacen.rnc_rna_precomputed",
+          "rnacen.rnc_interactions",
+          "rnacen.rnc_locus"
+        ],
+        "prompt_tokens": 2597
+      },
+      "pq_v2": {
+        "tables": 16,
+        "table_names": [
+          "rnacen.r2dt_results",
+          "rnacen.r2dt_models",
+          "rnacen.rnc_rna_precomputed",
+          "rnacen.rna",
+          "rnacen.ontology_terms",
+          "rnacen.rnc_release",
+          "rnacen.cpat_results",
+          "rnacen.ensembl_compara",
+          "rnacen.pipeline_tracking_genome_mapping",
+          "rnacen.r2dt_model_extra_data",
+          "rnacen.rnc_feedback_overlap",
+          "rnacen.rnc_gene_status",
+          "rnacen.rnc_interactions",
+          "rnacen.rnc_locus_members",
+          "rnacen.rnc_related_sequences",
+          "rnacen.rnc_sequence_regions"
+        ],
+        "prompt_tokens": 1714
+      }
+    },
+    {
+      "question": "cpat results joined to precomputed RNA with the RNA description",
+      "must_retrieve": [
+        "cpat_results",
+        "rnc_rna_precomputed"
+      ],
+      "naive": {
+        "tables": 216,
+        "prompt_tokens": 28175
+      },
+      "pq_v1": {
+        "tables": 25,
+        "table_names": [
+          "rnacen.cpat_results",
+          "rnacen_django_test.rnc_rna_precomputed",
+          "rnacen.rnc_rna_precomputed",
+          "rnacen_django_test.rnc_rna_precomputed_data",
+          "rnacen.r2dt_results",
+          "rnacen.publications",
+          "rnacen_django_test.auth_user",
+          "rnacen.rnc_related_sequences",
+          "rnacen.rnc_interactions",
+          "rnacen.ensembl_compara",
+          "rnacen_django_test.rna",
+          "rnacen.old_summaries",
+          "rnacen.rnc_gene_status",
+          "rnacen.litsumm_summaries",
+          "rnacen.rnc_sequence_regions",
+          "rnacen.rfam_models",
+          "rnacen.rnc_sequence_feature_providers",
+          "rnacen.rnc_locus_members",
+          "rnacen.pipeline_tracking_genome_mapping",
+          "rnacen.rna",
+          "rnacen.rnc_feedback_overlap",
+          "rnacen.rnc_chemical_components",
+          "rnacen_django_test.rnc_chemical_components",
+          "rnacen.protein_info",
+          "rnacen.rfam_clans"
+        ],
+        "prompt_tokens": 2519
+      },
+      "pq_v2": {
+        "tables": 12,
+        "table_names": [
+          "rnacen.cpat_results",
+          "rnacen.rnc_rna_precomputed",
+          "rnacen.ontology_terms",
+          "rnacen.rnc_release",
+          "rnacen.ensembl_compara",
+          "rnacen.pipeline_tracking_genome_mapping",
+          "rnacen.rnc_feedback_overlap",
+          "rnacen.rnc_gene_status",
+          "rnacen.rnc_interactions",
+          "rnacen.rnc_locus_members",
+          "rnacen.rnc_related_sequences",
+          "rnacen.rnc_sequence_regions"
+        ],
+        "prompt_tokens": 1359
+      }
+    },
+    {
+      "question": "count Rfam model hits per RNA, top 20",
+      "must_retrieve": [
+        "rfam_model_hits",
+        "rna"
+      ],
+      "naive": {
+        "tables": 216,
+        "prompt_tokens": 28175
+      },
+      "pq_v1": {
+        "tables": 25,
+        "table_names": [
+          "rnacen.rfam_model_hits",
+          "rnacen.rfam_models",
+          "rnacen.validate_layout_hits",
+          "rnacen.r2dt_models",
+          "rnacen.rfam_go_terms",
+          "rnacen.r2dt_models_backup",
+          "rnacen.rfam_clans",
+          "rnacen.xref_count",
+          "rnacen.r2dt_results",
+          "rnacen.rfam_analyzed_sequences",
+          "rnacen.r2dt_model_extra_data",
+          "rnacen.litscan_sentence_id_counts",
+          "rnacen.validate_layout_counts",
+          "rnacen.sequence_region_urs_counts",
+          "rnacen_django_test.rnc_rna_precomputed_data",
+          "rnacen.qa_status",
+          "rnacen_django_test.django_content_type",
+          "rnacen_django_test.rnc_rna_precomputed",
+          "rnacen.pipeline_tracking_qa_scan",
+          "pg_stat_statements",
+          "rnacen.rnc_database_json_stats",
+          "rnacen_django_test.rnc_database_json_stats",
+          "rnacen.rnc_sequence_regions",
+          "rnacen.rnc_rna_precomputed",
+          "rnacen.rnc_sequence_regions_active"
+        ],
+        "prompt_tokens": 2524
+      },
+      "pq_v2": {
+        "tables": 10,
+        "table_names": [
+          "rnacen.rfam_model_hits",
+          "rnacen.rfam_models",
+          "rnacen.rfam_analyzed_sequences",
+          "rnacen.r2dt_results",
+          "rnacen.rnc_sequence_features",
+          "rnacen.rna",
+          "rnacen.rfam_clans",
+          "rnacen.ontology_terms",
+          "rnacen.r2dt_models",
+          "rnacen.rfam_go_terms"
+        ],
+        "prompt_tokens": 1248
+      }
+    },
+    {
+      "question": "Ensembl compara homologies mapped to their precomputed RNA description",
+      "must_retrieve": [
+        "ensembl_compara",
+        "rnc_rna_precomputed"
+      ],
+      "naive": {
+        "tables": 216,
+        "prompt_tokens": 28175
+      },
+      "pq_v1": {
+        "tables": 25,
+        "table_names": [
+          "rnacen.ensembl_compara",
+          "rnacen_django_test.rnc_rna_precomputed",
+          "rnacen.rnc_rna_precomputed",
+          "rnacen_django_test.rnc_rna_precomputed_data",
+          "rnacen.rnc_sequence_regions_active_mapped",
+          "rnacen.litscan_ensembl_ids",
+          "rnacen.rnc_sequence_regions",
+          "rnacen.ensembl_pseudogene_regions",
+          "rnacen.ensembl_pseudogene_exons",
+          "rnacen.ensembl_import_tracking",
+          "rnacen.ensembl_coordinate_systems",
+          "rnacen.ensembl_assembly",
+          "rnacen.ensembl_stable_prefixes",
+          "rnacen.rnc_references",
+          "rnacen.rnc_gene_status",
+          "rnacen.rnc_related_sequences",
+          "rnacen.rnc_feedback_overlap",
+          "rnacen.rnc_interactions",
+          "rnacen.rnc_sequence_regions_active",
+          "rnacen.sequence_region_urs_counts",
+          "rnacen.rnc_sequence_regions_active_provided",
+          "rnacen.rnc_sequence_feature_providers",
+          "rnacen.cpat_results",
+          "rnacen.rnc_chemical_components",
+          "rnacen_django_test.rnc_chemical_components"
+        ],
+        "prompt_tokens": 2326
+      },
+      "pq_v2": {
+        "tables": 12,
+        "table_names": [
+          "rnacen.ensembl_compara",
+          "rnacen.rnc_rna_precomputed",
+          "rnacen.ontology_terms",
+          "rnacen.rnc_release",
+          "rnacen.cpat_results",
+          "rnacen.pipeline_tracking_genome_mapping",
+          "rnacen.rnc_feedback_overlap",
+          "rnacen.rnc_gene_status",
+          "rnacen.rnc_interactions",
+          "rnacen.rnc_locus_members",
+          "rnacen.rnc_related_sequences",
+          "rnacen.rnc_sequence_regions"
+        ],
+        "prompt_tokens": 1359
+      }
+    },
+    {
+      "question": "Rfam GO terms with both the Rfam model name and the ontology term name",
+      "must_retrieve": [
+        "rfam_go_terms",
+        "rfam_models",
+        "ontology_terms"
+      ],
+      "naive": {
+        "tables": 216,
+        "prompt_tokens": 28175
+      },
+      "pq_v1": {
+        "tables": 25,
+        "table_names": [
+          "rnacen.rfam_go_terms",
+          "rnacen.rfam_models",
+          "rnacen.go_term_annotations",
+          "rnacen.ontology_terms",
+          "rnacen.go_term_publication_map",
+          "rnacen.rfam_model_hits",
+          "rnacen.r2dt_models",
+          "rnacen.rfam_clans",
+          "rnacen.rfam_analyzed_sequences",
+          "rnacen.insdc_so_term_mapping",
+          "rnacen.r2dt_models_backup",
+          "rnacen.rnc_rna_precomputed",
+          "rnacen.r2dt_model_extra_data",
+          "rnacen.validate_layout_hits",
+          "rnacen.rnc_accessions",
+          "rnacen.r2dt_results",
+          "rnacen.qa_status",
+          "rnacen.rnc_sequence_feature_types",
+          "rnacen.rnc_taxonomy",
+          "rnacen.ensembl_import_tracking",
+          "rnacen_django_test.auth_user",
+          "rnacen.rnc_locus",
+          "rnacen.ensembl_assembly",
+          "rnacen.precompute_urs_accession",
+          "rnacen_django_test.auth_group"
+        ],
+        "prompt_tokens": 2749
+      },
+      "pq_v2": {
+        "tables": 10,
+        "table_names": [
+          "rnacen.rfam_go_terms",
+          "rnacen.rfam_models",
+          "rnacen.ontology_terms",
+          "rnacen.rfam_clans",
+          "rnacen.go_term_annotations",
+          "rnacen.insdc_so_term_mapping",
+          "rnacen.r2dt_models",
+          "rnacen.rfam_model_hits",
+          "rnacen.rnc_accessions",
+          "rnacen.rnc_rna_precomputed"
+        ],
+        "prompt_tokens": 1461
+      }
+    },
+    {
+      "question": "QA-flagged RNAs with possible contamination together with the RNA upi",
+      "must_retrieve": [
+        "qa_status",
+        "rna"
+      ],
+      "naive": {
+        "tables": 216,
+        "prompt_tokens": 28175
+      },
+      "pq_v1": {
+        "tables": 25,
+        "table_names": [
+          "rnacen.qa_status",
+          "rnacen.pipeline_tracking_qa_scan",
+          "rnacen_django_test.rnc_rna_precomputed",
+          "rnacen.rnc_rna_precomputed",
+          "rnacen_django_test.rna",
+          "rnacen.rna",
+          "rnacen_django_test.rnc_rna_precomputed_data",
+          "rnacen_django_test.xref",
+          "rnacen.xref_p10_deleted",
+          "rnacen.xref_p11_deleted",
+          "rnacen.xref_p12_deleted",
+          "rnacen.xref_p13_deleted",
+          "rnacen.xref_p14_deleted",
+          "rnacen.xref_p15_deleted",
+          "rnacen.xref_p16_deleted",
+          "rnacen.xref_p17_deleted",
+          "rnacen.xref_p18_deleted",
+          "rnacen.xref_p19_deleted",
+          "rnacen.xref_p1_deleted",
+          "rnacen.xref_p20_deleted",
+          "rnacen.xref_p21_deleted",
+          "rnacen.xref_p22_deleted",
+          "rnacen.xref_p23_deleted",
+          "rnacen.xref_p24_deleted",
+          "rnacen.xref_p25_deleted"
+        ],
+        "prompt_tokens": 3944
+      },
+      "pq_v2": {
+        "tables": 25,
+        "table_names": [
+          "rnacen.qa_status",
+          "rnacen.rnc_rna_precomputed",
+          "rnacen.rna",
+          "rnacen.ontology_terms",
+          "rnacen.rnc_release",
+          "rnacen.cpat_results",
+          "rnacen.ensembl_compara",
+          "rnacen.pipeline_tracking_genome_mapping",
+          "rnacen.pipeline_tracking_qa_scan",
+          "rnacen.pipeline_tracking_traveler",
+          "rnacen.precompute_urs",
+          "rnacen.precompute_urs_taxid",
+          "rnacen.r2dt_results",
+          "rnacen.rfam_analyzed_sequences",
+          "rnacen.rfam_model_hits",
+          "rnacen.rnc_feedback_overlap",
+          "rnacen.rnc_gene_status",
+          "rnacen.rnc_interactions",
+          "rnacen.rnc_locus_members",
+          "rnacen.rnc_related_sequences",
+          "rnacen.rnc_sequence_features",
+          "rnacen.rnc_sequence_regions",
+          "rnacen.validate_layout_counts",
+          "rnacen.xref_p10_deleted",
+          "rnacen.xref_p10_not_deleted"
+        ],
+        "prompt_tokens": 2797
+      }
+    },
+    {
+      "question": "count how many R2DT results exist per R2DT model",
+      "must_retrieve": [
+        "r2dt_results",
+        "r2dt_models"
+      ],
+      "naive": {
+        "tables": 216,
+        "prompt_tokens": 28175
+      },
+      "pq_v1": {
+        "tables": 25,
+        "table_names": [
+          "rnacen.r2dt_results",
+          "rnacen.r2dt_models",
+          "rnacen.r2dt_models_backup",
+          "rnacen.xref_count",
+          "rnacen.rfam_model_hits",
+          "rnacen.r2dt_model_extra_data",
+          "rnacen.cpat_results",
+          "rnacen.validate_layout_hits",
+          "rnacen.rfam_models",
+          "rnacen.litscan_sentence_id_counts",
+          "rnacen.validate_layout_counts",
+          "rnacen.sequence_region_urs_counts",
+          "rnacen.publications",
+          "rnacen_django_test.rnc_rna_precomputed_data",
+          "rnacen.rfam_go_terms",
+          "rnacen_django_test.django_content_type",
+          "rnacen.old_summaries",
+          "rnacen.litsumm_summaries",
+          "rnacen.rnc_database_json_stats",
+          "rnacen.pipeline_tracking_qa_scan",
+          "rnacen_django_test.rnc_database_json_stats",
+          "rnacen.rfam_clans",
+          "rnacen.rnc_sequence_regions",
+          "rnacen.rnc_sequence_regions_active",
+          "rnacen.ensembl_pseudogene_regions"
+        ],
+        "prompt_tokens": 2173
+      },
+      "pq_v2": {
+        "tables": 5,
+        "table_names": [
+          "rnacen.r2dt_results",
+          "rnacen.r2dt_models",
+          "rnacen.rna",
+          "rnacen.ontology_terms",
+          "rnacen.r2dt_model_extra_data"
+        ],
+        "prompt_tokens": 555
+      }
+    },
+    {
+      "question": "publications of GO annotations with their PMID",
+      "must_retrieve": [
+        "go_term_publication_map",
+        "rnc_references"
+      ],
+      "naive": {
+        "tables": 216,
+        "prompt_tokens": 28175
+      },
+      "pq_v1": {
+        "tables": 11,
+        "table_names": [
+          "rnacen.go_term_publication_map",
+          "rnacen.publications",
+          "rnacen.go_term_annotations",
+          "rnacen.rfam_go_terms",
+          "rnacen.rnc_references",
+          "rnacen_django_test.rnc_references",
+          "rnacen.ontology_terms",
+          "rnacen.rfam_models",
+          "rnacen.rnc_database_references",
+          "rnacen.rnc_reference_map",
+          "rnacen_django_test.rnc_reference_map"
+        ],
+        "prompt_tokens": 1083
+      },
+      "pq_v2": {
+        "tables": 11,
+        "table_names": [
+          "rnacen.go_term_publication_map",
+          "rnacen.publications",
+          "rnacen.go_term_annotations",
+          "rnacen.rfam_go_terms",
+          "rnacen.rnc_references",
+          "rnacen_django_test.rnc_references",
+          "rnacen.ontology_terms",
+          "rnacen.rfam_models",
+          "rnacen.rnc_database_references",
+          "rnacen.rnc_reference_map",
+          "rnacen_django_test.rnc_reference_map"
+        ],
+        "prompt_tokens": 1083
+      }
+    },
+    {
+      "question": "RNA cross-references with the source database display name",
+      "must_retrieve": [
+        "rnc_accessions",
+        "rnc_database"
+      ],
+      "naive": {
+        "tables": 216,
+        "prompt_tokens": 28175
+      },
+      "pq_v1": {
+        "tables": 25,
+        "table_names": [
+          "rnacen.xref",
+          "rnacen.rnc_database_references",
+          "rnacen.rnc_reference_map",
+          "rnacen.rnc_database",
+          "rnacen_django_test.rnc_reference_map",
+          "rnacen_django_test.rnc_references",
+          "rnacen.rnc_references",
+          "rnacen.rnc_release",
+          "rnacen_django_test.rnc_database",
+          "rnacen.rnc_related_sequences",
+          "rnacen.pipeline_tracking_qa_scan",
+          "rnacen.rnc_chemical_components",
+          "rnacen_django_test.rnc_chemical_components",
+          "rnacen.validate_layout_hits",
+          "rnacen.r2dt_models",
+          "rnacen.litsumm_summaries",
+          "rnacen.go_term_publication_map",
+          "rnacen.r2dt_models_backup",
+          "rnacen.ensembl_import_tracking",
+          "rnacen.rnc_accessions",
+          "rnacen.rnc_sequence_feature_types",
+          "rnacen.rnc_taxonomy",
+          "rnacen_django_test.rnc_rna_precomputed",
+          "rnacen_django_test.auth_user",
+          "rnacen.rfam_models"
+        ],
+        "prompt_tokens": 2737
+      },
+      "pq_v2": {
+        "tables": 19,
+        "table_names": [
+          "rnacen_django_test.rnc_database",
+          "rnacen.rnc_references",
+          "rnacen.rnc_accessions",
+          "rnacen.rnc_related_sequences",
+          "rnacen_django_test.xref",
+          "rnacen.ontology_terms",
+          "rnacen.rnc_relationship_types",
+          "rnacen.rnc_rna_precomputed",
+          "rnacen_django_test.rnc_accessions",
+          "rnacen_django_test.rnc_release",
+          "rnacen_django_test.rna",
+          "rnacen.go_term_publication_map",
+          "rnacen.rnc_accession_sequence_feature",
+          "rnacen.rnc_accession_sequence_region",
+          "rnacen.rnc_database_references",
+          "rnacen.rnc_modifications",
+          "rnacen.rnc_reference_map",
+          "rnacen.rnc_sequence_features",
+          "rnacen_django_test.rnc_modifications"
+        ],
+        "prompt_tokens": 2715
+      }
+    },
+    {
+      "question": "which RNA sequences are predicted to code for proteins",
+      "must_retrieve": [
+        "cpat_results"
+      ],
+      "naive": {
+        "tables": 216,
+        "prompt_tokens": 28175
+      },
+      "pq_v1": {
+        "tables": 25,
+        "table_names": [
+          "rnacen.rna",
+          "rnacen.protein_info",
+          "rnacen.rnc_accession_sequence_feature",
+          "rnacen.rnc_sequence_exons",
+          "rnacen.rnc_sequence_features",
+          "rnacen.rnc_accession_sequence_region",
+          "rnacen.sequence_region_urs_counts",
+          "rnacen.rnc_sequence_feature_providers",
+          "rnacen.rnc_sequence_feature_types",
+          "rnacen.rnc_sequence_regions",
+          "rnacen.rfam_analyzed_sequences",
+          "rnacen.rnc_related_sequences",
+          "rnacen.rfam_model_hits",
+          "rnacen.rnc_sequence_regions_active",
+          "rnacen.rnc_chemical_components",
+          "rnacen_django_test.rnc_chemical_components",
+          "rnacen.cpat_results",
+          "rnacen.rnc_sequence_regions_active_provided",
+          "rnacen.rnc_sequence_regions_active_mapped",
+          "rnacen.r2dt_results",
+          "rnacen.validate_layout_hits",
+          "rnacen.go_term_annotations",
+          "rnacen_django_test.rnc_rna_precomputed",
+          "rnacen.qa_status",
+          "rnacen.rnc_gene_status"
+        ],
+        "prompt_tokens": 2385
+      },
+      "pq_v2": {
+        "tables": 14,
+        "table_names": [
+          "rnacen.cpat_results",
+          "rnacen.rnc_rna_precomputed",
+          "rnacen.qa_status",
+          "rnacen.ontology_terms",
+          "rnacen.rnc_release",
+          "rnacen.rna",
+          "rnacen.ensembl_compara",
+          "rnacen.pipeline_tracking_genome_mapping",
+          "rnacen.rnc_feedback_overlap",
+          "rnacen.rnc_gene_status",
+          "rnacen.rnc_interactions",
+          "rnacen.rnc_locus_members",
+          "rnacen.rnc_related_sequences",
+          "rnacen.rnc_sequence_regions"
+        ],
+        "prompt_tokens": 1563
+      }
+    },
+    {
+      "question": "what 2D structures have been predicted for our RNAs",
+      "must_retrieve": [
+        "r2dt_results"
+      ],
+      "naive": {
+        "tables": 216,
+        "prompt_tokens": 28175
+      },
+      "pq_v1": {
+        "tables": 25,
+        "table_names": [
+          "rnacen.rnc_secondary_structure",
+          "rnacen.r2dt_results",
+          "rnacen_django_test.rnc_rna_precomputed",
+          "rnacen.rnc_rna_precomputed",
+          "rnacen_django_test.rna",
+          "rnacen.rna",
+          "rnacen_django_test.rnc_rna_precomputed_data",
+          "rnacen_django_test.xref",
+          "rnacen.validate_layout_hits",
+          "rnacen.rfam_models",
+          "rnacen.qa_status",
+          "rnacen.validate_layout_counts",
+          "rnacen.rnc_related_sequences",
+          "rnacen.xref_p10_deleted",
+          "rnacen.xref_p11_deleted",
+          "rnacen.xref_p12_deleted",
+          "rnacen.xref_p13_deleted",
+          "rnacen.xref_p14_deleted",
+          "rnacen.xref_p15_deleted",
+          "rnacen.xref_p16_deleted",
+          "rnacen.xref_p17_deleted",
+          "rnacen.xref_p18_deleted",
+          "rnacen.xref_p19_deleted",
+          "rnacen.xref_p1_deleted",
+          "rnacen.xref_p20_deleted"
+        ],
+        "prompt_tokens": 3698
+      },
+      "pq_v2": {
+        "tables": 16,
+        "table_names": [
+          "rnacen.rnc_secondary_structure",
+          "rnacen.r2dt_results",
+          "rnacen.rnc_rna_precomputed",
+          "rnacen.r2dt_models",
+          "rnacen.rna",
+          "rnacen.ontology_terms",
+          "rnacen.rnc_release",
+          "rnacen.cpat_results",
+          "rnacen.ensembl_compara",
+          "rnacen.pipeline_tracking_genome_mapping",
+          "rnacen.rnc_feedback_overlap",
+          "rnacen.rnc_gene_status",
+          "rnacen.rnc_interactions",
+          "rnacen.rnc_locus_members",
+          "rnacen.rnc_related_sequences",
+          "rnacen.rnc_sequence_regions"
+        ],
+        "prompt_tokens": 1702
+      }
+    },
+    {
+      "question": "show me literature summaries written about RNA",
+      "must_retrieve": [
+        "litsumm_summaries"
+      ],
+      "naive": {
+        "tables": 216,
+        "prompt_tokens": 28175
+      },
+      "pq_v1": {
+        "tables": 25,
+        "table_names": [
+          "rnacen.old_summaries",
+          "rnacen.litsumm_summaries",
+          "rnacen.rnc_references",
+          "pg_stat_statements",
+          "rnacen_django_test.rnc_rna_precomputed",
+          "rnacen.rnc_rna_precomputed",
+          "rnacen_django_test.rna",
+          "rnacen.rna",
+          "rnacen_django_test.rnc_rna_precomputed_data",
+          "rnacen_django_test.xref",
+          "rnacen.validate_layout_hits",
+          "rnacen.rfam_models",
+          "rnacen.qa_status",
+          "rnacen.validate_layout_counts",
+          "rnacen.rnc_related_sequences",
+          "rnacen.xref_p10_deleted",
+          "rnacen.xref_p11_deleted",
+          "rnacen.xref_p12_deleted",
+          "rnacen.xref_p13_deleted",
+          "rnacen.xref_p14_deleted",
+          "rnacen.xref_p15_deleted",
+          "rnacen.xref_p16_deleted",
+          "rnacen.xref_p17_deleted",
+          "rnacen.xref_p18_deleted",
+          "rnacen.xref_p19_deleted"
+        ],
+        "prompt_tokens": 3753
+      },
+      "pq_v2": {
+        "tables": 6,
+        "table_names": [
+          "rnacen.old_summaries",
+          "rnacen.litsumm_summaries",
+          "rnacen.rnc_references",
+          "rnacen.go_term_publication_map",
+          "rnacen.rnc_database_references",
+          "rnacen.rnc_reference_map"
+        ],
+        "prompt_tokens": 621
+      }
+    },
+    {
+      "question": "what RNA families exist in the database",
+      "must_retrieve": [
+        "rfam_models"
+      ],
+      "naive": {
+        "tables": 216,
+        "prompt_tokens": 28175
+      },
+      "pq_v1": {
+        "tables": 25,
+        "table_names": [
+          "rnacen.rfam_clans",
+          "rnacen.rfam_analyzed_sequences",
+          "rnacen_django_test.rnc_rna_precomputed",
+          "rnacen.rnc_rna_precomputed",
+          "rnacen.rnc_database_references",
+          "rnacen.rnc_database",
+          "rnacen.rnc_database_json_stats",
+          "rnacen_django_test.rnc_database_json_stats",
+          "rnacen_django_test.xref",
+          "rnacen_django_test.rna",
+          "rnacen.rna",
+          "rnacen_django_test.rnc_rna_precomputed_data",
+          "rnacen.xref",
+          "rnacen_django_test.rnc_database",
+          "rnacen.rnc_release",
+          "rnacen.xref_p10_deleted",
+          "rnacen.xref_p11_deleted",
+          "rnacen.xref_p12_deleted",
+          "rnacen.xref_p13_deleted",
+          "rnacen.xref_p14_deleted",
+          "rnacen.xref_p15_deleted",
+          "rnacen.xref_p16_deleted",
+          "rnacen.xref_p17_deleted",
+          "rnacen.xref_p18_deleted",
+          "rnacen.xref_p19_deleted"
+        ],
+        "prompt_tokens": 3409
+      },
+      "pq_v2": {
+        "tables": 16,
+        "table_names": [
+          "rnacen.rfam_clans",
+          "rnacen.rfam_analyzed_sequences",
+          "rnacen.rnc_rna_precomputed",
+          "rnacen.rna",
+          "rnacen.ontology_terms",
+          "rnacen.rnc_release",
+          "rnacen.cpat_results",
+          "rnacen.ensembl_compara",
+          "rnacen.pipeline_tracking_genome_mapping",
+          "rnacen.rfam_models",
+          "rnacen.rnc_feedback_overlap",
+          "rnacen.rnc_gene_status",
+          "rnacen.rnc_interactions",
+          "rnacen.rnc_locus_members",
+          "rnacen.rnc_related_sequences",
+          "rnacen.rnc_sequence_regions"
+        ],
+        "prompt_tokens": 1743
+      }
+    },
+    {
+      "question": "show me genome assemblies known to RNAcentral",
+      "must_retrieve": [
+        "ensembl_assembly"
+      ],
+      "naive": {
+        "tables": 216,
+        "prompt_tokens": 28175
+      },
+      "pq_v1": {
+        "tables": 19,
+        "table_names": [
+          "rnacen.pipeline_tracking_genome_mapping",
+          "rnacen.ensembl_assembly",
+          "rnacen.rnc_feedback_target_assemblies",
+          "rnacen.rnc_gene_status",
+          "rnacen.rnc_sequence_regions",
+          "rnacen.rnc_feedback_overlap",
+          "rnacen.ensembl_pseudogene_regions",
+          "rnacen.rnc_locus",
+          "rnacen.ensembl_coordinate_systems",
+          "rnacen.rnc_sequence_regions_active",
+          "rnacen.sequence_region_urs_counts",
+          "rnacen.rnc_sequence_regions_active_provided",
+          "rnacen.rnc_sequence_regions_active_mapped",
+          "rnacen.rnc_rna_precomputed",
+          "rnacen.rnc_database",
+          "rnacen.ensembl_pseudogene_exons",
+          "rnacen.rnc_accession_sequence_region",
+          "rnacen.rnc_locus_members",
+          "rnacen.rnc_sequence_exons"
+        ],
+        "prompt_tokens": 1973
+      },
+      "pq_v2": {
+        "tables": 19,
+        "table_names": [
+          "rnacen.pipeline_tracking_genome_mapping",
+          "rnacen.ensembl_assembly",
+          "rnacen.rnc_feedback_target_assemblies",
+          "rnacen.rnc_gene_status",
+          "rnacen.rnc_sequence_regions",
+          "rnacen.rnc_feedback_overlap",
+          "rnacen.ensembl_pseudogene_regions",
+          "rnacen.rnc_locus",
+          "rnacen.ensembl_coordinate_systems",
+          "rnacen.rnc_sequence_regions_active",
+          "rnacen.sequence_region_urs_counts",
+          "rnacen.rnc_sequence_regions_active_provided",
+          "rnacen.rnc_sequence_regions_active_mapped",
+          "rnacen.rnc_rna_precomputed",
+          "rnacen.rnc_database",
+          "rnacen.ensembl_pseudogene_exons",
+          "rnacen.rnc_accession_sequence_region",
+          "rnacen.rnc_locus_members",
+          "rnacen.rnc_sequence_exons"
+        ],
+        "prompt_tokens": 1973
+      }
+    },
+    {
+      "question": "which RNAs have quality-control issues",
+      "must_retrieve": [
+        "qa_status"
+      ],
+      "naive": {
+        "tables": 216,
+        "prompt_tokens": 28175
+      },
+      "pq_v1": {
+        "tables": 25,
+        "table_names": [
+          "rnacen.qa_status",
+          "rnacen_django_test.rnc_rna_precomputed",
+          "rnacen.rnc_rna_precomputed",
+          "rnacen_django_test.rna",
+          "rnacen.rna",
+          "rnacen_django_test.rnc_rna_precomputed_data",
+          "rnacen_django_test.xref",
+          "rnacen.validate_layout_hits",
+          "rnacen.rfam_models",
+          "rnacen.validate_layout_counts",
+          "rnacen.rnc_related_sequences",
+          "rnacen.xref_p10_deleted",
+          "rnacen.xref_p11_deleted",
+          "rnacen.xref_p12_deleted",
+          "rnacen.xref_p13_deleted",
+          "rnacen.xref_p14_deleted",
+          "rnacen.xref_p15_deleted",
+          "rnacen.xref_p16_deleted",
+          "rnacen.xref_p17_deleted",
+          "rnacen.xref_p18_deleted",
+          "rnacen.xref_p19_deleted",
+          "rnacen.xref_p1_deleted",
+          "rnacen.xref_p20_deleted",
+          "rnacen.xref_p21_deleted",
+          "rnacen.xref_p22_deleted"
+        ],
+        "prompt_tokens": 3859
+      },
+      "pq_v2": {
+        "tables": 25,
+        "table_names": [
+          "rnacen.qa_status",
+          "rnacen.rna",
+          "rnacen.pipeline_tracking_qa_scan",
+          "rnacen.pipeline_tracking_traveler",
+          "rnacen.precompute_urs",
+          "rnacen.precompute_urs_taxid",
+          "rnacen.r2dt_results",
+          "rnacen.rfam_analyzed_sequences",
+          "rnacen.rfam_model_hits",
+          "rnacen.rnc_sequence_features",
+          "rnacen.validate_layout_counts",
+          "rnacen.xref_p10_deleted",
+          "rnacen.xref_p10_not_deleted",
+          "rnacen.xref_p11_deleted",
+          "rnacen.xref_p11_not_deleted",
+          "rnacen.xref_p12_deleted",
+          "rnacen.xref_p12_not_deleted",
+          "rnacen.xref_p13_deleted",
+          "rnacen.xref_p13_not_deleted",
+          "rnacen.xref_p14_deleted",
+          "rnacen.xref_p14_not_deleted",
+          "rnacen.xref_p15_deleted",
+          "rnacen.xref_p15_not_deleted",
+          "rnacen.xref_p16_deleted",
+          "rnacen.xref_p16_not_deleted"
+        ],
+        "prompt_tokens": 3610
+      }
+    },
+    {
+      "question": "list the scientific papers we have citations for",
+      "must_retrieve": [
+        "rnc_references"
+      ],
+      "naive": {
+        "tables": 216,
+        "prompt_tokens": 28175
+      },
+      "pq_v1": {
+        "tables": 3,
+        "table_names": [
+          "pg_stat_statements",
+          "pg_stat_statements_info",
+          "rnacen.auth_permission"
+        ],
+        "prompt_tokens": 524
+      },
+      "pq_v2": {
+        "tables": 3,
+        "table_names": [
+          "pg_stat_statements",
+          "pg_stat_statements_info",
+          "rnacen.auth_permission"
+        ],
+        "prompt_tokens": 524
+      }
+    },
+    {
+      "question": "show homology mappings between species",
+      "must_retrieve": [
+        "ensembl_compara"
+      ],
+      "naive": {
+        "tables": 216,
+        "prompt_tokens": 28175
+      },
+      "pq_v1": {
+        "tables": 25,
+        "table_names": [
+          "rnacen.pipeline_tracking_genome_mapping",
+          "rnacen.insdc_so_term_mapping",
+          "rnacen.ensembl_compara",
+          "rnacen_django_test.rnc_accessions",
+          "rnacen.precompute_urs_accession",
+          "rnacen.ensembl_assembly",
+          "rnacen.rnc_accessions",
+          "rnacen.go_term_publication_map",
+          "rnacen.rnc_rna_precomputed",
+          "rnacen.ontology_terms",
+          "rnacen.go_term_annotations",
+          "rnacen.rnc_references",
+          "rnacen.ensembl_coordinate_systems",
+          "rnacen.ensembl_pseudogene_regions",
+          "rnacen.rnc_accession_sequence_feature",
+          "rnacen.rnc_accession_sequence_region",
+          "rnacen.rnc_feedback_overlap",
+          "rnacen.rnc_feedback_target_assemblies",
+          "rnacen.rnc_gene_status",
+          "rnacen.rnc_locus",
+          "rnacen.rnc_modifications",
+          "rnacen.rnc_related_sequences",
+          "rnacen.rnc_sequence_features",
+          "rnacen.rnc_sequence_regions",
+          "rnacen_django_test.rnc_coordinates"
+        ],
+        "prompt_tokens": 3266
+      },
+      "pq_v2": {
+        "tables": 25,
+        "table_names": [
+          "rnacen.pipeline_tracking_genome_mapping",
+          "rnacen.insdc_so_term_mapping",
+          "rnacen.ensembl_compara",
+          "rnacen_django_test.rnc_accessions",
+          "rnacen.precompute_urs_accession",
+          "rnacen.ensembl_assembly",
+          "rnacen.rnc_accessions",
+          "rnacen.go_term_publication_map",
+          "rnacen.rnc_rna_precomputed",
+          "rnacen.ontology_terms",
+          "rnacen.go_term_annotations",
+          "rnacen.rnc_references",
+          "rnacen.ensembl_coordinate_systems",
+          "rnacen.ensembl_pseudogene_regions",
+          "rnacen.rnc_accession_sequence_feature",
+          "rnacen.rnc_accession_sequence_region",
+          "rnacen.rnc_feedback_overlap",
+          "rnacen.rnc_feedback_target_assemblies",
+          "rnacen.rnc_gene_status",
+          "rnacen.rnc_locus",
+          "rnacen.rnc_modifications",
+          "rnacen.rnc_related_sequences",
+          "rnacen.rnc_sequence_features",
+          "rnacen.rnc_sequence_regions",
+          "rnacen_django_test.rnc_coordinates"
+        ],
+        "prompt_tokens": 3266
+      }
+    },
+    {
+      "question": "show the lineage information for each species",
+      "must_retrieve": [
+        "rnc_taxonomy"
+      ],
+      "naive": {
+        "tables": 216,
+        "prompt_tokens": 28175
+      },
+      "pq_v1": {
+        "tables": 15,
+        "table_names": [
+          "rnacen.precompute_urs_accession",
+          "rnacen.rnc_database_json_stats",
+          "rnacen_django_test.rnc_database_json_stats",
+          "rnacen.rnc_taxonomy",
+          "rnacen_django_test.rnc_accessions",
+          "rnacen.rnc_accessions",
+          "rnacen.ontology_terms",
+          "rnacen.rnc_accession_sequence_feature",
+          "rnacen.rnc_accession_sequence_region",
+          "rnacen.rnc_modifications",
+          "rnacen.rnc_related_sequences",
+          "rnacen.rnc_sequence_features",
+          "rnacen_django_test.rnc_coordinates",
+          "rnacen_django_test.rnc_reference_map",
+          "rnacen_django_test.xref"
+        ],
+        "prompt_tokens": 2196
+      },
+      "pq_v2": {
+        "tables": 15,
+        "table_names": [
+          "rnacen.precompute_urs_accession",
+          "rnacen.rnc_database_json_stats",
+          "rnacen_django_test.rnc_database_json_stats",
+          "rnacen.rnc_taxonomy",
+          "rnacen_django_test.rnc_accessions",
+          "rnacen.rnc_accessions",
+          "rnacen.ontology_terms",
+          "rnacen.rnc_accession_sequence_feature",
+          "rnacen.rnc_accession_sequence_region",
+          "rnacen.rnc_modifications",
+          "rnacen.rnc_related_sequences",
+          "rnacen.rnc_sequence_features",
+          "rnacen_django_test.rnc_coordinates",
+          "rnacen_django_test.rnc_reference_map",
+          "rnacen_django_test.xref"
+        ],
+        "prompt_tokens": 2196
+      }
+    },
+    {
+      "question": "which RNAs have been mapped to genome coordinates",
+      "must_retrieve": [
+        "rnc_rna_precomputed"
+      ],
+      "naive": {
+        "tables": 216,
+        "prompt_tokens": 28175
+      },
+      "pq_v1": {
+        "tables": 25,
+        "table_names": [
+          "rnacen.pipeline_tracking_genome_mapping",
+          "rnacen.ensembl_coordinate_systems",
+          "rnacen.rnc_sequence_regions_active_mapped",
+          "rnacen_django_test.rnc_coordinates",
+          "rnacen.rnc_rna_precomputed",
+          "rnacen_django_test.rnc_rna_precomputed_data",
+          "rnacen.rnc_sequence_regions",
+          "rnacen.ensembl_assembly",
+          "rnacen.rnc_sequence_regions_active",
+          "rnacen.sequence_region_urs_counts",
+          "rnacen_django_test.rnc_rna_precomputed",
+          "rnacen.rnc_sequence_regions_active_provided",
+          "rnacen_django_test.rna",
+          "rnacen.rna",
+          "rnacen_django_test.xref",
+          "rnacen.validate_layout_hits",
+          "rnacen.rfam_models",
+          "rnacen.qa_status",
+          "rnacen.validate_layout_counts",
+          "rnacen.rnc_related_sequences",
+          "rnacen.xref_p10_deleted",
+          "rnacen.xref_p11_deleted",
+          "rnacen.xref_p12_deleted",
+          "rnacen.xref_p13_deleted",
+          "rnacen.xref_p14_deleted"
+        ],
+        "prompt_tokens": 3198
+      },
+      "pq_v2": {
+        "tables": 11,
+        "table_names": [
+          "rnacen_django_test.rnc_rna_precomputed",
+          "rnacen.rnc_sequence_regions_active_mapped",
+          "rnacen.rnc_sequence_regions_active",
+          "rnacen.rnc_sequence_regions",
+          "rnacen_django_test.rna",
+          "rnacen.ensembl_assembly",
+          "rnacen.rnc_rna_precomputed",
+          "rnacen.rnc_accession_sequence_region",
+          "rnacen.rnc_gene_status",
+          "rnacen.rnc_locus_members",
+          "rnacen.rnc_sequence_exons"
+        ],
+        "prompt_tokens": 1263
+      }
+    }
+  ]
+}

@@ -1,0 +1,235 @@
+{
+  "summary": {
+    "schema_name": "shop",
+    "n_tables": 14,
+    "sql_model": "gpt-4o-mini",
+    "selector_model": "gpt-4o-mini",
+    "total": 3,
+    "naive_pass": 3,
+    "v1_pass": 3,
+    "v2_pass": 3,
+    "delta_v1_vs_naive": 0,
+    "delta_v2_vs_naive": 0,
+    "avg_naive_s": 1.1261285280052107,
+    "avg_v1_s": 1.1422545696647528,
+    "avg_v2_s": 0.733715805671333,
+    "model": "gpt-4o-mini",
+    "pq_pass": 3,
+    "delta": 0,
+    "avg_pq_s": 0.733715805671333
+  },
+  "raw": [
+    {
+      "question": "list all products",
+      "must_retrieve": [
+        "products"
+      ],
+      "naive": {
+        "pipeline": "naive",
+        "question": "list all products",
+        "sql": "SELECT products.id, products.sku, products.name, products.category_id, products.price, products.is_available\nFROM products",
+        "referenced": [
+          "products"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 1.229578208993189,
+        "extra": {}
+      },
+      "pq_v1": {
+        "pipeline": "pq_v1",
+        "question": "list all products",
+        "sql": "SELECT products.id, products.sku, products.name, products.category_id, products.price, products.is_available\nFROM products",
+        "referenced": [
+          "products"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 1.0722866250143852,
+        "extra": {
+          "retrieved": [
+            "products",
+            "reviews",
+            "categories",
+            "order_items",
+            "users",
+            "orders"
+          ]
+        }
+      },
+      "pq_v2": {
+        "pipeline": "pq_v2",
+        "question": "list all products",
+        "sql": "SELECT products.id, products.sku, products.name, products.category_id, products.price, products.is_available\nFROM products",
+        "referenced": [
+          "products"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 0.8683384160103742,
+        "extra": {
+          "retrieved": [
+            "products",
+            "reviews",
+            "categories",
+            "order_items",
+            "countries",
+            "plans",
+            "users",
+            "addresses",
+            "orders",
+            "payments",
+            "shipments",
+            "sessions",
+            "refunds",
+            "audit_log"
+          ]
+        }
+      }
+    },
+    {
+      "question": "how many users do we have",
+      "must_retrieve": [
+        "users"
+      ],
+      "naive": {
+        "pipeline": "naive",
+        "question": "how many users do we have",
+        "sql": "SELECT COUNT(*) AS total_users FROM users",
+        "referenced": [
+          "users"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 1.0254483750031795,
+        "extra": {}
+      },
+      "pq_v1": {
+        "pipeline": "pq_v1",
+        "question": "how many users do we have",
+        "sql": "SELECT COUNT(*) AS user_count FROM users",
+        "referenced": [
+          "users"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 1.5325570419954602,
+        "extra": {
+          "retrieved": [
+            "sessions",
+            "addresses",
+            "users",
+            "reviews",
+            "orders",
+            "audit_log",
+            "countries",
+            "plans",
+            "products",
+            "order_items",
+            "payments",
+            "shipments"
+          ]
+        }
+      },
+      "pq_v2": {
+        "pipeline": "pq_v2",
+        "question": "how many users do we have",
+        "sql": "SELECT COUNT(*) AS user_count FROM users",
+        "referenced": [
+          "users"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 0.720451959001366,
+        "extra": {
+          "retrieved": [
+            "sessions",
+            "addresses",
+            "users",
+            "reviews",
+            "orders",
+            "audit_log",
+            "countries",
+            "plans",
+            "categories",
+            "products",
+            "order_items",
+            "payments",
+            "shipments",
+            "refunds"
+          ]
+        }
+      }
+    },
+    {
+      "question": "show me all countries",
+      "must_retrieve": [
+        "countries"
+      ],
+      "naive": {
+        "pipeline": "naive",
+        "question": "show me all countries",
+        "sql": "SELECT * FROM countries",
+        "referenced": [
+          "countries"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 1.1233590000192635,
+        "extra": {}
+      },
+      "pq_v1": {
+        "pipeline": "pq_v1",
+        "question": "show me all countries",
+        "sql": "SELECT * FROM countries",
+        "referenced": [
+          "countries"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 0.8219200419844128,
+        "extra": {
+          "retrieved": [
+            "countries",
+            "users",
+            "addresses",
+            "plans",
+            "orders",
+            "reviews",
+            "sessions",
+            "audit_log"
+          ]
+        }
+      },
+      "pq_v2": {
+        "pipeline": "pq_v2",
+        "question": "show me all countries",
+        "sql": "SELECT * FROM countries",
+        "referenced": [
+          "countries"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 0.6123570420022588,
+        "extra": {
+          "retrieved": [
+            "countries",
+            "users",
+            "addresses",
+            "plans",
+            "categories",
+            "products",
+            "orders",
+            "order_items",
+            "payments",
+            "reviews",
+            "shipments",
+            "sessions",
+            "refunds",
+            "audit_log"
+          ]
+        }
+      }
+    }
+  ]
+}

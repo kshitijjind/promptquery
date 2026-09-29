@@ -1,0 +1,226 @@
+{
+  "_meta": {
+    "name": "shop",
+    "description": "Hand-crafted e-commerce schema used as the canonical fixture for the PromptQuery retrieval eval.",
+    "table_count": 14,
+    "ddl_source": "eval/fixtures/shop.sql"
+  },
+  "tables": [
+    {
+      "schema": "public",
+      "name": "countries",
+      "comment": "ISO country reference data",
+      "columns": [
+        {"name": "code", "data_type": "character(2)", "nullable": false, "is_primary_key": true},
+        {"name": "name", "data_type": "text", "nullable": false, "is_primary_key": false},
+        {"name": "currency_code", "data_type": "character(3)", "nullable": false, "is_primary_key": false}
+      ],
+      "foreign_keys": []
+    },
+    {
+      "schema": "public",
+      "name": "plans",
+      "comment": "subscription tiers offered to customers",
+      "columns": [
+        {"name": "id", "data_type": "bigint", "nullable": false, "is_primary_key": true},
+        {"name": "name", "data_type": "text", "nullable": false, "is_primary_key": false},
+        {"name": "monthly_price", "data_type": "numeric(10,2)", "nullable": false, "is_primary_key": false}
+      ],
+      "foreign_keys": []
+    },
+    {
+      "schema": "public",
+      "name": "users",
+      "comment": "end-customer accounts",
+      "columns": [
+        {"name": "id", "data_type": "bigint", "nullable": false, "is_primary_key": true},
+        {"name": "email", "data_type": "text", "nullable": false, "is_primary_key": false},
+        {"name": "full_name", "data_type": "text", "nullable": false, "is_primary_key": false},
+        {"name": "country_code", "data_type": "character(2)", "nullable": true, "is_primary_key": false},
+        {"name": "plan_id", "data_type": "bigint", "nullable": true, "is_primary_key": false},
+        {"name": "signup_date", "data_type": "date", "nullable": false, "is_primary_key": false},
+        {"name": "is_active", "data_type": "boolean", "nullable": false, "is_primary_key": false}
+      ],
+      "foreign_keys": [
+        {"column": "country_code", "referenced_schema": "public", "referenced_table": "countries", "referenced_column": "code"},
+        {"column": "plan_id", "referenced_schema": "public", "referenced_table": "plans", "referenced_column": "id"}
+      ]
+    },
+    {
+      "schema": "public",
+      "name": "addresses",
+      "comment": "shipping and billing addresses for users",
+      "columns": [
+        {"name": "id", "data_type": "bigint", "nullable": false, "is_primary_key": true},
+        {"name": "user_id", "data_type": "bigint", "nullable": false, "is_primary_key": false},
+        {"name": "street", "data_type": "text", "nullable": false, "is_primary_key": false},
+        {"name": "city", "data_type": "text", "nullable": false, "is_primary_key": false},
+        {"name": "postal_code", "data_type": "text", "nullable": true, "is_primary_key": false},
+        {"name": "country_code", "data_type": "character(2)", "nullable": false, "is_primary_key": false},
+        {"name": "is_default", "data_type": "boolean", "nullable": false, "is_primary_key": false}
+      ],
+      "foreign_keys": [
+        {"column": "user_id", "referenced_schema": "public", "referenced_table": "users", "referenced_column": "id"},
+        {"column": "country_code", "referenced_schema": "public", "referenced_table": "countries", "referenced_column": "code"}
+      ]
+    },
+    {
+      "schema": "public",
+      "name": "categories",
+      "comment": "product taxonomy with self-referential parent",
+      "columns": [
+        {"name": "id", "data_type": "bigint", "nullable": false, "is_primary_key": true},
+        {"name": "name", "data_type": "text", "nullable": false, "is_primary_key": false},
+        {"name": "parent_id", "data_type": "bigint", "nullable": true, "is_primary_key": false}
+      ],
+      "foreign_keys": [
+        {"column": "parent_id", "referenced_schema": "public", "referenced_table": "categories", "referenced_column": "id"}
+      ]
+    },
+    {
+      "schema": "public",
+      "name": "products",
+      "comment": "catalog of items for sale",
+      "columns": [
+        {"name": "id", "data_type": "bigint", "nullable": false, "is_primary_key": true},
+        {"name": "sku", "data_type": "text", "nullable": false, "is_primary_key": false},
+        {"name": "name", "data_type": "text", "nullable": false, "is_primary_key": false},
+        {"name": "category_id", "data_type": "bigint", "nullable": true, "is_primary_key": false},
+        {"name": "price", "data_type": "numeric(10,2)", "nullable": false, "is_primary_key": false},
+        {"name": "is_available", "data_type": "boolean", "nullable": false, "is_primary_key": false}
+      ],
+      "foreign_keys": [
+        {"column": "category_id", "referenced_schema": "public", "referenced_table": "categories", "referenced_column": "id"}
+      ]
+    },
+    {
+      "schema": "public",
+      "name": "orders",
+      "comment": "customer purchase orders",
+      "columns": [
+        {"name": "id", "data_type": "bigint", "nullable": false, "is_primary_key": true},
+        {"name": "user_id", "data_type": "bigint", "nullable": false, "is_primary_key": false},
+        {"name": "shipping_address_id", "data_type": "bigint", "nullable": true, "is_primary_key": false},
+        {"name": "status", "data_type": "text", "nullable": false, "is_primary_key": false},
+        {"name": "total_amount", "data_type": "numeric(12,2)", "nullable": false, "is_primary_key": false},
+        {"name": "created_at", "data_type": "timestamp with time zone", "nullable": false, "is_primary_key": false}
+      ],
+      "foreign_keys": [
+        {"column": "user_id", "referenced_schema": "public", "referenced_table": "users", "referenced_column": "id"},
+        {"column": "shipping_address_id", "referenced_schema": "public", "referenced_table": "addresses", "referenced_column": "id"}
+      ]
+    },
+    {
+      "schema": "public",
+      "name": "order_items",
+      "comment": "line items inside an order",
+      "columns": [
+        {"name": "id", "data_type": "bigint", "nullable": false, "is_primary_key": true},
+        {"name": "order_id", "data_type": "bigint", "nullable": false, "is_primary_key": false},
+        {"name": "product_id", "data_type": "bigint", "nullable": false, "is_primary_key": false},
+        {"name": "quantity", "data_type": "integer", "nullable": false, "is_primary_key": false},
+        {"name": "unit_price", "data_type": "numeric(10,2)", "nullable": false, "is_primary_key": false}
+      ],
+      "foreign_keys": [
+        {"column": "order_id", "referenced_schema": "public", "referenced_table": "orders", "referenced_column": "id"},
+        {"column": "product_id", "referenced_schema": "public", "referenced_table": "products", "referenced_column": "id"}
+      ]
+    },
+    {
+      "schema": "public",
+      "name": "payments",
+      "comment": "payment transactions for orders",
+      "columns": [
+        {"name": "id", "data_type": "bigint", "nullable": false, "is_primary_key": true},
+        {"name": "order_id", "data_type": "bigint", "nullable": false, "is_primary_key": false},
+        {"name": "method", "data_type": "text", "nullable": false, "is_primary_key": false},
+        {"name": "amount", "data_type": "numeric(12,2)", "nullable": false, "is_primary_key": false},
+        {"name": "processed_at", "data_type": "timestamp with time zone", "nullable": false, "is_primary_key": false},
+        {"name": "status", "data_type": "text", "nullable": false, "is_primary_key": false}
+      ],
+      "foreign_keys": [
+        {"column": "order_id", "referenced_schema": "public", "referenced_table": "orders", "referenced_column": "id"}
+      ]
+    },
+    {
+      "schema": "public",
+      "name": "reviews",
+      "comment": "product reviews written by users",
+      "columns": [
+        {"name": "id", "data_type": "bigint", "nullable": false, "is_primary_key": true},
+        {"name": "user_id", "data_type": "bigint", "nullable": false, "is_primary_key": false},
+        {"name": "product_id", "data_type": "bigint", "nullable": false, "is_primary_key": false},
+        {"name": "rating", "data_type": "smallint", "nullable": false, "is_primary_key": false},
+        {"name": "body", "data_type": "text", "nullable": true, "is_primary_key": false},
+        {"name": "created_at", "data_type": "timestamp with time zone", "nullable": false, "is_primary_key": false}
+      ],
+      "foreign_keys": [
+        {"column": "user_id", "referenced_schema": "public", "referenced_table": "users", "referenced_column": "id"},
+        {"column": "product_id", "referenced_schema": "public", "referenced_table": "products", "referenced_column": "id"}
+      ]
+    },
+    {
+      "schema": "public",
+      "name": "shipments",
+      "comment": "physical shipment tracking for orders",
+      "columns": [
+        {"name": "id", "data_type": "bigint", "nullable": false, "is_primary_key": true},
+        {"name": "order_id", "data_type": "bigint", "nullable": false, "is_primary_key": false},
+        {"name": "carrier", "data_type": "text", "nullable": false, "is_primary_key": false},
+        {"name": "tracking_no", "data_type": "text", "nullable": true, "is_primary_key": false},
+        {"name": "shipped_at", "data_type": "timestamp with time zone", "nullable": true, "is_primary_key": false},
+        {"name": "delivered_at", "data_type": "timestamp with time zone", "nullable": true, "is_primary_key": false}
+      ],
+      "foreign_keys": [
+        {"column": "order_id", "referenced_schema": "public", "referenced_table": "orders", "referenced_column": "id"}
+      ]
+    },
+    {
+      "schema": "public",
+      "name": "sessions",
+      "comment": "user web sessions",
+      "columns": [
+        {"name": "id", "data_type": "bigint", "nullable": false, "is_primary_key": true},
+        {"name": "user_id", "data_type": "bigint", "nullable": true, "is_primary_key": false},
+        {"name": "started_at", "data_type": "timestamp with time zone", "nullable": false, "is_primary_key": false},
+        {"name": "ended_at", "data_type": "timestamp with time zone", "nullable": true, "is_primary_key": false},
+        {"name": "ip_address", "data_type": "inet", "nullable": true, "is_primary_key": false},
+        {"name": "user_agent", "data_type": "text", "nullable": true, "is_primary_key": false}
+      ],
+      "foreign_keys": [
+        {"column": "user_id", "referenced_schema": "public", "referenced_table": "users", "referenced_column": "id"}
+      ]
+    },
+    {
+      "schema": "public",
+      "name": "refunds",
+      "comment": "refunded payments",
+      "columns": [
+        {"name": "id", "data_type": "bigint", "nullable": false, "is_primary_key": true},
+        {"name": "payment_id", "data_type": "bigint", "nullable": false, "is_primary_key": false},
+        {"name": "reason", "data_type": "text", "nullable": true, "is_primary_key": false},
+        {"name": "amount", "data_type": "numeric(12,2)", "nullable": false, "is_primary_key": false},
+        {"name": "refunded_at", "data_type": "timestamp with time zone", "nullable": false, "is_primary_key": false}
+      ],
+      "foreign_keys": [
+        {"column": "payment_id", "referenced_schema": "public", "referenced_table": "payments", "referenced_column": "id"}
+      ]
+    },
+    {
+      "schema": "public",
+      "name": "audit_log",
+      "comment": "append-only audit trail of mutations",
+      "columns": [
+        {"name": "id", "data_type": "bigint", "nullable": false, "is_primary_key": true},
+        {"name": "table_name", "data_type": "text", "nullable": false, "is_primary_key": false},
+        {"name": "action", "data_type": "text", "nullable": false, "is_primary_key": false},
+        {"name": "row_id", "data_type": "bigint", "nullable": true, "is_primary_key": false},
+        {"name": "actor_user_id", "data_type": "bigint", "nullable": true, "is_primary_key": false},
+        {"name": "occurred_at", "data_type": "timestamp with time zone", "nullable": false, "is_primary_key": false}
+      ],
+      "foreign_keys": [
+        {"column": "actor_user_id", "referenced_schema": "public", "referenced_table": "users", "referenced_column": "id"}
+      ]
+    }
+  ]
+}

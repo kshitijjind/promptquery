@@ -1,0 +1,1520 @@
+{
+  "summary": {
+    "schema_name": "odoo",
+    "n_tables": 675,
+    "model": "gpt-5.4",
+    "total": 25,
+    "naive_pass": 25,
+    "pq_pass": 18,
+    "delta": -7,
+    "avg_naive_s": 3.3192651100386867,
+    "avg_pq_s": 2.8053559984790626
+  },
+  "raw": [
+    {
+      "question": "list all customers and vendors",
+      "must_retrieve": [
+        "res_partner"
+      ],
+      "naive": {
+        "pipeline": "naive",
+        "question": "list all customers and vendors",
+        "sql": "SELECT\n  res_partner.id,\n  res_partner.name,\n  res_partner.email,\n  res_partner.phone,\n  res_partner.mobile,\n  res_partner.customer_rank,\n  res_partner.supplier_rank,\n  CASE\n    WHEN res_partner.customer_rank > 0 AND res_partner.supplier_rank > 0 THEN 'customer_and_vendor'\n    WHEN res_partner.customer_rank > 0 THEN 'customer'\n    WHEN res_partner.supplier_rank > 0 THEN 'vendor'\n  END AS partner_type\nFROM res_partner\nWHERE res_partner.customer_rank > 0\n   OR res_partner.supplier_rank > 0\nORDER BY res_partner.name, res_partner.id",
+        "referenced": [
+          "res_partner"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 4.763531541015254,
+        "extra": {}
+      },
+      "pq": {
+        "pipeline": "promptquery",
+        "question": "list all customers and vendors",
+        "sql": "SELECT\n  res_partner.id,\n  res_partner.name,\n  res_partner.complete_name,\n  res_partner.email,\n  res_partner.phone,\n  res_partner.mobile,\n  res_partner.company_name,\n  res_partner.customer_rank,\n  res_partner.supplier_rank\nFROM res_partner\nWHERE COALESCE(res_partner.customer_rank, 0) > 0\n   OR COALESCE(res_partner.supplier_rank, 0) > 0\nORDER BY res_partner.name, res_partner.id",
+        "referenced": [
+          "res_partner"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 1.8311478329997044,
+        "extra": {
+          "retrieved": [
+            "fleet_vehicle_model_vendors",
+            "website_route",
+            "base_module_uninstall",
+            "account_report",
+            "fleet_vehicle_model",
+            "res_partner",
+            "res_users",
+            "ir_module_module",
+            "res_country",
+            "account_report_column",
+            "account_report_line",
+            "account_report_section_rel",
+            "website_rewrite"
+          ]
+        }
+      }
+    },
+    {
+      "question": "show me all system users",
+      "must_retrieve": [
+        "res_users"
+      ],
+      "naive": {
+        "pipeline": "naive",
+        "question": "show me all system users",
+        "sql": "SELECT\n  res_users.id,\n  res_users.login,\n  res_users.active,\n  res_users.share,\n  res_users.notification_type,\n  res_users.company_id,\n  res_users.partner_id,\n  res_users.create_date,\n  res_users.write_date\nFROM res_users\nORDER BY res_users.id",
+        "referenced": [
+          "res_users"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 2.3497013750020415,
+        "extra": {}
+      },
+      "pq": {
+        "pipeline": "promptquery",
+        "question": "show me all system users",
+        "sql": "SELECT\n    res_users.id,\n    res_users.login,\n    res_users.active,\n    res_users.share,\n    res_users.company_id,\n    res_users.partner_id,\n    res_users.create_date,\n    res_users.write_date\nFROM res_users\nORDER BY res_users.id",
+        "referenced": [
+          "res_users"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 1.7387771669891663,
+        "extra": {
+          "retrieved": [
+            "website_route",
+            "ir_config_parameter",
+            "base_module_uninstall",
+            "res_users_log",
+            "res_company_users_rel",
+            "res_users_deletion",
+            "account_report",
+            "res_groups_users_rel",
+            "iap_account_res_users_rel",
+            "res_users_apikeys",
+            "res_users_identitycheck",
+            "rel_badge_auth_users",
+            "res_users_apikeys_description",
+            "gamification_challenge_users_rel",
+            "res_users_settings",
+            "res_users",
+            "ir_module_module",
+            "res_company",
+            "res_country",
+            "res_groups",
+            "iap_account",
+            "gamification_badge",
+            "gamification_challenge",
+            "account_report_column",
+            "account_report_line"
+          ]
+        }
+      }
+    },
+    {
+      "question": "list every product in the catalog",
+      "must_retrieve": [
+        "product_template"
+      ],
+      "naive": {
+        "pipeline": "naive",
+        "question": "list every product in the catalog",
+        "sql": "SELECT\n  product_template.id AS product_template_id,\n  product_product.id AS product_variant_id,\n  product_template.default_code AS product_template_default_code,\n  product_product.default_code AS product_variant_default_code,\n  product_template.name AS product_name,\n  product_template.type AS product_type,\n  product_template.active AS is_active,\n  product_template.sale_ok,\n  product_template.purchase_ok,\n  product_template.list_price,\n  product_template.create_date,\n  product_template.write_date\nFROM product_template\nLEFT JOIN product_product\n  ON product_product.product_tmpl_id = product_template.id\nORDER BY product_template.id, product_product.id",
+        "referenced": [
+          "product_product",
+          "product_template"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 2.56223220800166,
+        "extra": {}
+      },
+      "pq": {
+        "pipeline": "promptquery",
+        "question": "list every product in the catalog",
+        "sql": "SELECT\n  pp.id AS product_variant_id,\n  pp.product_tmpl_id AS product_template_id,\n  pt.name AS product_name,\n  pp.default_code AS variant_default_code,\n  pt.default_code AS template_default_code,\n  pp.barcode AS variant_barcode,\n  pt.type AS product_type,\n  pt.list_price,\n  pp.active AS variant_active,\n  pt.active AS template_active,\n  pt.create_date AS template_create_date,\n  pp.create_date AS variant_create_date\nFROM product_product AS pp\nJOIN product_template AS pt\n  ON pt.id = pp.product_tmpl_id\nORDER BY pt.id, pp.id",
+        "referenced": [
+          "product_product",
+          "product_template"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 2.5293339589843526,
+        "extra": {
+          "retrieved": [
+            "product_tag_product_product_rel",
+            "product_label_layout_product_product_rel",
+            "product_variant_combination",
+            "product_tag_product_template_rel",
+            "product_product",
+            "product_attribute_product_template_rel",
+            "product_supplierinfo",
+            "product_replenish",
+            "product_optional_rel",
+            "product_combo_product_template_rel",
+            "stock_change_product_qty",
+            "product_label_layout_product_template_rel",
+            "product_packaging",
+            "product_product_stock_track_confirmation_rel",
+            "product_tag",
+            "product_label_layout",
+            "product_template_attribute_value",
+            "product_template",
+            "res_users",
+            "product_attribute",
+            "res_company",
+            "res_currency",
+            "res_partner",
+            "mrp_bom",
+            "uom_uom"
+          ]
+        }
+      }
+    },
+    {
+      "question": "how many sales orders have been created",
+      "must_retrieve": [
+        "sale_order"
+      ],
+      "naive": {
+        "pipeline": "naive",
+        "question": "how many sales orders have been created",
+        "sql": "SELECT COUNT(*) AS sales_orders_created\nFROM sale_order",
+        "referenced": [
+          "sale_order"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 2.4518185000051744,
+        "extra": {}
+      },
+      "pq": {
+        "pipeline": "promptquery",
+        "question": "how many sales orders have been created",
+        "sql": "SELECT COUNT(*) AS sales_orders_created\nFROM sale_order",
+        "referenced": [
+          "sale_order"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 1.265850333002163,
+        "extra": {
+          "retrieved": [
+            "account_accrued_orders_wizard",
+            "sale_mass_cancel_orders",
+            "stock_move_created_purchase_line_rel",
+            "sale_order_mass_cancel_wizard_rel",
+            "res_users",
+            "crm_team",
+            "sale_order_cancel",
+            "mrp_account_wip_accounting_line",
+            "crm_team_member",
+            "sale_advance_payment_inv",
+            "sale_order",
+            "product_packaging",
+            "sale_order_line",
+            "digest_digest",
+            "stock_move",
+            "account_account",
+            "res_company",
+            "res_currency",
+            "account_journal",
+            "purchase_order_line",
+            "gamification_karma_rank",
+            "res_partner",
+            "website",
+            "mail_alias",
+            "mail_template"
+          ]
+        }
+      }
+    },
+    {
+      "question": "list all manufacturing orders",
+      "must_retrieve": [
+        "mrp_production"
+      ],
+      "naive": {
+        "pipeline": "naive",
+        "question": "list all manufacturing orders",
+        "sql": "SELECT\n  mrp_production.id,\n  mrp_production.name,\n  mrp_production.origin,\n  mrp_production.state,\n  mrp_production.priority,\n  mrp_production.product_id,\n  mrp_production.product_uom_id,\n  mrp_production.bom_id,\n  mrp_production.company_id,\n  mrp_production.user_id,\n  mrp_production.picking_type_id,\n  mrp_production.location_src_id,\n  mrp_production.location_dest_id,\n  mrp_production.location_final_id,\n  mrp_production.procurement_group_id,\n  mrp_production.orderpoint_id,\n  mrp_production.production_location_id,\n  mrp_production.sale_line_id,\n  mrp_production.project_id,\n  mrp_production.product_qty,\n  mrp_production.qty_producing,\n  mrp_production.product_uom_qty,\n  mrp_production.extra_cost,\n  mrp_production.consumption,\n  mrp_production.reservation_state,\n  mrp_production.product_description_variants,\n  mrp_production.propagate_cancel,\n  mrp_production.is_locked,\n  mrp_production.is_planned,\n  mrp_production.allow_workorder_dependencies,\n  mrp_production.is_outdated_bom,\n  mrp_production.backorder_sequence,\n  mrp_production.lot_producing_id,\n  mrp_production.date_deadline,\n  mrp_production.date_start,\n  mrp_production.date_finished,\n  mrp_production.create_date,\n  mrp_production.write_date,\n  mrp_production.create_uid,\n  mrp_production.write_uid\nFROM mrp_production\nORDER BY mrp_production.id",
+        "referenced": [
+          "mrp_production"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 5.675582124997163,
+        "extra": {}
+      },
+      "pq": {
+        "pipeline": "promptquery",
+        "question": "list all manufacturing orders",
+        "sql": "SELECT\n  mrp_production.id,\n  mrp_production.name,\n  mrp_production.origin,\n  mrp_production.state,\n  mrp_production.reservation_state,\n  mrp_production.product_id,\n  mrp_production.product_qty,\n  mrp_production.qty_producing,\n  mrp_production.product_uom_id,\n  mrp_production.bom_id,\n  mrp_production.picking_type_id,\n  mrp_production.location_src_id,\n  mrp_production.location_dest_id,\n  mrp_production.location_final_id,\n  mrp_production.company_id,\n  mrp_production.user_id,\n  mrp_production.procurement_group_id,\n  mrp_production.orderpoint_id,\n  mrp_production.production_location_id,\n  mrp_production.sale_line_id,\n  mrp_production.priority,\n  mrp_production.consumption,\n  mrp_production.propagate_cancel,\n  mrp_production.is_locked,\n  mrp_production.is_planned,\n  mrp_production.allow_workorder_dependencies,\n  mrp_production.is_outdated_bom,\n  mrp_production.date_start,\n  mrp_production.date_deadline,\n  mrp_production.date_finished,\n  mrp_production.create_date,\n  mrp_production.write_date,\n  mrp_production.product_uom_qty,\n  mrp_production.extra_cost\nFROM mrp_production\nORDER BY mrp_production.id",
+        "referenced": [
+          "mrp_production"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 3.9738682079769205,
+        "extra": {
+          "retrieved": [
+            "account_accrued_orders_wizard",
+            "sale_mass_cancel_orders",
+            "website_route",
+            "sale_order_mass_cancel_wizard_rel",
+            "mrp_account_wip_accounting",
+            "mrp_production",
+            "base_module_uninstall",
+            "stock_warehouse_orderpoint",
+            "account_report",
+            "res_company",
+            "res_config_settings",
+            "account_account",
+            "res_users",
+            "res_currency",
+            "account_journal",
+            "sale_order",
+            "mrp_bom",
+            "stock_location",
+            "stock_lot",
+            "stock_picking_type",
+            "procurement_group",
+            "product_product",
+            "uom_uom",
+            "project_project",
+            "sale_order_line"
+          ]
+        }
+      }
+    },
+    {
+      "question": "show the chart of accounts",
+      "must_retrieve": [
+        "account_account"
+      ],
+      "naive": {
+        "pipeline": "naive",
+        "question": "show the chart of accounts",
+        "sql": "SELECT\n  aa.id,\n  aa.account_type,\n  aa.code_store,\n  aa.name,\n  aa.note,\n  aa.deprecated,\n  aa.reconcile,\n  aa.non_trade,\n  aa.currency_id,\n  aa.create_date,\n  aa.write_date\nFROM account_account AS aa\nORDER BY aa.account_type, aa.id",
+        "referenced": [
+          "account_account"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 4.168954416003544,
+        "extra": {}
+      },
+      "pq": {
+        "pipeline": "promptquery",
+        "question": "show the chart of accounts",
+        "sql": "SELECT\n  account_account.id,\n  account_account.account_type,\n  account_account.name,\n  account_account.code_store,\n  account_account.currency_id,\n  account_account.reconcile,\n  account_account.non_trade,\n  account_account.deprecated,\n  account_account.note,\n  account_account.create_date,\n  account_account.write_date\nFROM account_account\nORDER BY account_account.id",
+        "referenced": [
+          "account_account"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 2.155298416997539,
+        "extra": {
+          "retrieved": [
+            "res_partner_bank",
+            "account_fiscal_position_account",
+            "res_company",
+            "account_report",
+            "res_config_settings",
+            "res_bank",
+            "res_users",
+            "res_currency",
+            "res_partner",
+            "account_account",
+            "account_fiscal_position",
+            "res_country",
+            "account_move",
+            "account_tax",
+            "mail_alias_domain",
+            "account_journal",
+            "ir_sequence",
+            "ir_ui_view",
+            "account_incoterms",
+            "stock_location",
+            "barcode_nomenclature",
+            "report_paperformat",
+            "resource_calendar",
+            "product_product",
+            "mail_template"
+          ]
+        }
+      }
+    },
+    {
+      "question": "sales orders with their customer name",
+      "must_retrieve": [
+        "sale_order",
+        "res_partner"
+      ],
+      "naive": {
+        "pipeline": "naive",
+        "question": "sales orders with their customer name",
+        "sql": "SELECT\n  sale_order.id,\n  sale_order.name AS sales_order,\n  res_partner.name AS customer_name\nFROM sale_order\nINNER JOIN res_partner\n  ON sale_order.partner_id = res_partner.id\nORDER BY sale_order.name",
+        "referenced": [
+          "res_partner",
+          "sale_order"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 4.1956099169910885,
+        "extra": {}
+      },
+      "pq": {
+        "pipeline": "promptquery",
+        "question": "sales orders with their customer name",
+        "sql": "SELECT\n  so.id,\n  so.name AS sales_order,\n  rp.name AS customer_name\nFROM sale_order AS so\nINNER JOIN res_partner AS rp\n  ON so.partner_id = rp.id\nORDER BY so.id",
+        "referenced": [
+          "res_partner",
+          "sale_order"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 1.5378847910033073,
+        "extra": {
+          "retrieved": [
+            "account_accrued_orders_wizard",
+            "sale_mass_cancel_orders",
+            "sale_order_mass_cancel_wizard_rel",
+            "res_users",
+            "crm_quotation_partner",
+            "crm_team",
+            "sale_order_cancel",
+            "sale_order_line",
+            "crm_team_member",
+            "sale_advance_payment_inv",
+            "sale_order",
+            "product_packaging",
+            "res_partner",
+            "stock_inventory_adjustment_name_stock_quant_rel",
+            "stock_inventory_adjustment_name",
+            "account_account",
+            "res_company",
+            "res_currency",
+            "account_journal",
+            "gamification_karma_rank",
+            "website",
+            "crm_lead",
+            "mail_alias",
+            "mail_template",
+            "product_combo_item"
+          ]
+        }
+      }
+    },
+    {
+      "question": "purchase orders with the vendor name",
+      "must_retrieve": [
+        "purchase_order",
+        "res_partner"
+      ],
+      "naive": {
+        "pipeline": "naive",
+        "question": "purchase orders with the vendor name",
+        "sql": "SELECT\n  purchase_order.id,\n  purchase_order.name AS purchase_order,\n  res_partner.name AS vendor_name\nFROM purchase_order\nJOIN res_partner\n  ON purchase_order.partner_id = res_partner.id\nORDER BY purchase_order.id",
+        "referenced": [
+          "purchase_order",
+          "res_partner"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 2.4441652910027187,
+        "extra": {}
+      },
+      "pq": {
+        "pipeline": "promptquery",
+        "question": "purchase orders with the vendor name",
+        "sql": "SELECT 'insufficient schema: missing res_partner.name for vendor name' AS error",
+        "referenced": [],
+        "passed": false,
+        "reason": "no tables referenced",
+        "elapsed_s": 1.1380848750122823,
+        "extra": {
+          "retrieved": [
+            "vendor_delay_report",
+            "account_accrued_orders_wizard",
+            "purchase_bill_union",
+            "account_move_purchase_order_rel",
+            "sale_mass_cancel_orders",
+            "purchase_order_stock_picking_rel",
+            "stock_move_created_purchase_line_rel",
+            "account_tax_purchase_order_line_rel",
+            "product_template_attribute_value_purchase_order_line_rel",
+            "bill_to_po_wizard",
+            "sale_order_mass_cancel_wizard_rel",
+            "purchase_order",
+            "product_template",
+            "purchase_order_line",
+            "stock_warehouse_orderpoint",
+            "account_account",
+            "res_company",
+            "res_users",
+            "res_currency",
+            "account_journal",
+            "account_move",
+            "stock_picking",
+            "stock_move",
+            "account_tax",
+            "product_template_attribute_value"
+          ]
+        }
+      }
+    },
+    {
+      "question": "list employees with their department",
+      "must_retrieve": [
+        "hr_employee",
+        "hr_department"
+      ],
+      "naive": {
+        "pipeline": "naive",
+        "question": "list employees with their department",
+        "sql": "SELECT\n  hr_employee.id AS employee_id,\n  hr_employee.name AS employee_name,\n  hr_department.id AS department_id,\n  hr_department.name AS department_name\nFROM hr_employee\nLEFT JOIN hr_department\n  ON hr_employee.department_id = hr_department.id\nORDER BY hr_employee.name",
+        "referenced": [
+          "hr_department",
+          "hr_employee"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 4.094063541997457,
+        "extra": {}
+      },
+      "pq": {
+        "pipeline": "promptquery",
+        "question": "list employees with their department",
+        "sql": "SELECT\n  hr_employee.id AS employee_id,\n  hr_employee.name AS employee_name,\n  hr_department.id AS department_id,\n  hr_department.complete_name AS department_name\nFROM hr_employee\nLEFT JOIN hr_department\n  ON hr_employee.department_id = hr_department.id\nORDER BY hr_employee.name",
+        "referenced": [
+          "hr_department",
+          "hr_employee"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 2.0526585829793476,
+        "extra": {
+          "retrieved": [
+            "hr_department",
+            "discuss_channel_hr_department_rel",
+            "hr_job",
+            "mail_activity_plan",
+            "hr_resume_line",
+            "hr_employee_skill_log",
+            "hr_employee_public",
+            "hr_employee_skill_report",
+            "hr_employee",
+            "res_company",
+            "res_users",
+            "discuss_channel",
+            "hr_contract_type",
+            "ir_model",
+            "hr_resume_line_type",
+            "survey_survey",
+            "hr_skill",
+            "hr_skill_level",
+            "hr_skill_type",
+            "res_partner",
+            "res_partner_bank",
+            "res_country",
+            "hr_departure_reason",
+            "ir_attachment",
+            "res_country_state"
+          ]
+        }
+      }
+    },
+    {
+      "question": "open opportunities with the salesperson assigned",
+      "must_retrieve": [
+        "crm_lead",
+        "res_users"
+      ],
+      "naive": {
+        "pipeline": "naive",
+        "question": "open opportunities with the salesperson assigned",
+        "sql": "SELECT\n  crm_lead.id AS opportunity_id,\n  crm_lead.name AS opportunity_name,\n  crm_lead.create_date,\n  crm_lead.date_open,\n  crm_lead.date_deadline,\n  crm_lead.expected_revenue,\n  crm_lead.probability,\n  res_users.id AS salesperson_id,\n  res_users.login AS salesperson_login,\n  res_partner.name AS salesperson_name\nFROM crm_lead\nLEFT JOIN res_users\n  ON crm_lead.user_id = res_users.id\nLEFT JOIN res_partner\n  ON res_users.partner_id = res_partner.id\nWHERE crm_lead.type = 'opportunity'\n  AND crm_lead.active = TRUE\n  AND crm_lead.date_closed IS NULL\nORDER BY crm_lead.create_date DESC, crm_lead.id",
+        "referenced": [
+          "crm_lead",
+          "res_partner",
+          "res_users"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 3.4772758329927456,
+        "extra": {}
+      },
+      "pq": {
+        "pipeline": "promptquery",
+        "question": "open opportunities with the salesperson assigned",
+        "sql": "SELECT\n  crm_lead.id,\n  crm_lead.name AS opportunity_name,\n  res_users.login AS salesperson_login,\n  crm_lead.expected_revenue,\n  crm_lead.probability,\n  crm_lead.date_open,\n  crm_lead.date_deadline,\n  crm_team.name AS sales_team_name\nFROM crm_lead\nLEFT JOIN res_users\n  ON crm_lead.user_id = res_users.id\nLEFT JOIN crm_team\n  ON crm_lead.team_id = crm_team.id\nWHERE crm_lead.type = 'opportunity'\n  AND crm_lead.active = TRUE\n  AND crm_lead.date_closed IS NULL\nORDER BY crm_lead.date_open DESC NULLS LAST, crm_lead.id",
+        "referenced": [
+          "crm_lead",
+          "crm_team",
+          "res_users"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 10.37352891699993,
+        "extra": {
+          "retrieved": [
+            "crm_merge_opportunity",
+            "res_users_settings",
+            "report_project_task_user",
+            "crm_team",
+            "project_task",
+            "payment_link_wizard",
+            "crm_lead",
+            "digest_digest",
+            "onboarding_onboarding_step",
+            "res_users",
+            "mail_alias",
+            "res_company",
+            "ir_attachment",
+            "project_milestone",
+            "res_partner",
+            "project_project",
+            "project_task_recurrence",
+            "project_task_type",
+            "res_currency",
+            "utm_campaign",
+            "res_country",
+            "res_lang",
+            "crm_iap_lead_mining_request",
+            "crm_lost_reason",
+            "utm_medium"
+          ]
+        }
+      }
+    },
+    {
+      "question": "show all project tasks with the project name",
+      "must_retrieve": [
+        "project_task",
+        "project_project"
+      ],
+      "naive": {
+        "pipeline": "naive",
+        "question": "show all project tasks with the project name",
+        "sql": "SELECT\n  pt.id AS task_id,\n  pt.name AS task_name,\n  pp.name AS project_name\nFROM project_task AS pt\nLEFT JOIN project_project AS pp\n  ON pt.project_id = pp.id\nORDER BY pp.name, pt.name",
+        "referenced": [
+          "project_project",
+          "project_task"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 3.7567804169957526,
+        "extra": {}
+      },
+      "pq": {
+        "pipeline": "promptquery",
+        "question": "show all project tasks with the project name",
+        "sql": "SELECT\n  pt.id AS task_id,\n  pt.name AS task_name,\n  pp.name AS project_name\nFROM project_task AS pt\nLEFT JOIN project_project AS pp\n  ON pt.project_id = pp.id",
+        "referenced": [
+          "project_project",
+          "project_task"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 1.4354190419835504,
+        "extra": {
+          "retrieved": [
+            "project_project_project_tags_rel",
+            "project_favorite_user_rel",
+            "project_project_project_task_type_delete_wizard_rel",
+            "project_task_type_rel",
+            "project_project_stage_project_project_stage_delete_wizard_rel",
+            "project_project",
+            "project_collaborator",
+            "project_tags_project_task_rel",
+            "project_project_stage",
+            "project_update",
+            "project_milestone",
+            "project_share_wizard",
+            "project_project_stage_delete_wizard",
+            "project_tags",
+            "project_task",
+            "res_users",
+            "project_task_type_delete_wizard",
+            "project_task_type",
+            "account_analytic_account",
+            "mail_alias",
+            "res_company",
+            "res_partner",
+            "mail_template",
+            "sms_template",
+            "ir_attachment"
+          ]
+        }
+      }
+    },
+    {
+      "question": "products grouped by category",
+      "must_retrieve": [
+        "product_template",
+        "product_category"
+      ],
+      "naive": {
+        "pipeline": "naive",
+        "question": "products grouped by category",
+        "sql": "SELECT\n  pc.id AS category_id,\n  pc.name AS category_name,\n  COUNT(pt.id) AS product_count\nFROM product_category AS pc\nLEFT JOIN product_template AS pt\n  ON pt.categ_id = pc.id\nGROUP BY\n  pc.id,\n  pc.name\nORDER BY\n  pc.name",
+        "referenced": [
+          "product_category",
+          "product_template"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 3.6844812499766704,
+        "extra": {}
+      },
+      "pq": {
+        "pipeline": "promptquery",
+        "question": "products grouped by category",
+        "sql": "SELECT\n  pc.id AS category_id,\n  pc.name AS category_name,\n  COUNT(pp.id) AS product_count\nFROM product_category AS pc\nLEFT JOIN product_template AS pt\n  ON pt.categ_id = pc.id\nLEFT JOIN product_product AS pp\n  ON pp.product_tmpl_id = pt.id\nGROUP BY\n  pc.id,\n  pc.name\nORDER BY\n  pc.name",
+        "referenced": [
+          "product_category",
+          "product_product",
+          "product_template"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 1.9481814170139842,
+        "extra": {
+          "retrieved": [
+            "fleet_vehicle_model_category",
+            "hr_employee_category",
+            "res_partner_res_partner_category_rel",
+            "ir_module_category",
+            "res_partner_category",
+            "stock_storage_category",
+            "employee_category_rel",
+            "account_reconcile_model_res_partner_category_rel",
+            "stock_storage_category_capacity",
+            "uom_category",
+            "res_groups",
+            "stock_putaway_rule",
+            "product_category",
+            "stock_route_categ",
+            "meeting_category_rel",
+            "res_users",
+            "res_partner",
+            "res_company",
+            "hr_employee",
+            "account_reconcile_model",
+            "stock_package_type",
+            "product_product",
+            "stock_location",
+            "product_removal",
+            "stock_route"
+          ]
+        }
+      }
+    },
+    {
+      "question": "employees per job position",
+      "must_retrieve": [
+        "hr_employee",
+        "hr_job"
+      ],
+      "naive": {
+        "pipeline": "naive",
+        "question": "employees per job position",
+        "sql": "SELECT\n  hj.id AS job_id,\n  hj.name AS job_position_name,\n  COUNT(he.id) AS employee_count\nFROM hr_job AS hj\nLEFT JOIN hr_employee AS he\n  ON he.job_id = hj.id\nGROUP BY\n  hj.id,\n  hj.name\nORDER BY\n  employee_count DESC,\n  hj.id",
+        "referenced": [
+          "hr_employee",
+          "hr_job"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 3.0659006250207312,
+        "extra": {}
+      },
+      "pq": {
+        "pipeline": "promptquery",
+        "question": "employees per job position",
+        "sql": "SELECT\n  hj.id AS job_id,\n  hj.name AS job_name,\n  COUNT(he.id) AS employee_count\nFROM hr_job AS hj\nLEFT JOIN hr_employee AS he\n  ON he.job_id = hj.id\nGROUP BY\n  hj.id,\n  hj.name\nORDER BY\n  employee_count DESC,\n  hj.id",
+        "referenced": [
+          "hr_employee",
+          "hr_job"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 1.7615312499983702,
+        "extra": {
+          "retrieved": [
+            "hr_job",
+            "account_fiscal_position_account",
+            "account_fiscal_position_tax",
+            "account_fiscal_position",
+            "account_fiscal_position_res_country_state_rel",
+            "hr_employee_public",
+            "hr_employee",
+            "resource_calendar",
+            "res_currency",
+            "purchase_order",
+            "account_report_external_value",
+            "res_country",
+            "sale_order",
+            "onboarding_onboarding_step",
+            "account_move",
+            "res_company",
+            "hr_contract_type",
+            "res_users",
+            "hr_department",
+            "account_account",
+            "account_tax",
+            "res_country_group",
+            "res_country_state",
+            "res_partner",
+            "res_partner_bank"
+          ]
+        }
+      }
+    },
+    {
+      "question": "for each sales order, list the line items with product name",
+      "must_retrieve": [
+        "sale_order",
+        "sale_order_line",
+        "product_product"
+      ],
+      "naive": {
+        "pipeline": "naive",
+        "question": "for each sales order, list the line items with product name",
+        "sql": "SELECT\n  so.id AS sales_order_id,\n  so.name AS sales_order_name,\n  sol.id AS sales_order_line_id,\n  pt.name AS product_name,\n  sol.name AS line_description,\n  sol.product_uom_qty AS quantity,\n  sol.price_unit\nFROM sale_order AS so\nINNER JOIN sale_order_line AS sol\n  ON sol.order_id = so.id\nLEFT JOIN product_product AS pp\n  ON pp.id = sol.product_id\nLEFT JOIN product_template AS pt\n  ON pt.id = pp.product_tmpl_id\nORDER BY so.id, sol.sequence, sol.id",
+        "referenced": [
+          "product_product",
+          "product_template",
+          "sale_order",
+          "sale_order_line"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 3.0514392089971807,
+        "extra": {}
+      },
+      "pq": {
+        "pipeline": "promptquery",
+        "question": "for each sales order, list the line items with product name",
+        "sql": "SELECT\n  so.id AS sales_order_id,\n  so.name AS sales_order_name,\n  sol.id AS sales_order_line_id,\n  sol.sequence,\n  sol.name AS product_name\nFROM sale_order AS so\nJOIN sale_order_line AS sol\n  ON sol.order_id = so.id\nORDER BY\n  so.id,\n  sol.sequence,\n  sol.id",
+        "referenced": [
+          "sale_order",
+          "sale_order_line"
+        ],
+        "passed": false,
+        "reason": "missing: product_product",
+        "elapsed_s": 1.605994749988895,
+        "extra": {
+          "retrieved": [
+            "sale_order_line",
+            "sale_order_line_invoice_rel",
+            "purchase_order_line",
+            "sale_order_cancel",
+            "product_template_attribute_value_sale_order_line_rel",
+            "product_template_attribute_value_purchase_order_line_rel",
+            "account_tax_sale_order_line_rel",
+            "account_tax_purchase_order_line_rel",
+            "product_tag_product_product_rel",
+            "account_analytic_line",
+            "product_packaging",
+            "product_template_attribute_line",
+            "product_label_layout_product_product_rel",
+            "sale_order",
+            "mrp_bom_line",
+            "product_combo_item",
+            "res_company",
+            "res_users",
+            "res_currency",
+            "res_partner",
+            "product_product",
+            "uom_uom",
+            "stock_route",
+            "stock_warehouse",
+            "account_move_line"
+          ]
+        }
+      }
+    },
+    {
+      "question": "total revenue per customer across all sales orders",
+      "must_retrieve": [
+        "sale_order",
+        "res_partner"
+      ],
+      "naive": {
+        "pipeline": "naive",
+        "question": "total revenue per customer across all sales orders",
+        "sql": "SELECT\n  so.partner_id AS customer_id,\n  rp.name AS customer_name,\n  SUM(so.amount_total) AS total_revenue\nFROM sale_order AS so\nLEFT JOIN res_partner AS rp\n  ON rp.id = so.partner_id\nGROUP BY\n  so.partner_id,\n  rp.name\nORDER BY\n  total_revenue DESC,\n  customer_name",
+        "referenced": [
+          "res_partner",
+          "sale_order"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 3.104925583989825,
+        "extra": {}
+      },
+      "pq": {
+        "pipeline": "promptquery",
+        "question": "total revenue per customer across all sales orders",
+        "sql": "SELECT\n  sale_order.partner_id,\n  SUM(sale_order.amount_total) AS total_revenue\nFROM sale_order\nGROUP BY sale_order.partner_id\nORDER BY total_revenue DESC",
+        "referenced": [
+          "sale_order"
+        ],
+        "passed": false,
+        "reason": "missing: res_partner",
+        "elapsed_s": 1.5341804590134416,
+        "extra": {
+          "retrieved": [
+            "account_accrued_orders_wizard",
+            "sale_mass_cancel_orders",
+            "website_route",
+            "crm_lead",
+            "sale_order_mass_cancel_wizard_rel",
+            "crm_recurring_plan",
+            "res_users",
+            "crm_quotation_partner",
+            "crm_team",
+            "sale_order_line",
+            "digest_digest",
+            "sale_order_cancel",
+            "sale_order",
+            "crm_team_member",
+            "sale_advance_payment_inv",
+            "account_account",
+            "res_company",
+            "res_currency",
+            "account_journal",
+            "utm_campaign",
+            "res_country",
+            "res_lang",
+            "crm_iap_lead_mining_request",
+            "crm_lost_reason",
+            "utm_medium"
+          ]
+        }
+      }
+    },
+    {
+      "question": "manufacturing orders with their bill of materials",
+      "must_retrieve": [
+        "mrp_production",
+        "mrp_bom"
+      ],
+      "naive": {
+        "pipeline": "naive",
+        "question": "manufacturing orders with their bill of materials",
+        "sql": "SELECT\n  mrp_production.id AS manufacturing_order_id,\n  mrp_production.name AS manufacturing_order_name,\n  mrp_production.state AS manufacturing_order_state,\n  mrp_production.date_start,\n  mrp_production.date_finished,\n  mrp_production.product_qty AS manufacturing_order_qty,\n  mrp_bom.id AS bom_id,\n  mrp_bom.code AS bom_code,\n  mrp_bom.type AS bom_type,\n  mrp_bom.product_qty AS bom_product_qty\nFROM mrp_production\nLEFT JOIN mrp_bom\n  ON mrp_production.bom_id = mrp_bom.id\nORDER BY mrp_production.id",
+        "referenced": [
+          "mrp_bom",
+          "mrp_production"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 3.075524250016315,
+        "extra": {}
+      },
+      "pq": {
+        "pipeline": "promptquery",
+        "question": "manufacturing orders with their bill of materials",
+        "sql": "SELECT\n    mp.id AS manufacturing_order_id,\n    mp.name AS manufacturing_order,\n    mp.state AS manufacturing_order_state,\n    mp.origin,\n    mp.product_qty AS manufacturing_order_qty,\n    mp.date_start,\n    mp.date_finished,\n    mb.id AS bom_id,\n    mb.code AS bom_code,\n    mb.type AS bom_type,\n    mb.product_qty AS bom_quantity,\n    pt.name AS bom_product_name,\n    pp.default_code AS bom_product_default_code\nFROM mrp_production AS mp\nLEFT JOIN mrp_bom AS mb\n    ON mp.bom_id = mb.id\nLEFT JOIN product_product AS pp\n    ON mb.product_id = pp.id\nLEFT JOIN product_template AS pt\n    ON pp.product_tmpl_id = pt.id\nORDER BY mp.id",
+        "referenced": [
+          "mrp_bom",
+          "mrp_production",
+          "product_product",
+          "product_template"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 3.1795145419891924,
+        "extra": {
+          "retrieved": [
+            "bill_to_po_wizard",
+            "purchase_bill_union",
+            "account_accrued_orders_wizard",
+            "sale_mass_cancel_orders",
+            "sale_order_mass_cancel_wizard_rel",
+            "mrp_bom",
+            "mrp_account_wip_accounting",
+            "mrp_bom_line",
+            "mrp_production",
+            "stock_warehouse_orderpoint",
+            "res_company",
+            "res_config_settings",
+            "res_users",
+            "res_partner",
+            "purchase_order",
+            "account_account",
+            "res_currency",
+            "account_journal",
+            "sale_order",
+            "stock_picking_type",
+            "product_product",
+            "product_template",
+            "uom_uom",
+            "project_project",
+            "mrp_routing_workcenter"
+          ]
+        }
+      }
+    },
+    {
+      "question": "incoming shipments with the source warehouse",
+      "must_retrieve": [
+        "stock_picking",
+        "stock_warehouse"
+      ],
+      "naive": {
+        "pipeline": "naive",
+        "question": "incoming shipments with the source warehouse",
+        "sql": "SELECT\n    sp.id AS picking_id,\n    sp.name AS picking_name,\n    sp.origin,\n    sp.state,\n    sp.scheduled_date,\n    sp.date_done,\n    sw.id AS source_warehouse_id,\n    sw.name AS source_warehouse_name,\n    sw.code AS source_warehouse_code\nFROM stock_picking AS sp\nINNER JOIN stock_picking_type AS spt\n    ON sp.picking_type_id = spt.id\nINNER JOIN stock_warehouse AS sw\n    ON spt.warehouse_id = sw.id\nWHERE spt.code = 'incoming'\nORDER BY sp.scheduled_date DESC NULLS LAST, sp.id",
+        "referenced": [
+          "stock_picking",
+          "stock_picking_type",
+          "stock_warehouse"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 2.962278791994322,
+        "extra": {}
+      },
+      "pq": {
+        "pipeline": "promptquery",
+        "question": "incoming shipments with the source warehouse",
+        "sql": "SELECT\n  sw.name AS incoming_shipment_warehouse,\n  src_wh.name AS source_warehouse\nFROM stock_warehouse AS sw\nLEFT JOIN stock_route AS sr\n  ON sr.id = sw.reception_route_id\nLEFT JOIN stock_warehouse AS src_wh\n  ON src_wh.id = sr.supplier_wh_id\nWHERE sw.reception_route_id IS NOT NULL",
+        "referenced": [
+          "stock_route",
+          "stock_warehouse"
+        ],
+        "passed": false,
+        "reason": "missing: stock_picking",
+        "elapsed_s": 3.7984387089964002,
+        "extra": {
+          "retrieved": [
+            "utm_source",
+            "stock_route_warehouse",
+            "stock_wh_resupply_table",
+            "stock_rules_report_stock_warehouse_rel",
+            "stock_warehouse_orderpoint",
+            "fetchmail_server",
+            "stock_orderpoint_snooze_stock_warehouse_orderpoint_rel",
+            "sale_order",
+            "stock_rule",
+            "stock_route",
+            "account_payment_register",
+            "report_stock_quantity",
+            "product_replenish",
+            "stock_location",
+            "stock_replenishment_option",
+            "res_users",
+            "stock_warehouse",
+            "stock_rules_report",
+            "mrp_bom",
+            "res_company",
+            "procurement_group",
+            "product_category",
+            "product_product",
+            "res_partner",
+            "product_supplierinfo"
+          ]
+        }
+      }
+    },
+    {
+      "question": "current stock levels per product",
+      "must_retrieve": [
+        "stock_quant",
+        "product_product"
+      ],
+      "naive": {
+        "pipeline": "naive",
+        "question": "current stock levels per product",
+        "sql": "SELECT\n  pp.id AS product_id,\n  pt.id AS product_template_id,\n  pt.name AS product_name,\n  COALESCE(SUM(sq.quantity), 0) AS current_stock_level\nFROM product_product AS pp\nINNER JOIN product_template AS pt\n  ON pt.id = pp.product_tmpl_id\nLEFT JOIN stock_quant AS sq\n  ON sq.product_id = pp.id\nGROUP BY\n  pp.id,\n  pt.id,\n  pt.name\nORDER BY\n  pt.name,\n  pp.id",
+        "referenced": [
+          "product_product",
+          "product_template",
+          "stock_quant"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 2.342788792011561,
+        "extra": {}
+      },
+      "pq": {
+        "pipeline": "promptquery",
+        "question": "current stock levels per product",
+        "sql": "SELECT\n  pp.id AS product_id,\n  pp.default_code AS product_default_code,\n  pt.name AS product_name,\n  rsq.company_id,\n  rsq.warehouse_id,\n  SUM(rsq.product_qty) AS current_stock_level\nFROM report_stock_quantity AS rsq\nJOIN product_product AS pp\n  ON rsq.product_id = pp.id\nJOIN product_template AS pt\n  ON rsq.product_tmpl_id = pt.id\nGROUP BY\n  pp.id,\n  pp.default_code,\n  pt.name,\n  rsq.company_id,\n  rsq.warehouse_id\nORDER BY\n  pp.id,\n  rsq.company_id,\n  rsq.warehouse_id",
+        "referenced": [
+          "product_product",
+          "product_template",
+          "report_stock_quantity"
+        ],
+        "passed": false,
+        "reason": "missing: stock_quant",
+        "elapsed_s": 2.3768744580156635,
+        "extra": {
+          "retrieved": [
+            "product_tag_product_product_rel",
+            "product_product_stock_track_confirmation_rel",
+            "stock_route_product",
+            "stock_change_product_qty",
+            "product_label_layout_product_product_rel",
+            "stock_move_line",
+            "product_replenish",
+            "product_variant_combination",
+            "stock_rules_report",
+            "report_stock_quantity",
+            "stock_warehouse_orderpoint",
+            "product_tag_product_template_rel",
+            "product_product",
+            "product_attribute_product_template_rel",
+            "stock_move",
+            "product_tag",
+            "stock_track_confirmation",
+            "product_template",
+            "stock_route",
+            "res_users",
+            "product_label_layout",
+            "res_company",
+            "stock_location",
+            "stock_lot",
+            "res_partner"
+          ]
+        }
+      }
+    },
+    {
+      "question": "purchase order lines with product and vendor",
+      "must_retrieve": [
+        "purchase_order",
+        "purchase_order_line",
+        "res_partner"
+      ],
+      "naive": {
+        "pipeline": "naive",
+        "question": "purchase order lines with product and vendor",
+        "sql": "SELECT\n  pol.id AS purchase_order_line_id,\n  po.name AS purchase_order,\n  po.date_order,\n  rp.id AS vendor_id,\n  rp.name AS vendor_name,\n  pp.id AS product_id,\n  pt.name AS product_name,\n  pol.name AS line_description,\n  pol.product_qty,\n  pol.price_unit,\n  pol.price_subtotal,\n  pol.price_total,\n  pol.state\nFROM purchase_order_line AS pol\nINNER JOIN purchase_order AS po\n  ON pol.order_id = po.id\nLEFT JOIN res_partner AS rp\n  ON po.partner_id = rp.id\nLEFT JOIN product_product AS pp\n  ON pol.product_id = pp.id\nLEFT JOIN product_template AS pt\n  ON pp.product_tmpl_id = pt.id\nORDER BY po.date_order DESC, po.name, pol.id",
+        "referenced": [
+          "product_product",
+          "product_template",
+          "purchase_order",
+          "purchase_order_line",
+          "res_partner"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 3.459516624978278,
+        "extra": {}
+      },
+      "pq": {
+        "pipeline": "promptquery",
+        "question": "purchase order lines with product and vendor",
+        "sql": "SELECT\n  pol.id AS purchase_order_line_id,\n  po.name AS purchase_order,\n  pol.name AS line_description,\n  pol.product_id,\n  rp.name AS vendor,\n  pol.product_qty,\n  pol.price_unit,\n  pol.price_subtotal,\n  pol.price_total,\n  pol.state,\n  pol.date_planned\nFROM purchase_order_line AS pol\nINNER JOIN purchase_order AS po\n  ON pol.order_id = po.id\nINNER JOIN res_partner AS rp\n  ON po.partner_id = rp.id\nORDER BY po.name, pol.id",
+        "referenced": [
+          "purchase_order",
+          "purchase_order_line",
+          "res_partner"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 2.3616345420014113,
+        "extra": {
+          "retrieved": [
+            "account_move_purchase_order_rel",
+            "vendor_delay_report",
+            "purchase_order_stock_picking_rel",
+            "product_template_attribute_value_purchase_order_line_rel",
+            "account_tax_purchase_order_line_rel",
+            "purchase_order_line",
+            "purchase_bill_union",
+            "stock_move_created_purchase_line_rel",
+            "bill_to_po_wizard",
+            "purchase_order",
+            "product_tag_product_product_rel",
+            "stock_warehouse_orderpoint",
+            "sale_order_line",
+            "product_label_layout_product_product_rel",
+            "product_template_attribute_value_sale_order_line_rel",
+            "account_move",
+            "stock_picking",
+            "product_template_attribute_value",
+            "account_tax",
+            "res_company",
+            "res_users",
+            "res_currency",
+            "procurement_group",
+            "stock_location",
+            "res_partner"
+          ]
+        }
+      }
+    },
+    {
+      "question": "invoices that are still unpaid, with the customer",
+      "must_retrieve": [
+        "account_move",
+        "res_partner"
+      ],
+      "naive": {
+        "pipeline": "naive",
+        "question": "invoices that are still unpaid, with the customer",
+        "sql": "SELECT\n  account_move.id AS invoice_id,\n  account_move.name AS invoice_number,\n  account_move.ref AS reference,\n  account_move.invoice_date,\n  account_move.invoice_date_due,\n  account_move.date AS accounting_date,\n  account_move.amount_total,\n  account_move.amount_residual,\n  account_move.payment_state,\n  res_partner.id AS customer_id,\n  res_partner.name AS customer_name\nFROM account_move\nJOIN res_partner\n  ON res_partner.id = account_move.partner_id\nWHERE account_move.move_type IN ('out_invoice', 'out_refund')\n  AND account_move.state = 'posted'\n  AND COALESCE(account_move.amount_residual, 0) > 0\n  AND COALESCE(account_move.payment_state, '') NOT IN ('paid', 'in_payment', 'reversed')\nORDER BY account_move.invoice_date_due NULLS LAST, account_move.invoice_date, account_move.id",
+        "referenced": [
+          "account_move",
+          "res_partner"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 3.4753286670020316,
+        "extra": {}
+      },
+      "pq": {
+        "pipeline": "promptquery",
+        "question": "invoices that are still unpaid, with the customer",
+        "sql": "SELECT 'insufficient schema: missing invoice/payment tables needed to identify unpaid invoices and customer details' AS error",
+        "referenced": [],
+        "passed": false,
+        "reason": "no tables referenced",
+        "elapsed_s": 1.7437343340134248,
+        "extra": {
+          "retrieved": [
+            "crm_lead_scoring_frequency_field",
+            "crm_quotation_partner",
+            "account_reconcile_model",
+            "res_partner",
+            "sale_order_line",
+            "res_config_settings",
+            "res_users",
+            "ir_model_fields",
+            "crm_lead",
+            "res_company",
+            "res_country",
+            "res_partner_industry",
+            "ir_act_report_xml",
+            "res_country_state",
+            "res_partner_title",
+            "website",
+            "product_combo_item",
+            "res_currency",
+            "sale_order",
+            "product_product",
+            "product_packaging",
+            "uom_uom",
+            "stock_route",
+            "stock_warehouse",
+            "digest_digest"
+          ]
+        }
+      }
+    },
+    {
+      "question": "leads with the assigned sales team",
+      "must_retrieve": [
+        "crm_lead",
+        "crm_team"
+      ],
+      "naive": {
+        "pipeline": "naive",
+        "question": "leads with the assigned sales team",
+        "sql": "SELECT\n  crm_lead.id AS lead_id,\n  crm_lead.name AS lead_name,\n  crm_lead.type AS lead_type,\n  crm_lead.partner_name,\n  crm_lead.contact_name,\n  crm_lead.email_from,\n  crm_lead.phone,\n  crm_lead.mobile,\n  crm_lead.stage_id,\n  crm_lead.user_id,\n  crm_lead.company_id,\n  crm_lead.create_date,\n  crm_lead.date_open,\n  crm_lead.date_closed,\n  crm_lead.probability,\n  crm_team.id AS sales_team_id,\n  crm_team.name AS sales_team_name\nFROM crm_lead\nLEFT JOIN crm_team\n  ON crm_lead.team_id = crm_team.id\nORDER BY crm_team.id, crm_lead.id",
+        "referenced": [
+          "crm_lead",
+          "crm_team"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 3.1725453750113957,
+        "extra": {}
+      },
+      "pq": {
+        "pipeline": "promptquery",
+        "question": "leads with the assigned sales team",
+        "sql": "SELECT 'insufficient schema: missing crm_lead table needed to identify leads and their assigned sales team' AS error",
+        "referenced": [],
+        "passed": false,
+        "reason": "no tables referenced",
+        "elapsed_s": 2.166710207995493,
+        "extra": {
+          "retrieved": [
+            "crm_team",
+            "crm_team_member",
+            "team_favorite_user_rel",
+            "res_users",
+            "sale_order",
+            "crm_stage",
+            "sale_order_cancel",
+            "crm_merge_opportunity",
+            "crm_lead2opportunity_partner",
+            "sale_advance_payment_inv",
+            "crm_lead2opportunity_partner_mass",
+            "crm_lead_scoring_frequency",
+            "product_packaging",
+            "crm_activity_report",
+            "crm_iap_lead_mining_request",
+            "mail_alias",
+            "res_company",
+            "gamification_karma_rank",
+            "res_partner",
+            "website",
+            "utm_campaign",
+            "res_currency",
+            "account_fiscal_position",
+            "account_incoterms",
+            "account_journal"
+          ]
+        }
+      }
+    },
+    {
+      "question": "calendar events organized by employee",
+      "must_retrieve": [
+        "calendar_event"
+      ],
+      "naive": {
+        "pipeline": "naive",
+        "question": "calendar events organized by employee",
+        "sql": "SELECT\n  he.id AS employee_id,\n  he.name AS employee_name,\n  COUNT(ce.id) AS calendar_event_count\nFROM hr_employee AS he\nJOIN res_users AS ru\n  ON ru.id = he.user_id\nJOIN calendar_event AS ce\n  ON ce.user_id = ru.id\nGROUP BY\n  he.id,\n  he.name\nORDER BY\n  calendar_event_count DESC,\n  he.name",
+        "referenced": [
+          "calendar_event",
+          "hr_employee",
+          "res_users"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 2.74745187498047,
+        "extra": {}
+      },
+      "pq": {
+        "pipeline": "promptquery",
+        "question": "calendar events organized by employee",
+        "sql": "SELECT\n  he.id AS employee_id,\n  he.name AS employee_name,\n  COUNT(ce.id) AS organized_event_count\nFROM hr_employee AS he\nLEFT JOIN res_users AS ru\n  ON ru.id = he.user_id\nLEFT JOIN calendar_event AS ce\n  ON ce.user_id = ru.id\nGROUP BY\n  he.id,\n  he.name\nORDER BY\n  organized_event_count DESC,\n  he.name",
+        "referenced": [
+          "calendar_event",
+          "hr_employee",
+          "res_users"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 2.2565330840006936,
+        "extra": {
+          "retrieved": [
+            "employee_category_rel",
+            "calendar_alarm_calendar_event_rel",
+            "hr_employee_category",
+            "hr_employee_hr_employee_cv_wizard_rel",
+            "calendar_event_res_partner_rel",
+            "calendar_filters",
+            "calendar_attendee",
+            "meeting_category_rel",
+            "calendar_event",
+            "calendar_popover_delete_wizard",
+            "hr_employee_public",
+            "hr_employee_skill_report",
+            "hr_employee_hr_skill_rel",
+            "hr_employee_skill",
+            "resource_calendar_attendance",
+            "hr_employee",
+            "calendar_alarm",
+            "res_users",
+            "hr_employee_cv_wizard",
+            "res_partner",
+            "calendar_event_type",
+            "crm_lead",
+            "calendar_recurrence",
+            "ir_model",
+            "discuss_channel"
+          ]
+        }
+      }
+    },
+    {
+      "question": "list vehicles in the company fleet",
+      "must_retrieve": [
+        "fleet_vehicle"
+      ],
+      "naive": {
+        "pipeline": "naive",
+        "question": "list vehicles in the company fleet",
+        "sql": "SELECT\n  fv.id,\n  fv.name,\n  fv.license_plate,\n  fv.vin_sn,\n  fv.company_id,\n  fv.model_id,\n  fv.brand_id,\n  fv.state_id,\n  fv.driver_id,\n  fv.active,\n  fv.acquisition_date,\n  fv.write_off_date\nFROM fleet_vehicle AS fv\nORDER BY fv.company_id, fv.name, fv.license_plate",
+        "referenced": [
+          "fleet_vehicle"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 3.3726743749866728,
+        "extra": {}
+      },
+      "pq": {
+        "pipeline": "promptquery",
+        "question": "list vehicles in the company fleet",
+        "sql": "SELECT\n  fv.id AS vehicle_id,\n  fv.name AS vehicle_name,\n  fv.license_plate,\n  rc.id AS company_id,\n  rc.name AS company_name,\n  fvm.name AS model_name,\n  fvmb.name AS brand_name,\n  fvs.name AS vehicle_state\nFROM fleet_vehicle AS fv\nLEFT JOIN res_company AS rc\n  ON fv.company_id = rc.id\nLEFT JOIN fleet_vehicle_model AS fvm\n  ON fv.model_id = fvm.id\nLEFT JOIN fleet_vehicle_model_brand AS fvmb\n  ON fv.brand_id = fvmb.id\nLEFT JOIN fleet_vehicle_state AS fvs\n  ON fv.state_id = fvs.id\nWHERE fv.active IS TRUE\nORDER BY rc.name, fv.name, fv.license_plate",
+        "referenced": [
+          "fleet_vehicle",
+          "fleet_vehicle_model",
+          "fleet_vehicle_model_brand",
+          "fleet_vehicle_state",
+          "res_company"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 10.957737625023583,
+        "extra": {
+          "retrieved": [
+            "fleet_vehicle_log_services",
+            "fleet_service_type_fleet_vehicle_log_contract_rel",
+            "fleet_vehicle_fleet_vehicle_send_mail_rel",
+            "fleet_service_type",
+            "fleet_vehicle_model_vendors",
+            "fleet_vehicle_vehicle_tag_rel",
+            "fleet_vehicle_mail_compose_message_ir_attachments_rel",
+            "fleet_vehicle_log_contract",
+            "fleet_vehicle_state",
+            "fleet_vehicle_model_category",
+            "res_company_users_rel",
+            "fleet_vehicle",
+            "fleet_vehicle_tag",
+            "fleet_vehicle_cost_report",
+            "fleet_vehicle_odometer",
+            "account_move_line",
+            "res_company",
+            "res_users",
+            "hr_employee",
+            "res_partner",
+            "fleet_vehicle_send_mail",
+            "fleet_vehicle_model",
+            "ir_attachment",
+            "fleet_vehicle_model_brand",
+            "fleet_vehicle_assignation_log"
+          ]
+        }
+      }
+    },
+    {
+      "question": "top 5 customers by total sales order value",
+      "must_retrieve": [
+        "sale_order",
+        "res_partner"
+      ],
+      "naive": {
+        "pipeline": "naive",
+        "question": "top 5 customers by total sales order value",
+        "sql": "SELECT\n  rp.id AS customer_id,\n  rp.name AS customer_name,\n  SUM(so.amount_total) AS total_sales_order_value\nFROM sale_order AS so\nJOIN res_partner AS rp\n  ON rp.id = so.partner_id\nGROUP BY\n  rp.id,\n  rp.name\nORDER BY\n  total_sales_order_value DESC,\n  rp.id\nLIMIT 5",
+        "referenced": [
+          "res_partner",
+          "sale_order"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 2.663413457979914,
+        "extra": {}
+      },
+      "pq": {
+        "pipeline": "promptquery",
+        "question": "top 5 customers by total sales order value",
+        "sql": "SELECT\n  rp.id AS customer_id,\n  rp.name AS customer_name,\n  SUM(so.amount_total) AS total_sales_order_value\nFROM sale_order AS so\nJOIN res_partner AS rp\n  ON rp.id = so.partner_id\nGROUP BY\n  rp.id,\n  rp.name\nORDER BY\n  total_sales_order_value DESC,\n  rp.id\nLIMIT 5",
+        "referenced": [
+          "res_partner",
+          "sale_order"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 2.3583369590051007,
+        "extra": {
+          "retrieved": [
+            "sale_order_cancel",
+            "product_template_attribute_value_sale_order_line_rel",
+            "product_template_attribute_value_purchase_order_line_rel",
+            "mail_tracking_value",
+            "sale_order",
+            "product_attribute_custom_value",
+            "sale_order_line",
+            "purchase_order",
+            "update_product_attribute_value",
+            "sale_order_tag_rel",
+            "purchase_order_line",
+            "account_move_purchase_order_rel",
+            "template_attribute_value_stock_move_rel",
+            "purchase_order_stock_picking_rel",
+            "product_attribute_value",
+            "res_partner",
+            "res_users",
+            "mail_template",
+            "product_template_attribute_value",
+            "res_currency",
+            "ir_model_fields",
+            "mail_message",
+            "utm_campaign",
+            "res_company",
+            "account_fiscal_position"
+          ]
+        }
+      }
+    },
+    {
+      "question": "number of project tasks per project, descending",
+      "must_retrieve": [
+        "project_task",
+        "project_project"
+      ],
+      "naive": {
+        "pipeline": "naive",
+        "question": "number of project tasks per project, descending",
+        "sql": "SELECT\n  pp.id AS project_id,\n  pp.name AS project_name,\n  COUNT(pt.id) AS task_count\nFROM project_project AS pp\nLEFT JOIN project_task AS pt\n  ON pt.project_id = pp.id\nGROUP BY\n  pp.id,\n  pp.name\nORDER BY\n  task_count DESC,\n  pp.id",
+        "referenced": [
+          "project_project",
+          "project_task"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 2.8636437090171967,
+        "extra": {}
+      },
+      "pq": {
+        "pipeline": "promptquery",
+        "question": "number of project tasks per project, descending",
+        "sql": "SELECT\n  pp.id AS project_id,\n  pp.name AS project_name,\n  COUNT(pt.id) AS task_count\nFROM project_project AS pp\nLEFT JOIN project_task AS pt\n  ON pt.project_id = pp.id\nGROUP BY\n  pp.id,\n  pp.name\nORDER BY\n  task_count DESC,\n  pp.id",
+        "referenced": [
+          "project_project",
+          "project_task"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 2.05264549999265,
+        "extra": {
+          "retrieved": [
+            "project_project_project_tags_rel",
+            "project_favorite_user_rel",
+            "project_project_project_task_type_delete_wizard_rel",
+            "project_task_type_rel",
+            "project_project_stage_project_project_stage_delete_wizard_rel",
+            "project_project",
+            "project_collaborator",
+            "project_tags_project_task_rel",
+            "project_project_stage",
+            "project_update",
+            "project_milestone",
+            "project_share_wizard",
+            "project_project_stage_delete_wizard",
+            "project_tags",
+            "project_task_type_project_task_type_delete_wizard_rel",
+            "res_users",
+            "project_task_type_delete_wizard",
+            "project_task_type",
+            "account_analytic_account",
+            "mail_alias",
+            "res_company",
+            "res_partner",
+            "project_task",
+            "mail_template",
+            "sms_template"
+          ]
+        }
+      }
+    }
+  ]
+}

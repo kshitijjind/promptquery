@@ -1,0 +1,4144 @@
+{
+  "summary": {
+    "schema_name": "rnacentral",
+    "n_tables": 216,
+    "sql_model": "gpt-4o",
+    "selector_model": "gpt-4o-mini",
+    "total": 50,
+    "naive_pass": 41,
+    "v1_pass": 37,
+    "v2_pass": 47,
+    "delta_v1_vs_naive": -4,
+    "delta_v2_vs_naive": 6,
+    "avg_naive_s": 2.949407219980494,
+    "avg_v1_s": 1.8614440734422533,
+    "avg_v2_s": 4.799824909980526,
+    "model": "gpt-4o",
+    "pq_pass": 47,
+    "delta": 6,
+    "avg_pq_s": 4.799824909980526
+  },
+  "raw": [
+    {
+      "question": "show me the latest blog posts",
+      "must_retrieve": [
+        "blog"
+      ],
+      "naive": {
+        "pipeline": "naive",
+        "question": "show me the latest blog posts",
+        "sql": "SELECT \n    id, \n    title, \n    content, \n    created \nFROM \n    rnacen.blog \nORDER BY \n    created DESC \nLIMIT 10",
+        "referenced": [
+          "blog"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 6.278885165986139,
+        "extra": {}
+      },
+      "pq_v1": {
+        "pipeline": "pq_v1",
+        "question": "show me the latest blog posts",
+        "sql": "SELECT id, title, content, created, featured, release_image\nFROM rnacen.blog\nORDER BY created DESC",
+        "referenced": [
+          "blog"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 1.3138441659975797,
+        "extra": {
+          "retrieved": [
+            "rnacen.blog"
+          ]
+        }
+      },
+      "pq_v2": {
+        "pipeline": "pq_v2",
+        "question": "show me the latest blog posts",
+        "sql": "SELECT * FROM rnacen.blog ORDER BY created DESC",
+        "referenced": [
+          "blog"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 3.925671874982072,
+        "extra": {
+          "retrieved": [
+            "rnacen.blog"
+          ]
+        }
+      }
+    },
+    {
+      "question": "list all source databases that contribute to RNAcentral",
+      "must_retrieve": [
+        "rnc_database"
+      ],
+      "naive": {
+        "pipeline": "naive",
+        "question": "list all source databases that contribute to RNAcentral",
+        "sql": "SELECT descr AS source_database\nFROM rnacen.rnc_database",
+        "referenced": [
+          "rnc_database"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 1.076219917013077,
+        "extra": {}
+      },
+      "pq_v1": {
+        "pipeline": "pq_v1",
+        "question": "list all source databases that contribute to RNAcentral",
+        "sql": "SELECT descr \nFROM rnacen.rnc_database",
+        "referenced": [
+          "rnc_database"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 1.2326437089941464,
+        "extra": {
+          "retrieved": [
+            "rnacen.rnc_release",
+            "rnacen.rnc_database",
+            "rnacen.rnc_related_sequences",
+            "rnacen.pipeline_tracking_qa_scan",
+            "rnacen.rnc_chemical_components",
+            "rnacen_django_test.rnc_chemical_components",
+            "rnacen.r2dt_models",
+            "rnacen.validate_layout_hits",
+            "rnacen.r2dt_models_backup",
+            "rnacen.rnc_database_references",
+            "rnacen.rnc_database_json_stats",
+            "rnacen_django_test.rnc_database_json_stats",
+            "rnacen.xref",
+            "rnacen_django_test.rnc_database",
+            "rnacen_django_test.xref",
+            "rnacen.rnc_relationship_types",
+            "rnacen.rnc_accessions",
+            "rnacen.rnc_rna_precomputed",
+            "rnacen.rna",
+            "rnacen.ontology_terms",
+            "rnacen.rnc_references",
+            "rnacen_django_test.rnc_accessions",
+            "rnacen_django_test.rnc_release",
+            "rnacen_django_test.rna",
+            "rnacen.r2dt_model_extra_data"
+          ]
+        }
+      },
+      "pq_v2": {
+        "pipeline": "pq_v2",
+        "question": "list all source databases that contribute to RNAcentral",
+        "sql": "SELECT rnacen.rnc_database.id, rnacen.rnc_database.display_name \nFROM rnacen.rnc_database\nWHERE rnacen.rnc_database.for_release = 'Y'",
+        "referenced": [
+          "rnc_database"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 4.760768333013402,
+        "extra": {
+          "retrieved": [
+            "rnacen_django_test.rnc_database",
+            "rnacen.rnc_database_references",
+            "rnacen_django_test.rnc_release",
+            "rnacen.rnc_database",
+            "rnacen.rnc_references",
+            "rnacen_django_test.xref"
+          ]
+        }
+      }
+    },
+    {
+      "question": "show me the available ontology terms",
+      "must_retrieve": [
+        "ontology_terms"
+      ],
+      "naive": {
+        "pipeline": "naive",
+        "question": "show me the available ontology terms",
+        "sql": "SELECT ontology_term_id, ontology, name, definition\nFROM rnacen.ontology_terms",
+        "referenced": [
+          "ontology_terms"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 0.8453714170027524,
+        "extra": {}
+      },
+      "pq_v1": {
+        "pipeline": "pq_v1",
+        "question": "show me the available ontology terms",
+        "sql": "SELECT ontology_term_id, ontology, name, definition\nFROM rnacen.ontology_terms",
+        "referenced": [
+          "ontology_terms"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 1.050280333001865,
+        "extra": {
+          "retrieved": [
+            "rnacen.ontology_terms",
+            "rnacen.go_term_annotations",
+            "rnacen.rfam_go_terms",
+            "rnacen.insdc_so_term_mapping",
+            "rnacen.rnc_rna_precomputed",
+            "rnacen.go_term_publication_map",
+            "rnacen.r2dt_models",
+            "rnacen.rnc_accessions",
+            "rnacen.rfam_models",
+            "rnacen.r2dt_models_backup",
+            "rnacen.rnc_release",
+            "rnacen.rnc_references",
+            "rnacen.rfam_clans",
+            "rnacen.cpat_results",
+            "rnacen.ensembl_compara",
+            "rnacen.pipeline_tracking_genome_mapping",
+            "rnacen.r2dt_model_extra_data",
+            "rnacen.r2dt_results",
+            "rnacen.rfam_model_hits",
+            "rnacen.rnc_accession_sequence_feature",
+            "rnacen.rnc_accession_sequence_region",
+            "rnacen.rnc_feedback_overlap",
+            "rnacen.rnc_gene_status",
+            "rnacen.rnc_interactions",
+            "rnacen.rnc_locus_members"
+          ]
+        }
+      },
+      "pq_v2": {
+        "pipeline": "pq_v2",
+        "question": "show me the available ontology terms",
+        "sql": "SELECT ontology_term_id, ontology, name, definition\nFROM rnacen.ontology_terms",
+        "referenced": [
+          "ontology_terms"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 3.170909542008303,
+        "extra": {
+          "retrieved": [
+            "rnacen.ontology_terms",
+            "rnacen.go_term_annotations",
+            "rnacen.insdc_so_term_mapping",
+            "rnacen.r2dt_models",
+            "rnacen.rfam_go_terms",
+            "rnacen.rfam_models",
+            "rnacen.rnc_accessions",
+            "rnacen.rnc_rna_precomputed"
+          ]
+        }
+      }
+    },
+    {
+      "question": "list every Rfam clan",
+      "must_retrieve": [
+        "rfam_clans"
+      ],
+      "naive": {
+        "pipeline": "naive",
+        "question": "list every Rfam clan",
+        "sql": "SELECT rfam_clan_id, name, description, family_count\nFROM rnacen.rfam_clans",
+        "referenced": [
+          "rfam_clans"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 1.0236608339764643,
+        "extra": {}
+      },
+      "pq_v1": {
+        "pipeline": "pq_v1",
+        "question": "list every Rfam clan",
+        "sql": "SELECT rfam_clan_id, name, description, family_count\nFROM rnacen.rfam_clans",
+        "referenced": [
+          "rfam_clans"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 1.0326950419985224,
+        "extra": {
+          "retrieved": [
+            "rnacen.rfam_clans",
+            "rnacen.rfam_models",
+            "rnacen.rfam_go_terms",
+            "rnacen.rfam_analyzed_sequences",
+            "rnacen.rfam_model_hits",
+            "rnacen.qa_status",
+            "rnacen.ontology_terms",
+            "rnacen.rna",
+            "rnacen.rnc_sequence_features"
+          ]
+        }
+      },
+      "pq_v2": {
+        "pipeline": "pq_v2",
+        "question": "list every Rfam clan",
+        "sql": "SELECT rfam_clan_id, name, description, family_count\nFROM rnacen.rfam_clans",
+        "referenced": [
+          "rfam_clans"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 4.202484042005381,
+        "extra": {
+          "retrieved": [
+            "rnacen.rfam_clans",
+            "rnacen.rfam_models"
+          ]
+        }
+      }
+    },
+    {
+      "question": "show me all Rfam family models",
+      "must_retrieve": [
+        "rfam_models"
+      ],
+      "naive": {
+        "pipeline": "naive",
+        "question": "show me all Rfam family models",
+        "sql": "SELECT rfam_model_id, short_name, long_name, description, seed_count, full_count, length, is_suppressed, domain, rna_type, rfam_clan_id, rfam_rna_type, so_rna_type\nFROM rnacen.rfam_models",
+        "referenced": [
+          "rfam_models"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 1.6010685000219382,
+        "extra": {}
+      },
+      "pq_v1": {
+        "pipeline": "pq_v1",
+        "question": "show me all Rfam family models",
+        "sql": "SELECT rfam_model_id, short_name, long_name, description, seed_count, full_count, length, \n       is_suppressed, domain, rna_type, rfam_clan_id, rfam_rna_type, so_rna_type\nFROM rnacen.rfam_models",
+        "referenced": [
+          "rfam_models"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 1.6663872500066645,
+        "extra": {
+          "retrieved": [
+            "rnacen.rfam_models",
+            "rnacen.rfam_model_hits",
+            "rnacen.rfam_clans",
+            "rnacen.rfam_go_terms",
+            "rnacen.rfam_analyzed_sequences",
+            "rnacen.r2dt_models",
+            "rnacen.r2dt_models_backup",
+            "rnacen.r2dt_model_extra_data",
+            "rnacen.validate_layout_hits",
+            "rnacen.r2dt_results",
+            "rnacen_django_test.django_content_type",
+            "rnacen.qa_status",
+            "rnacen.pipeline_tracking_qa_scan",
+            "rnacen.ontology_terms",
+            "rnacen.rnc_sequence_features",
+            "rnacen.rna",
+            "rnacen_django_test.auth_permission"
+          ]
+        }
+      },
+      "pq_v2": {
+        "pipeline": "pq_v2",
+        "question": "show me all Rfam family models",
+        "sql": "SELECT rfam_model_id, short_name, long_name, description, seed_count, full_count, length, is_suppressed, domain, rna_type, rfam_clan_id, rfam_rna_type, so_rna_type \nFROM rnacen.rfam_models",
+        "referenced": [
+          "rfam_models"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 3.3753673339961097,
+        "extra": {
+          "retrieved": [
+            "rnacen.rfam_models",
+            "rnacen.rfam_model_hits",
+            "rnacen.rfam_clans",
+            "rnacen.rfam_go_terms",
+            "rnacen.ontology_terms",
+            "rnacen.rnc_sequence_features",
+            "rnacen.rna"
+          ]
+        }
+      }
+    },
+    {
+      "question": "list the Ensembl assemblies",
+      "must_retrieve": [
+        "ensembl_assembly"
+      ],
+      "naive": {
+        "pipeline": "naive",
+        "question": "list the Ensembl assemblies",
+        "sql": "SELECT assembly_id, assembly_full_name, gca_accession, assembly_ucsc, common_name, taxid, ensembl_url, division, blat_mapping, example_chromosome, example_end, example_start, subdomain, selected_genome \nFROM rnacen.ensembl_assembly",
+        "referenced": [
+          "ensembl_assembly"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 1.4369827919872478,
+        "extra": {}
+      },
+      "pq_v1": {
+        "pipeline": "pq_v1",
+        "question": "list the Ensembl assemblies",
+        "sql": "SELECT assembly_id, assembly_full_name\nFROM rnacen.ensembl_assembly",
+        "referenced": [
+          "ensembl_assembly"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 1.8269598750048317,
+        "extra": {
+          "retrieved": [
+            "rnacen.ensembl_assembly",
+            "rnacen.rnc_feedback_target_assemblies",
+            "rnacen.ensembl_pseudogene_regions",
+            "rnacen.ensembl_coordinate_systems",
+            "rnacen.ensembl_compara",
+            "rnacen.litscan_ensembl_ids",
+            "rnacen.ensembl_pseudogene_exons",
+            "rnacen.ensembl_import_tracking",
+            "rnacen.rnc_gene_status",
+            "rnacen.rnc_sequence_regions",
+            "rnacen.ensembl_stable_prefixes",
+            "rnacen.rnc_feedback_overlap",
+            "rnacen.rnc_locus",
+            "rnacen.pipeline_tracking_genome_mapping",
+            "rnacen.rnc_sequence_regions_active",
+            "rnacen.rnc_database",
+            "rnacen.rnc_rna_precomputed",
+            "rnacen.rnc_accession_sequence_region",
+            "rnacen.rnc_locus_members",
+            "rnacen.rnc_sequence_exons"
+          ]
+        }
+      },
+      "pq_v2": {
+        "pipeline": "pq_v2",
+        "question": "list the Ensembl assemblies",
+        "sql": "SELECT assembly_id, assembly_full_name\nFROM rnacen.ensembl_assembly",
+        "referenced": [
+          "ensembl_assembly"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 1.5717766669986304,
+        "extra": {
+          "retrieved": [
+            "rnacen.ensembl_assembly",
+            "rnacen.ensembl_coordinate_systems",
+            "rnacen.ensembl_pseudogene_regions",
+            "rnacen.rnc_feedback_overlap",
+            "rnacen.rnc_feedback_target_assemblies",
+            "rnacen.rnc_gene_status",
+            "rnacen.rnc_locus",
+            "rnacen.rnc_sequence_regions"
+          ]
+        }
+      }
+    },
+    {
+      "question": "show me the registered R2DT models",
+      "must_retrieve": [
+        "r2dt_models"
+      ],
+      "naive": {
+        "pipeline": "naive",
+        "question": "show me the registered R2DT models",
+        "sql": "SELECT id, model_name, rna_type, so_term_id, model_source, model_length, model_basepair_count\nFROM rnacen.r2dt_models",
+        "referenced": [
+          "r2dt_models"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 1.6323023329896387,
+        "extra": {}
+      },
+      "pq_v1": {
+        "pipeline": "pq_v1",
+        "question": "show me the registered R2DT models",
+        "sql": "SELECT id, model_name, rna_type, so_term_id, model_source, model_length, model_basepair_count\nFROM rnacen.r2dt_models",
+        "referenced": [
+          "r2dt_models"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 1.0691195419931319,
+        "extra": {
+          "retrieved": [
+            "rnacen.r2dt_models",
+            "rnacen.r2dt_models_backup",
+            "rnacen.rfam_model_hits",
+            "rnacen.r2dt_model_extra_data",
+            "rnacen.validate_layout_hits",
+            "rnacen.r2dt_results",
+            "rnacen.rfam_models",
+            "rnacen.rfam_go_terms",
+            "rnacen_django_test.django_content_type",
+            "rnacen.pipeline_tracking_qa_scan",
+            "rnacen.ontology_terms",
+            "rnacen.rnc_sequence_features",
+            "rnacen.rna",
+            "rnacen.rfam_clans",
+            "rnacen_django_test.auth_permission"
+          ]
+        }
+      },
+      "pq_v2": {
+        "pipeline": "pq_v2",
+        "question": "show me the registered R2DT models",
+        "sql": "SELECT id, model_name, rna_type, so_term_id, model_source, model_length, model_basepair_count\nFROM rnacen.r2dt_models",
+        "referenced": [
+          "r2dt_models"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 1.6782150420185644,
+        "extra": {
+          "retrieved": [
+            "rnacen.r2dt_models",
+            "rnacen.r2dt_model_extra_data",
+            "rnacen.r2dt_results",
+            "rnacen.ontology_terms",
+            "rnacen.rna"
+          ]
+        }
+      }
+    },
+    {
+      "question": "how many taxonomy records are there",
+      "must_retrieve": [
+        "rnc_taxonomy"
+      ],
+      "naive": {
+        "pipeline": "naive",
+        "question": "how many taxonomy records are there",
+        "sql": "SELECT COUNT(*) FROM rnacen.rnc_taxonomy",
+        "referenced": [
+          "rnc_taxonomy"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 1.057983915990917,
+        "extra": {}
+      },
+      "pq_v1": {
+        "pipeline": "pq_v1",
+        "question": "how many taxonomy records are there",
+        "sql": "SELECT COUNT(*) FROM rnacen.rnc_taxonomy",
+        "referenced": [
+          "rnc_taxonomy"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 1.3989787500177044,
+        "extra": {
+          "retrieved": [
+            "rnacen.rnc_taxonomy",
+            "rnacen.rnc_sequence_features",
+            "pg_stat_statements",
+            "rnacen.rnc_sequence_feature_providers",
+            "rnacen.rnc_sequence_feature_types",
+            "rnacen.rnc_accessions",
+            "rnacen.rna",
+            "rnacen.rfam_model_hits",
+            "rnacen.rnc_accession_sequence_feature"
+          ]
+        }
+      },
+      "pq_v2": {
+        "pipeline": "pq_v2",
+        "question": "how many taxonomy records are there",
+        "sql": "SELECT COUNT(*) AS taxonomy_record_count\nFROM rnacen.rnc_taxonomy",
+        "referenced": [
+          "rnc_taxonomy"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 1.7427771670045331,
+        "extra": {
+          "retrieved": [
+            "rnacen.rnc_taxonomy",
+            "rnacen.rnc_sequence_features"
+          ]
+        }
+      }
+    },
+    {
+      "question": "show release statistics for the most recent release",
+      "must_retrieve": [
+        "release_stats"
+      ],
+      "naive": {
+        "pipeline": "naive",
+        "question": "show release statistics for the most recent release",
+        "sql": "SELECT *\nFROM rnacen.release_stats\nWHERE this_release = (SELECT MAX(this_release) FROM rnacen.release_stats)",
+        "referenced": [
+          "release_stats"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 1.736090916005196,
+        "extra": {}
+      },
+      "pq_v1": {
+        "pipeline": "pq_v1",
+        "question": "show release statistics for the most recent release",
+        "sql": "SELECT rs.*\nFROM rnacen.release_stats rs\nJOIN (\n    SELECT dbid, MAX(this_release) AS max_release\n    FROM rnacen.release_stats\n    GROUP BY dbid\n) recent ON rs.dbid = recent.dbid AND rs.this_release = recent.max_release",
+        "referenced": [
+          "release_stats"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 1.4575494589807931,
+        "extra": {
+          "retrieved": [
+            "rnacen.litscan_statistics",
+            "rnacen.rnc_release",
+            "rnacen_django_test.rnc_release",
+            "rnacen.release_stats",
+            "rnacen_django_test.xref",
+            "rnacen.xref_p10_deleted",
+            "rnacen.xref_p11_deleted",
+            "rnacen.xref_p12_deleted",
+            "rnacen.xref_p13_deleted",
+            "rnacen.xref_p14_deleted",
+            "rnacen.xref_p15_deleted",
+            "rnacen.xref_p16_deleted",
+            "rnacen.xref_p17_deleted",
+            "rnacen.xref_p18_deleted",
+            "rnacen.xref_p19_deleted",
+            "rnacen_django_test.rnc_database",
+            "rnacen_django_test.rnc_accessions",
+            "rnacen_django_test.rna",
+            "rnacen.rnc_database",
+            "rnacen.rna",
+            "rnacen.rnc_rna_precomputed",
+            "rnacen.xref_p10_not_deleted",
+            "rnacen.xref_p11_not_deleted",
+            "rnacen.xref_p12_not_deleted",
+            "rnacen.xref_p13_not_deleted"
+          ]
+        }
+      },
+      "pq_v2": {
+        "pipeline": "pq_v2",
+        "question": "show release statistics for the most recent release",
+        "sql": "SELECT rs.*\nFROM rnacen.release_stats rs\nJOIN rnacen_django_test.rnc_release rl ON rs.this_release = rl.id\nORDER BY rl.release_date DESC\nLIMIT 1",
+        "referenced": [
+          "release_stats",
+          "rnc_release"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 2.3896432500041556,
+        "extra": {
+          "retrieved": [
+            "rnacen.release_stats",
+            "rnacen_django_test.rnc_release",
+            "rnacen_django_test.rnc_database",
+            "rnacen_django_test.xref"
+          ]
+        }
+      }
+    },
+    {
+      "question": "list all the cpat protein-coding predictions",
+      "must_retrieve": [
+        "cpat_results"
+      ],
+      "naive": {
+        "pipeline": "naive",
+        "question": "list all the cpat protein-coding predictions",
+        "sql": "SELECT urs_taxid, fickett_score, hexamer_score, coding_probability, is_protein_coding\nFROM rnacen.cpat_results",
+        "referenced": [
+          "cpat_results"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 1.9183021660137456,
+        "extra": {}
+      },
+      "pq_v1": {
+        "pipeline": "pq_v1",
+        "question": "list all the cpat protein-coding predictions",
+        "sql": "SELECT urs_taxid, fickett_score, hexamer_score, coding_probability, is_protein_coding\nFROM rnacen.cpat_results\nWHERE is_protein_coding = TRUE",
+        "referenced": [
+          "cpat_results"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 1.3048493750102352,
+        "extra": {
+          "retrieved": [
+            "rnacen.cpat_results",
+            "rnacen.protein_info",
+            "rnacen.rna",
+            "rnacen_django_test.rnc_accessions",
+            "rnacen.rnc_accessions",
+            "rnacen.rnc_rna_precomputed",
+            "rnacen.ontology_terms",
+            "rnacen.pipeline_tracking_qa_scan",
+            "rnacen.pipeline_tracking_traveler",
+            "rnacen.precompute_urs",
+            "rnacen.precompute_urs_taxid",
+            "rnacen.qa_status",
+            "rnacen.r2dt_results",
+            "rnacen.rfam_analyzed_sequences",
+            "rnacen.rfam_model_hits",
+            "rnacen.rnc_accession_sequence_feature",
+            "rnacen.rnc_accession_sequence_region",
+            "rnacen.rnc_modifications",
+            "rnacen.rnc_related_sequences",
+            "rnacen.rnc_sequence_features",
+            "rnacen.validate_layout_counts",
+            "rnacen.xref_p10_deleted",
+            "rnacen.xref_p10_not_deleted",
+            "rnacen.xref_p11_deleted",
+            "rnacen.xref_p11_not_deleted"
+          ]
+        }
+      },
+      "pq_v2": {
+        "pipeline": "pq_v2",
+        "question": "list all the cpat protein-coding predictions",
+        "sql": "SELECT * \nFROM rnacen.cpat_results\nWHERE is_protein_coding = TRUE",
+        "referenced": [
+          "cpat_results"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 1.7409819159947801,
+        "extra": {
+          "retrieved": [
+            "rnacen.cpat_results",
+            "rnacen.rnc_accessions",
+            "rnacen.protein_info",
+            "rnacen.rnc_rna_precomputed",
+            "rnacen.ontology_terms",
+            "rnacen.rnc_accession_sequence_feature",
+            "rnacen.rnc_accession_sequence_region",
+            "rnacen.rnc_modifications",
+            "rnacen.rnc_related_sequences",
+            "rnacen.rnc_sequence_features"
+          ]
+        }
+      }
+    },
+    {
+      "question": "list Ensembl assemblies together with their reference chromosomes",
+      "must_retrieve": [
+        "ensembl_assembly",
+        "ensembl_coordinate_systems"
+      ],
+      "naive": {
+        "pipeline": "naive",
+        "question": "list Ensembl assemblies together with their reference chromosomes",
+        "sql": "SELECT \n    ea.assembly_id, \n    ea.assembly_full_name, \n    ea.common_name, \n    co.assembly_id AS coordinate_assembly_id, \n    co.chromosome \nFROM \n    rnacen.ensembl_assembly ea\nJOIN \n    rnacen.ensembl_coordinate_systems co \nON \n    ea.assembly_id = co.assembly_id\nWHERE \n    co.is_reference = TRUE",
+        "referenced": [
+          "ensembl_assembly",
+          "ensembl_coordinate_systems"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 4.096435875020688,
+        "extra": {}
+      },
+      "pq_v1": {
+        "pipeline": "pq_v1",
+        "question": "list Ensembl assemblies together with their reference chromosomes",
+        "sql": "SELECT \n  ensembl_assembly.assembly_id, \n  ensembl_assembly.assembly_full_name, \n  ensembl_coordinate_systems.chromosome\nFROM \n  rnacen.ensembl_assembly\nJOIN \n  rnacen.ensembl_coordinate_systems \nON \n  ensembl_assembly.assembly_id = ensembl_coordinate_systems.assembly_id\nWHERE \n  ensembl_coordinate_systems.is_reference = TRUE",
+        "referenced": [
+          "ensembl_assembly",
+          "ensembl_coordinate_systems"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 3.682161584001733,
+        "extra": {
+          "retrieved": [
+            "rnacen.ensembl_assembly",
+            "rnacen.rnc_database_references",
+            "rnacen.rnc_references",
+            "rnacen.rnc_reference_map",
+            "rnacen.rnc_feedback_target_assemblies",
+            "rnacen.ensembl_coordinate_systems",
+            "rnacen_django_test.rnc_reference_map",
+            "rnacen.ensembl_pseudogene_regions",
+            "rnacen_django_test.rnc_references",
+            "rnacen.ensembl_compara",
+            "rnacen.litscan_ensembl_ids",
+            "rnacen.xref",
+            "rnacen.rnc_sequence_regions",
+            "rnacen.rnc_locus",
+            "rnacen.ensembl_pseudogene_exons",
+            "rnacen.rnc_database",
+            "rnacen_django_test.rnc_accessions",
+            "rnacen.rnc_rna_precomputed",
+            "rnacen.go_term_publication_map",
+            "rnacen.rnc_accession_sequence_region",
+            "rnacen.rnc_feedback_overlap",
+            "rnacen.rnc_gene_status",
+            "rnacen.rnc_locus_members",
+            "rnacen.rnc_sequence_exons"
+          ]
+        }
+      },
+      "pq_v2": {
+        "pipeline": "pq_v2",
+        "question": "list Ensembl assemblies together with their reference chromosomes",
+        "sql": "SELECT \n  ea.assembly_id, \n  ea.assembly_full_name, \n  ecs.chromosome AS reference_chromosome\nFROM \n  rnacen.ensembl_assembly ea\nJOIN \n  rnacen.ensembl_coordinate_systems ecs ON ea.assembly_id = ecs.assembly_id\nWHERE \n  ecs.is_reference = TRUE",
+        "referenced": [
+          "ensembl_assembly",
+          "ensembl_coordinate_systems"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 2.255213458003709,
+        "extra": {
+          "retrieved": [
+            "rnacen.ensembl_assembly",
+            "rnacen.ensembl_coordinate_systems",
+            "rnacen.ensembl_pseudogene_regions",
+            "rnacen.rnc_feedback_overlap",
+            "rnacen.rnc_feedback_target_assemblies",
+            "rnacen.rnc_gene_status",
+            "rnacen.rnc_locus",
+            "rnacen.rnc_sequence_regions"
+          ]
+        }
+      }
+    },
+    {
+      "question": "show Rfam family models with their clan name",
+      "must_retrieve": [
+        "rfam_models",
+        "rfam_clans"
+      ],
+      "naive": {
+        "pipeline": "naive",
+        "question": "show Rfam family models with their clan name",
+        "sql": "SELECT \n    rm.rfam_model_id,\n    rm.short_name,\n    rc.name AS clan_name\nFROM \n    rnacen.rfam_models rm\nLEFT JOIN \n    rnacen.rfam_clans rc ON rm.rfam_clan_id = rc.rfam_clan_id",
+        "referenced": [
+          "rfam_clans",
+          "rfam_models"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 1.638664083002368,
+        "extra": {}
+      },
+      "pq_v1": {
+        "pipeline": "pq_v1",
+        "question": "show Rfam family models with their clan name",
+        "sql": "SELECT\n    rnacen.rfam_models.rfam_model_id,\n    rnacen.rfam_models.short_name,\n    rnacen.rfam_models.long_name,\n    rnacen.rfam_clans.name AS clan_name\nFROM\n    rnacen.rfam_models\nLEFT JOIN\n    rnacen.rfam_clans ON rnacen.rfam_models.rfam_clan_id = rnacen.rfam_clans.rfam_clan_id",
+        "referenced": [
+          "rfam_clans",
+          "rfam_models"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 1.5311636250116862,
+        "extra": {
+          "retrieved": [
+            "rnacen.rfam_clans",
+            "rnacen.rfam_models",
+            "rnacen.rfam_model_hits",
+            "rnacen.rfam_go_terms",
+            "rnacen.r2dt_models",
+            "rnacen.rfam_analyzed_sequences",
+            "rnacen.r2dt_models_backup",
+            "rnacen.r2dt_model_extra_data",
+            "rnacen.validate_layout_hits",
+            "rnacen.r2dt_results",
+            "rnacen.rnc_references",
+            "rnacen_django_test.django_content_type",
+            "rnacen.qa_status",
+            "rnacen.rnc_sequence_feature_types",
+            "rnacen.rnc_taxonomy",
+            "rnacen.ontology_terms",
+            "rnacen.rnc_sequence_features",
+            "rnacen.rna",
+            "rnacen.go_term_publication_map",
+            "rnacen.rnc_database_references",
+            "rnacen.rnc_reference_map",
+            "rnacen_django_test.auth_permission"
+          ]
+        }
+      },
+      "pq_v2": {
+        "pipeline": "pq_v2",
+        "question": "show Rfam family models with their clan name",
+        "sql": "SELECT \n  rm.rfam_model_id, \n  rm.short_name, \n  rm.long_name, \n  rc.name AS clan_name\nFROM \n  rnacen.rfam_models rm\nLEFT JOIN \n  rnacen.rfam_clans rc ON rm.rfam_clan_id = rc.rfam_clan_id",
+        "referenced": [
+          "rfam_clans",
+          "rfam_models"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 2.155978208000306,
+        "extra": {
+          "retrieved": [
+            "rnacen.rfam_models",
+            "rnacen.rfam_clans",
+            "rnacen.ontology_terms",
+            "rnacen.rfam_go_terms",
+            "rnacen.rfam_model_hits"
+          ]
+        }
+      }
+    },
+    {
+      "question": "GO annotations with their ontology term name",
+      "must_retrieve": [
+        "go_term_annotations",
+        "ontology_terms"
+      ],
+      "naive": {
+        "pipeline": "naive",
+        "question": "GO annotations with their ontology term name",
+        "sql": "SELECT \n  gta.go_term_annotation_id,\n  gta.rna_id,\n  gta.qualifier,\n  gta.ontology_term_id,\n  gta.evidence_code,\n  gta.assigned_by,\n  gta.extensions,\n  ot.name AS ontology_term_name\nFROM \n  rnacen.go_term_annotations AS gta\nJOIN \n  rnacen.ontology_terms AS ot \nON \n  gta.ontology_term_id = ot.ontology_term_id",
+        "referenced": [
+          "go_term_annotations",
+          "ontology_terms"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 1.4489290000055917,
+        "extra": {}
+      },
+      "pq_v1": {
+        "pipeline": "pq_v1",
+        "question": "GO annotations with their ontology term name",
+        "sql": "SELECT\n  goa.go_term_annotation_id,\n  goa.rna_id,\n  goa.qualifier,\n  goa.ontology_term_id,\n  ot.name AS ontology_term_name\nFROM\n  rnacen.go_term_annotations goa\nJOIN\n  rnacen.ontology_terms ot ON goa.ontology_term_id = ot.ontology_term_id",
+        "referenced": [
+          "go_term_annotations",
+          "ontology_terms"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 1.442511041997932,
+        "extra": {
+          "retrieved": [
+            "rnacen.go_term_annotations",
+            "rnacen.go_term_publication_map",
+            "rnacen.ontology_terms",
+            "rnacen.rfam_go_terms",
+            "rnacen.insdc_so_term_mapping",
+            "rnacen.rnc_rna_precomputed",
+            "rnacen.r2dt_models",
+            "rnacen.rnc_accessions",
+            "rnacen.rnc_references",
+            "rnacen.rfam_models",
+            "rnacen.rnc_sequence_feature_types",
+            "rnacen.r2dt_models_backup",
+            "rnacen.rnc_taxonomy",
+            "rnacen.ensembl_import_tracking",
+            "rnacen_django_test.auth_user",
+            "rnacen.rnc_release",
+            "rnacen.rfam_clans",
+            "rnacen.cpat_results",
+            "rnacen.ensembl_compara",
+            "rnacen.pipeline_tracking_genome_mapping",
+            "rnacen.r2dt_model_extra_data",
+            "rnacen.r2dt_results",
+            "rnacen.rfam_model_hits",
+            "rnacen.rnc_accession_sequence_feature",
+            "rnacen.rnc_accession_sequence_region"
+          ]
+        }
+      },
+      "pq_v2": {
+        "pipeline": "pq_v2",
+        "question": "GO annotations with their ontology term name",
+        "sql": "SELECT \n    goa.go_term_annotation_id,\n    goa.rna_id,\n    goa.qualifier,\n    goa.ontology_term_id,\n    goa.evidence_code,\n    goa.assigned_by,\n    goa.extensions,\n    ot.name AS ontology_term_name\nFROM \n    rnacen.go_term_annotations goa\nJOIN \n    rnacen.ontology_terms ot ON goa.ontology_term_id = ot.ontology_term_id",
+        "referenced": [
+          "go_term_annotations",
+          "ontology_terms"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 3.5611263329919893,
+        "extra": {
+          "retrieved": [
+            "rnacen.go_term_annotations",
+            "rnacen.ontology_terms",
+            "rnacen.go_term_publication_map",
+            "rnacen.insdc_so_term_mapping",
+            "rnacen.r2dt_models",
+            "rnacen.rfam_go_terms",
+            "rnacen.rfam_models",
+            "rnacen.rnc_accessions",
+            "rnacen.rnc_rna_precomputed"
+          ]
+        }
+      }
+    },
+    {
+      "question": "Rfam-to-GO mappings with the Rfam model name",
+      "must_retrieve": [
+        "rfam_go_terms",
+        "rfam_models"
+      ],
+      "naive": {
+        "pipeline": "naive",
+        "question": "Rfam-to-GO mappings with the Rfam model name",
+        "sql": "SELECT rm.rfam_model_id, rm.short_name AS model_name, gt.ontology_term_id\nFROM rnacen.rfam_models rm\nJOIN rnacen.rfam_go_terms gt ON rm.rfam_model_id = gt.rfam_model_id",
+        "referenced": [
+          "rfam_go_terms",
+          "rfam_models"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 1.7363100840011612,
+        "extra": {}
+      },
+      "pq_v1": {
+        "pipeline": "pq_v1",
+        "question": "Rfam-to-GO mappings with the Rfam model name",
+        "sql": "SELECT \n    rnacen.rfam_models.rfam_model_id, \n    rnacen.rfam_models.long_name AS rfam_model_name, \n    rnacen.rfam_go_terms.ontology_term_id\nFROM \n    rnacen.rfam_go_terms\nJOIN \n    rnacen.rfam_models ON rnacen.rfam_go_terms.rfam_model_id = rnacen.rfam_models.rfam_model_id",
+        "referenced": [
+          "rfam_go_terms",
+          "rfam_models"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 1.3583369580155704,
+        "extra": {
+          "retrieved": [
+            "rnacen.rfam_go_terms",
+            "rnacen.rfam_models",
+            "rnacen.rfam_model_hits",
+            "rnacen.rfam_clans",
+            "rnacen.rfam_analyzed_sequences",
+            "rnacen.go_term_publication_map",
+            "rnacen.r2dt_models",
+            "rnacen.r2dt_models_backup",
+            "rnacen.r2dt_model_extra_data",
+            "rnacen.validate_layout_hits",
+            "rnacen.go_term_annotations",
+            "rnacen.pipeline_tracking_genome_mapping",
+            "rnacen.r2dt_results",
+            "rnacen.insdc_so_term_mapping",
+            "rnacen.qa_status",
+            "rnacen.ontology_terms",
+            "rnacen.rnc_sequence_features",
+            "rnacen.rna",
+            "rnacen.rnc_references",
+            "rnacen.rnc_rna_precomputed"
+          ]
+        }
+      },
+      "pq_v2": {
+        "pipeline": "pq_v2",
+        "question": "Rfam-to-GO mappings with the Rfam model name",
+        "sql": "SELECT \n    rm.rfam_model_id, \n    rm.long_name AS rfam_model_name, \n    ot.ontology_term_id, \n    ot.name AS go_term_name\nFROM \n    rnacen.rfam_models rm\nJOIN \n    rnacen.rfam_go_terms rgt ON rm.rfam_model_id = rgt.rfam_model_id\nJOIN \n    rnacen.ontology_terms ot ON rgt.ontology_term_id = ot.ontology_term_id",
+        "referenced": [
+          "ontology_terms",
+          "rfam_go_terms",
+          "rfam_models"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 3.456372916989494,
+        "extra": {
+          "retrieved": [
+            "rnacen.rfam_models",
+            "rnacen.go_term_publication_map",
+            "rnacen.go_term_annotations",
+            "rnacen.rfam_clans",
+            "rnacen.ontology_terms",
+            "rnacen.rnc_references",
+            "rnacen.rfam_go_terms",
+            "rnacen.rfam_model_hits"
+          ]
+        }
+      }
+    },
+    {
+      "question": "R2DT secondary-structure results with the model name they matched",
+      "must_retrieve": [
+        "r2dt_results",
+        "r2dt_models"
+      ],
+      "naive": {
+        "pipeline": "naive",
+        "question": "R2DT secondary-structure results with the model name they matched",
+        "sql": "SELECT\n  r2dt_results.urs,\n  r2dt_results.secondary_structure,\n  r2dt_results.overlap_count,\n  r2dt_results.basepair_count,\n  r2dt_results.model_start,\n  r2dt_results.model_stop,\n  r2dt_results.sequence_start,\n  r2dt_results.sequence_stop,\n  r2dt_results.sequence_coverage,\n  r2dt_results.model_coverage,\n  r2dt_models.model_name\nFROM\n  rnacen.r2dt_results\nJOIN\n  rnacen.r2dt_models ON r2dt_results.model_id = r2dt_models.id",
+        "referenced": [
+          "r2dt_models",
+          "r2dt_results"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 3.90179045900004,
+        "extra": {}
+      },
+      "pq_v1": {
+        "pipeline": "pq_v1",
+        "question": "R2DT secondary-structure results with the model name they matched",
+        "sql": "SELECT \n  r2dt_results.secondary_structure, \n  r2dt_models.model_name\nFROM \n  rnacen.r2dt_results\nJOIN \n  rnacen.r2dt_models ON r2dt_results.model_id = r2dt_models.id",
+        "referenced": [
+          "r2dt_models",
+          "r2dt_results"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 1.6230090830067638,
+        "extra": {
+          "retrieved": [
+            "rnacen.rnc_secondary_structure",
+            "rnacen.r2dt_results",
+            "rnacen.r2dt_models",
+            "rnacen.r2dt_models_backup",
+            "rnacen.r2dt_model_extra_data",
+            "rnacen.rfam_model_hits",
+            "rnacen.validate_layout_hits",
+            "rnacen.cpat_results",
+            "rnacen.rfam_models",
+            "rnacen.publications",
+            "rnacen.rfam_go_terms",
+            "rnacen_django_test.django_content_type",
+            "rnacen.rnc_sequence_feature_types",
+            "rnacen.rnc_taxonomy",
+            "rnacen.old_summaries",
+            "rnacen.rna",
+            "rnacen.ontology_terms",
+            "rnacen.rnc_sequence_features",
+            "rnacen.rnc_rna_precomputed",
+            "rnacen.rfam_clans",
+            "rnacen_django_test.auth_permission"
+          ]
+        }
+      },
+      "pq_v2": {
+        "pipeline": "pq_v2",
+        "question": "R2DT secondary-structure results with the model name they matched",
+        "sql": "SELECT\n  r2dt_results.secondary_structure,\n  r2dt_models.model_name\nFROM\n  rnacen.r2dt_results\nJOIN\n  rnacen.r2dt_models ON r2dt_results.model_id = r2dt_models.id",
+        "referenced": [
+          "r2dt_models",
+          "r2dt_results"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 4.203130540990969,
+        "extra": {
+          "retrieved": [
+            "rnacen.r2dt_results",
+            "rnacen.r2dt_models",
+            "rnacen.rna",
+            "rnacen.ontology_terms",
+            "rnacen.r2dt_model_extra_data"
+          ]
+        }
+      }
+    },
+    {
+      "question": "Rfam model hits with the Rfam model details",
+      "must_retrieve": [
+        "rfam_model_hits",
+        "rfam_models"
+      ],
+      "naive": {
+        "pipeline": "naive",
+        "question": "Rfam model hits with the Rfam model details",
+        "sql": "SELECT rm.rfam_model_id, \n       rm.short_name, \n       rm.long_name, \n       rm.description, \n       rm.seed_count, \n       rm.full_count, \n       rm.length, \n       rm.is_suppressed, \n       rm.domain, \n       rm.rna_type, \n       rm.rfam_rna_type, \n       rm.so_rna_type, \n       rfh.rfam_hit_id, \n       rfh.sequence_start, \n       rfh.sequence_stop, \n       rfh.sequence_completeness, \n       rfh.model_start, \n       rfh.model_stop, \n       rfh.model_completeness, \n       rfh.overlap, \n       rfh.e_value, \n       rfh.score, \n       rfh.upi, \n       rfh.rnc_sequence_features_id\nFROM rnacen.rfam_models rm\nJOIN rnacen.rfam_model_hits rfh ON rm.rfam_model_id = rfh.rfam_model_id",
+        "referenced": [
+          "rfam_model_hits",
+          "rfam_models"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 3.78769304198795,
+        "extra": {}
+      },
+      "pq_v1": {
+        "pipeline": "pq_v1",
+        "question": "Rfam model hits with the Rfam model details",
+        "sql": "SELECT\n  h.rfam_hit_id,\n  h.sequence_start,\n  h.sequence_stop,\n  h.sequence_completeness,\n  h.model_start,\n  h.model_stop,\n  h.model_completeness,\n  h.overlap,\n  h.e_value,\n  h.score,\n  h.rfam_model_id,\n  h.upi,\n  h.rnc_sequence_features_id,\n  m.short_name,\n  m.long_name,\n  m.description,\n  m.seed_count,\n  m.full_count,\n  m.length,\n  m.is_suppressed,\n  m.domain,\n  m.rna_type,\n  m.rfam_clan_id,\n  m.rfam_rna_type,\n  m.so_rna_type\nFROM\n  rnacen.rfam_model_hits h\nJOIN\n  rnacen.rfam_models m ON h.rfam_model_id = m.rfam_model_id",
+        "referenced": [
+          "rfam_model_hits",
+          "rfam_models"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 3.585267999995267,
+        "extra": {
+          "retrieved": [
+            "rnacen.rfam_model_hits",
+            "rnacen.rfam_models",
+            "rnacen.rfam_go_terms",
+            "rnacen.r2dt_models",
+            "rnacen.validate_layout_hits",
+            "rnacen.r2dt_models_backup",
+            "rnacen.rfam_clans",
+            "rnacen.rfam_analyzed_sequences",
+            "rnacen.r2dt_model_extra_data",
+            "rnacen.r2dt_results",
+            "rnacen_django_test.django_content_type",
+            "rnacen.qa_status",
+            "rnacen.pipeline_tracking_qa_scan",
+            "pg_stat_statements",
+            "rnacen.rnc_sequence_features",
+            "rnacen.rna",
+            "rnacen.ontology_terms",
+            "rnacen_django_test.auth_permission"
+          ]
+        }
+      },
+      "pq_v2": {
+        "pipeline": "pq_v2",
+        "question": "Rfam model hits with the Rfam model details",
+        "sql": "SELECT \n  rmh.rfam_hit_id,\n  rmh.sequence_start,\n  rmh.sequence_stop,\n  rmh.sequence_completeness,\n  rmh.model_start,\n  rmh.model_stop,\n  rmh.model_completeness,\n  rmh.overlap,\n  rmh.e_value,\n  rmh.score,\n  rmh.rfam_model_id,\n  rm.rfam_model_id,\n  rm.short_name,\n  rm.long_name,\n  rm.description,\n  rm.seed_count,\n  rm.full_count,\n  rm.length,\n  rm.is_suppressed,\n  rm.domain,\n  rm.rna_type,\n  rm.rfam_clan_id,\n  rm.rfam_rna_type,\n  rm.so_rna_type\nFROM \n  rnacen.rfam_model_hits rmh\nJOIN \n  rnacen.rfam_models rm ON rmh.rfam_model_id = rm.rfam_model_id",
+        "referenced": [
+          "rfam_model_hits",
+          "rfam_models"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 3.3192285830155015,
+        "extra": {
+          "retrieved": [
+            "rnacen.rfam_model_hits",
+            "rnacen.rfam_models",
+            "rnacen.rnc_sequence_features",
+            "rnacen.rna",
+            "rnacen.rfam_clans",
+            "rnacen.ontology_terms",
+            "rnacen.rfam_go_terms"
+          ]
+        }
+      }
+    },
+    {
+      "question": "Ensembl coordinate systems with the assembly they belong to",
+      "must_retrieve": [
+        "ensembl_coordinate_systems",
+        "ensembl_assembly"
+      ],
+      "naive": {
+        "pipeline": "naive",
+        "question": "Ensembl coordinate systems with the assembly they belong to",
+        "sql": "SELECT \n  ecs.id AS coordinate_system_id,\n  ecs.chromosome,\n  ecs.coordinate_system,\n  ecs.is_reference,\n  ecs.karyotype_rank,\n  ea.assembly_id,\n  ea.assembly_full_name\nFROM \n  rnacen.ensembl_coordinate_systems ecs\nJOIN \n  rnacen.ensembl_assembly ea ON ecs.assembly_id = ea.assembly_id",
+        "referenced": [
+          "ensembl_assembly",
+          "ensembl_coordinate_systems"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 9.06617787500727,
+        "extra": {}
+      },
+      "pq_v1": {
+        "pipeline": "pq_v1",
+        "question": "Ensembl coordinate systems with the assembly they belong to",
+        "sql": "SELECT \n    ecs.coordinate_system, \n    ea.assembly_full_name \nFROM \n    rnacen.ensembl_coordinate_systems ecs\nJOIN \n    rnacen.ensembl_assembly ea \nON \n    ecs.assembly_id = ea.assembly_id",
+        "referenced": [
+          "ensembl_assembly",
+          "ensembl_coordinate_systems"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 1.5366248750069644,
+        "extra": {
+          "retrieved": [
+            "rnacen.ensembl_coordinate_systems",
+            "rnacen.ensembl_assembly",
+            "rnacen.rnc_feedback_target_assemblies",
+            "rnacen.ensembl_pseudogene_regions",
+            "rnacen_django_test.rnc_coordinates",
+            "rnacen.ensembl_compara",
+            "rnacen.litscan_ensembl_ids",
+            "rnacen.ensembl_pseudogene_exons",
+            "rnacen.ensembl_import_tracking",
+            "rnacen.rnc_gene_status",
+            "rnacen.rnc_sequence_regions",
+            "rnacen.ensembl_stable_prefixes",
+            "rnacen.rnc_feedback_overlap",
+            "rnacen.rnc_locus",
+            "rnacen_django_test.rnc_rna_precomputed_data",
+            "rnacen.rnc_database",
+            "rnacen_django_test.rnc_accessions",
+            "rnacen.rnc_rna_precomputed",
+            "rnacen_django_test.rna",
+            "rnacen.rnc_accession_sequence_region",
+            "rnacen.rnc_locus_members",
+            "rnacen.rnc_sequence_exons"
+          ]
+        }
+      },
+      "pq_v2": {
+        "pipeline": "pq_v2",
+        "question": "Ensembl coordinate systems with the assembly they belong to",
+        "sql": "SELECT \n    rnacen.ensembl_coordinate_systems.id,\n    rnacen.ensembl_coordinate_systems.chromosome,\n    rnacen.ensembl_coordinate_systems.assembly_id,\n    rnacen.ensembl_coordinate_systems.coordinate_system,\n    rnacen.ensembl_coordinate_systems.is_reference,\n    rnacen.ensembl_coordinate_systems.karyotype_rank,\n    rnacen.ensembl_assembly.assembly_full_name\nFROM \n    rnacen.ensembl_coordinate_systems\nJOIN \n    rnacen.ensembl_assembly ON rnacen.ensembl_coordinate_systems.assembly_id = rnacen.ensembl_assembly.assembly_id",
+        "referenced": [
+          "ensembl_assembly",
+          "ensembl_coordinate_systems"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 3.2645967499993276,
+        "extra": {
+          "retrieved": [
+            "rnacen.ensembl_coordinate_systems",
+            "rnacen.ensembl_assembly",
+            "rnacen.ensembl_pseudogene_regions",
+            "rnacen.rnc_feedback_overlap",
+            "rnacen.rnc_feedback_target_assemblies",
+            "rnacen.rnc_gene_status",
+            "rnacen.rnc_locus",
+            "rnacen.rnc_sequence_regions"
+          ]
+        }
+      }
+    },
+    {
+      "question": "R2DT results joined to the RNA upi they describe",
+      "must_retrieve": [
+        "r2dt_results",
+        "rna"
+      ],
+      "naive": {
+        "pipeline": "naive",
+        "question": "R2DT results joined to the RNA upi they describe",
+        "sql": "SELECT \n    rr.urs,\n    rr.secondary_structure,\n    rr.overlap_count,\n    rr.basepair_count,\n    rr.model_start,\n    rr.model_stop,\n    rr.sequence_start,\n    rr.sequence_stop,\n    rr.sequence_coverage,\n    rr.model_id,\n    rr.model_coverage,\n    rr.assigned_should_show,\n    rna.upi\nFROM \n    rnacen.r2dt_results rr\nJOIN \n    rnacen.rna rna ON rr.urs = rna.upi",
+        "referenced": [
+          "r2dt_results",
+          "rna"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 1.684756708011264,
+        "extra": {}
+      },
+      "pq_v1": {
+        "pipeline": "pq_v1",
+        "question": "R2DT results joined to the RNA upi they describe",
+        "sql": "SELECT \n    rnacen.r2dt_results.urs AS rna_upi,\n    rnacen.r2dt_results.secondary_structure,\n    rnacen.r2dt_results.overlap_count,\n    rnacen.r2dt_results.basepair_count,\n    rnacen.r2dt_results.model_start,\n    rnacen.r2dt_results.model_stop,\n    rnacen.r2dt_results.sequence_start,\n    rnacen.r2dt_results.sequence_stop,\n    rnacen.r2dt_results.sequence_coverage,\n    rnacen.r2dt_results.model_id,\n    rnacen.r2dt_results.id,\n    rnacen.r2dt_results.inferred_should_show,\n    rnacen.r2dt_results.model_coverage,\n    rnacen.r2dt_results.assigned_should_show,\n    rnacen.rna.upi AS rna_upi_reference\nFROM \n    rnacen.r2dt_results\nJOIN \n    rnacen.rna ON rnacen.r2dt_results.urs = rnacen.rna.upi",
+        "referenced": [
+          "r2dt_results",
+          "rna"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 2.11950312499539,
+        "extra": {
+          "retrieved": [
+            "rnacen.cpat_results",
+            "rnacen.r2dt_results",
+            "rnacen.publications",
+            "rnacen_django_test.auth_user",
+            "rnacen_django_test.rnc_rna_precomputed",
+            "rnacen.old_summaries",
+            "rnacen.litsumm_summaries",
+            "rnacen_django_test.rna",
+            "rnacen.rnc_rna_precomputed",
+            "rnacen.rna",
+            "rnacen_django_test.xref",
+            "rnacen_django_test.rnc_rna_precomputed_data",
+            "rnacen.xref_p10_deleted",
+            "rnacen.xref_p11_deleted",
+            "rnacen.xref_p12_deleted",
+            "rnacen.r2dt_models",
+            "rnacen.ontology_terms",
+            "rnacen.rnc_release",
+            "rnacen_django_test.rnc_accessions",
+            "rnacen_django_test.rnc_release",
+            "rnacen_django_test.rnc_database",
+            "rnacen.rnc_database",
+            "rnacen.ensembl_compara",
+            "rnacen.pipeline_tracking_genome_mapping",
+            "rnacen.pipeline_tracking_qa_scan"
+          ]
+        }
+      },
+      "pq_v2": {
+        "pipeline": "pq_v2",
+        "question": "R2DT results joined to the RNA upi they describe",
+        "sql": "SELECT\n  r2dt_results.*,\n  rna.upi\nFROM\n  rnacen.r2dt_results\nJOIN\n  rnacen.rna ON r2dt_results.urs = rna.upi",
+        "referenced": [
+          "r2dt_results",
+          "rna"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 2.5581398330105003,
+        "extra": {
+          "retrieved": [
+            "rnacen.r2dt_results",
+            "rnacen.rna",
+            "rnacen.r2dt_models",
+            "rnacen.pipeline_tracking_qa_scan",
+            "rnacen.pipeline_tracking_traveler",
+            "rnacen.precompute_urs",
+            "rnacen.precompute_urs_taxid",
+            "rnacen.qa_status",
+            "rnacen.rfam_analyzed_sequences",
+            "rnacen.rfam_model_hits",
+            "rnacen.rnc_sequence_features",
+            "rnacen.validate_layout_counts",
+            "rnacen.xref_p10_deleted",
+            "rnacen.xref_p10_not_deleted",
+            "rnacen.xref_p11_deleted",
+            "rnacen.xref_p11_not_deleted",
+            "rnacen.xref_p12_deleted",
+            "rnacen.xref_p12_not_deleted",
+            "rnacen.xref_p13_deleted",
+            "rnacen.xref_p13_not_deleted",
+            "rnacen.xref_p14_deleted",
+            "rnacen.xref_p14_not_deleted",
+            "rnacen.xref_p15_deleted",
+            "rnacen.xref_p15_not_deleted",
+            "rnacen.xref_p16_deleted"
+          ]
+        }
+      }
+    },
+    {
+      "question": "Rfam-analyzed sequences with the RNA they were run against",
+      "must_retrieve": [
+        "rfam_analyzed_sequences",
+        "rna"
+      ],
+      "naive": {
+        "pipeline": "naive",
+        "question": "Rfam-analyzed sequences with the RNA they were run against",
+        "sql": "SELECT \n  ras.upi AS rfam_analyzed_sequence,\n  r.seq_long AS rna_sequence\nFROM \n  rnacen.rfam_analyzed_sequences ras\nJOIN \n  rnacen.rna r\nON \n  ras.upi = r.upi",
+        "referenced": [
+          "rfam_analyzed_sequences",
+          "rna"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 3.9892469579936005,
+        "extra": {}
+      },
+      "pq_v1": {
+        "pipeline": "pq_v1",
+        "question": "Rfam-analyzed sequences with the RNA they were run against",
+        "sql": "SELECT rfam_analyzed_sequences.*, rna.*\nFROM rnacen.rfam_analyzed_sequences\nJOIN rnacen.rna ON rfam_analyzed_sequences.upi = rna.upi",
+        "referenced": [
+          "rfam_analyzed_sequences",
+          "rna"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 1.2482488339883275,
+        "extra": {
+          "retrieved": [
+            "rnacen.rfam_analyzed_sequences",
+            "rnacen.rfam_models",
+            "rnacen.rfam_model_hits",
+            "rnacen.rfam_go_terms",
+            "rnacen.rfam_clans",
+            "rnacen.rnc_accession_sequence_feature",
+            "rnacen.rnc_sequence_exons",
+            "rnacen.rnc_sequence_features",
+            "rnacen.rnc_accession_sequence_region",
+            "rnacen.rna",
+            "rnacen.sequence_region_urs_counts",
+            "rnacen.rnc_sequence_feature_providers",
+            "rnacen.rnc_sequence_feature_types",
+            "rnacen.qa_status",
+            "rnacen.rnc_sequence_regions",
+            "rnacen.ontology_terms",
+            "rnacen.rnc_accessions",
+            "rnacen.rnc_taxonomy",
+            "rnacen.ensembl_assembly",
+            "rnacen.rnc_rna_precomputed",
+            "rnacen.pipeline_tracking_qa_scan",
+            "rnacen.pipeline_tracking_traveler",
+            "rnacen.precompute_urs",
+            "rnacen.precompute_urs_taxid",
+            "rnacen.r2dt_results"
+          ]
+        }
+      },
+      "pq_v2": {
+        "pipeline": "pq_v2",
+        "question": "Rfam-analyzed sequences with the RNA they were run against",
+        "sql": "SELECT\n  rfam.upi AS rfam_upi,\n  rfam.date,\n  rfam.total_matches,\n  rfam.rfam_version,\n  rfam.total_family_matches,\n  rna.upi AS rna_upi,\n  rna.timestamp,\n  rna.userstamp,\n  rna.crc64,\n  rna.len,\n  rna.seq_short,\n  rna.seq_long,\n  rna.md5\nFROM\n  rnacen.rfam_analyzed_sequences as rfam\nJOIN\n  rnacen_django_test.rna as rna\nON\n  rfam.upi = rna.upi",
+        "referenced": [
+          "rfam_analyzed_sequences",
+          "rna"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 2.954728917015018,
+        "extra": {
+          "retrieved": [
+            "rnacen.rfam_analyzed_sequences",
+            "rnacen_django_test.rna",
+            "rnacen.rna",
+            "rnacen_django_test.rnc_modifications",
+            "rnacen_django_test.rnc_rna_precomputed",
+            "rnacen_django_test.rnc_rna_precomputed_data",
+            "rnacen_django_test.xref"
+          ]
+        }
+      }
+    },
+    {
+      "question": "QA-flagged RNAs with their upi",
+      "must_retrieve": [
+        "qa_status",
+        "rna"
+      ],
+      "naive": {
+        "pipeline": "naive",
+        "question": "QA-flagged RNAs with their upi",
+        "sql": "SELECT qa_status.rna_id, qa_status.upi\nFROM rnacen.qa_status\nWHERE qa_status.has_issue = TRUE",
+        "referenced": [
+          "qa_status"
+        ],
+        "passed": false,
+        "reason": "missing: rna",
+        "elapsed_s": 1.266101167013403,
+        "extra": {}
+      },
+      "pq_v1": {
+        "pipeline": "pq_v1",
+        "question": "QA-flagged RNAs with their upi",
+        "sql": "SELECT \n  qa_status.upi, \n  qa_status.rna_id\nFROM \n  rnacen.qa_status\nWHERE \n  qa_status.has_issue = TRUE",
+        "referenced": [
+          "qa_status"
+        ],
+        "passed": false,
+        "reason": "missing: rna",
+        "elapsed_s": 1.4980329170066398,
+        "extra": {
+          "retrieved": [
+            "rnacen.qa_status",
+            "rnacen.pipeline_tracking_qa_scan",
+            "rnacen.rnc_references",
+            "rnacen_django_test.rnc_rna_precomputed",
+            "rnacen_django_test.rna",
+            "rnacen.rnc_rna_precomputed",
+            "rnacen.rna",
+            "rnacen_django_test.xref",
+            "rnacen_django_test.rnc_rna_precomputed_data",
+            "rnacen.xref_p10_deleted",
+            "rnacen.xref_p11_deleted",
+            "rnacen.xref_p12_deleted",
+            "rnacen.xref_p13_deleted",
+            "rnacen.xref_p14_deleted",
+            "rnacen.xref_p15_deleted",
+            "rnacen.ontology_terms",
+            "rnacen.rnc_release",
+            "rnacen_django_test.rnc_accessions",
+            "rnacen_django_test.rnc_release",
+            "rnacen_django_test.rnc_database",
+            "rnacen.rnc_database",
+            "rnacen.cpat_results",
+            "rnacen.ensembl_compara",
+            "rnacen.go_term_publication_map",
+            "rnacen.pipeline_tracking_genome_mapping"
+          ]
+        }
+      },
+      "pq_v2": {
+        "pipeline": "pq_v2",
+        "question": "QA-flagged RNAs with their upi",
+        "sql": "SELECT qa.upi \nFROM rnacen.qa_status qa\nWHERE qa.has_issue = TRUE",
+        "referenced": [
+          "qa_status"
+        ],
+        "passed": false,
+        "reason": "missing: rna",
+        "elapsed_s": 2.1472443749953527,
+        "extra": {
+          "retrieved": [
+            "rnacen.qa_status",
+            "rnacen.rnc_rna_precomputed",
+            "rnacen.rna",
+            "rnacen.ontology_terms",
+            "rnacen.rnc_release",
+            "rnacen.cpat_results",
+            "rnacen.ensembl_compara",
+            "rnacen.pipeline_tracking_genome_mapping",
+            "rnacen.pipeline_tracking_qa_scan",
+            "rnacen.pipeline_tracking_traveler",
+            "rnacen.precompute_urs",
+            "rnacen.precompute_urs_taxid",
+            "rnacen.r2dt_results",
+            "rnacen.rfam_analyzed_sequences",
+            "rnacen.rfam_model_hits",
+            "rnacen.rnc_feedback_overlap",
+            "rnacen.rnc_gene_status",
+            "rnacen.rnc_interactions",
+            "rnacen.rnc_locus_members",
+            "rnacen.rnc_related_sequences",
+            "rnacen.rnc_sequence_features",
+            "rnacen.rnc_sequence_regions",
+            "rnacen.validate_layout_counts",
+            "rnacen.xref_p10_deleted",
+            "rnacen.xref_p10_not_deleted"
+          ]
+        }
+      }
+    },
+    {
+      "question": "Ensembl compara homology entries with the precomputed RNA they belong to",
+      "must_retrieve": [
+        "ensembl_compara",
+        "rnc_rna_precomputed"
+      ],
+      "naive": {
+        "pipeline": "naive",
+        "question": "Ensembl compara homology entries with the precomputed RNA they belong to",
+        "sql": "SELECT \n    ec.id AS ensembl_compara_id,\n    ec.ensembl_transcript_id,\n    ec.urs_taxid,\n    ec.homology_id,\n    rp.id AS rnc_rna_precomputed_id,\n    rp.urs AS rna_urs\nFROM \n    rnacen.ensembl_compara ec\nJOIN \n    rnacen.rnc_rna_precomputed rp ON ec.urs_taxid = rp.id",
+        "referenced": [
+          "ensembl_compara",
+          "rnc_rna_precomputed"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 1.6041684589872602,
+        "extra": {}
+      },
+      "pq_v1": {
+        "pipeline": "pq_v1",
+        "question": "Ensembl compara homology entries with the precomputed RNA they belong to",
+        "sql": "SELECT \n    ensembl_compara.id AS homology_id,\n    ensembl_compara.ensembl_transcript_id,\n    ensembl_compara.urs_taxid,\n    rnc_rna_precomputed.upi,\n    rnc_rna_precomputed.description\nFROM \n    rnacen.ensembl_compara\nJOIN \n    rnacen.rnc_rna_precomputed ON ensembl_compara.urs_taxid = rnc_rna_precomputed.id",
+        "referenced": [
+          "ensembl_compara",
+          "rnc_rna_precomputed"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 2.186906250019092,
+        "extra": {
+          "retrieved": [
+            "rnacen.ensembl_compara",
+            "rnacen_django_test.rnc_rna_precomputed",
+            "rnacen.litscan_ensembl_ids",
+            "rnacen.rnc_rna_precomputed",
+            "rnacen_django_test.rnc_rna_precomputed_data",
+            "rnacen.ensembl_pseudogene_regions",
+            "rnacen.ensembl_pseudogene_exons",
+            "rnacen.ensembl_import_tracking",
+            "rnacen.ensembl_coordinate_systems",
+            "rnacen.ensembl_assembly",
+            "rnacen.ensembl_stable_prefixes",
+            "rnacen.rnc_gene_status",
+            "rnacen.rnc_related_sequences",
+            "rnacen.rnc_sequence_regions",
+            "rnacen.rnc_feedback_overlap",
+            "rnacen_django_test.rna",
+            "rnacen.ontology_terms",
+            "rnacen.rnc_release",
+            "rnacen.rnc_relationship_types",
+            "rnacen.rnc_accessions",
+            "rnacen.cpat_results",
+            "rnacen.pipeline_tracking_genome_mapping",
+            "rnacen.rnc_accession_sequence_region",
+            "rnacen.rnc_feedback_target_assemblies",
+            "rnacen.rnc_interactions"
+          ]
+        }
+      },
+      "pq_v2": {
+        "pipeline": "pq_v2",
+        "question": "Ensembl compara homology entries with the precomputed RNA they belong to",
+        "sql": "SELECT \n    ensembl_compara.ensembl_transcript_id,\n    ensembl_compara.homology_id,\n    rnc_rna_precomputed.upi,\n    rnc_rna_precomputed.description\nFROM \n    rnacen.ensembl_compara\nJOIN \n    rnacen.rnc_rna_precomputed ON ensembl_compara.urs_taxid = rnc_rna_precomputed.id",
+        "referenced": [
+          "ensembl_compara",
+          "rnc_rna_precomputed"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 4.252166791993659,
+        "extra": {
+          "retrieved": [
+            "rnacen.ensembl_compara",
+            "rnacen.rnc_rna_precomputed",
+            "rnacen_django_test.rnc_rna_precomputed_data",
+            "rnacen.ontology_terms",
+            "rnacen.rnc_release",
+            "rnacen_django_test.rna",
+            "rnacen.cpat_results",
+            "rnacen.pipeline_tracking_genome_mapping",
+            "rnacen.rnc_feedback_overlap",
+            "rnacen.rnc_gene_status",
+            "rnacen.rnc_interactions",
+            "rnacen.rnc_locus_members",
+            "rnacen.rnc_related_sequences",
+            "rnacen.rnc_sequence_regions"
+          ]
+        }
+      }
+    },
+    {
+      "question": "cpat protein-coding predictions joined to the precomputed RNA",
+      "must_retrieve": [
+        "cpat_results",
+        "rnc_rna_precomputed"
+      ],
+      "naive": {
+        "pipeline": "naive",
+        "question": "cpat protein-coding predictions joined to the precomputed RNA",
+        "sql": "SELECT \n    c.urs_taxid,\n    c.fickett_score,\n    c.hexamer_score,\n    c.coding_probability,\n    c.is_protein_coding,\n    r.id AS rna_id,\n    r.taxid,\n    r.description,\n    r.upi,\n    r.rna_type,\n    r.update_date\nFROM \n    rnacen.cpat_results c\nJOIN \n    rnacen.rnc_rna_precomputed r ON c.urs_taxid = r.id",
+        "referenced": [
+          "cpat_results",
+          "rnc_rna_precomputed"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 1.8902810829749797,
+        "extra": {}
+      },
+      "pq_v1": {
+        "pipeline": "pq_v1",
+        "question": "cpat protein-coding predictions joined to the precomputed RNA",
+        "sql": "SELECT \n    cpat.urs_taxid,\n    cpat.fickett_score,\n    cpat.hexamer_score,\n    cpat.coding_probability,\n    cpat.is_protein_coding,\n    precomputed.id,\n    precomputed.taxid,\n    precomputed.description,\n    precomputed.upi,\n    precomputed.rna_type,\n    precomputed.update_date,\n    precomputed.has_coordinates,\n    precomputed.databases,\n    precomputed.is_active,\n    precomputed.last_release,\n    precomputed.short_description,\n    precomputed.so_rna_type,\n    precomputed.is_locus_representative,\n    precomputed.assigned_so_rna_type\nFROM \n    rnacen.cpat_results AS cpat\nJOIN \n    rnacen.rnc_rna_precomputed AS precomputed\nON \n    cpat.urs_taxid = precomputed.id",
+        "referenced": [
+          "cpat_results",
+          "rnc_rna_precomputed"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 2.964937500015367,
+        "extra": {
+          "retrieved": [
+            "rnacen.cpat_results",
+            "rnacen.protein_info",
+            "rnacen_django_test.rnc_rna_precomputed",
+            "rnacen.rna",
+            "rnacen.rnc_rna_precomputed",
+            "rnacen_django_test.rnc_rna_precomputed_data",
+            "rnacen_django_test.auth_user",
+            "rnacen.rnc_related_sequences",
+            "rnacen.rnc_interactions",
+            "rnacen.ensembl_compara",
+            "rnacen_django_test.rnc_accessions",
+            "rnacen.rnc_accessions",
+            "rnacen.rnc_gene_status",
+            "rnacen.rnc_sequence_regions",
+            "rnacen.rnc_locus_members",
+            "rnacen_django_test.rna",
+            "rnacen.ontology_terms",
+            "rnacen.rnc_release",
+            "rnacen.rnc_relationship_types",
+            "rnacen.ensembl_assembly",
+            "rnacen.rnc_locus",
+            "rnacen.pipeline_tracking_genome_mapping",
+            "rnacen.pipeline_tracking_qa_scan",
+            "rnacen.pipeline_tracking_traveler",
+            "rnacen.precompute_urs"
+          ]
+        }
+      },
+      "pq_v2": {
+        "pipeline": "pq_v2",
+        "question": "cpat protein-coding predictions joined to the precomputed RNA",
+        "sql": "SELECT \n  cpat_results.urs_taxid,\n  cpat_results.fickett_score,\n  cpat_results.hexamer_score,\n  cpat_results.coding_probability,\n  cpat_results.is_protein_coding,\n  rnc_rna_precomputed.taxid,\n  rnc_rna_precomputed.description,\n  rnc_rna_precomputed.upi,\n  rnc_rna_precomputed.rna_type,\n  rnc_rna_precomputed.update_date,\n  rnc_rna_precomputed.has_coordinates,\n  rnc_rna_precomputed.is_active,\n  rnc_rna_precomputed.last_release,\n  rnc_rna_precomputed.short_description\nFROM \n  rnacen.cpat_results\nJOIN \n  rnacen.rnc_rna_precomputed \nON \n  cpat_results.urs_taxid = rnc_rna_precomputed.id",
+        "referenced": [
+          "cpat_results",
+          "rnc_rna_precomputed"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 3.587552584009245,
+        "extra": {
+          "retrieved": [
+            "rnacen.cpat_results",
+            "rnacen_django_test.rna",
+            "rnacen.rnc_rna_precomputed",
+            "rnacen.rnc_accessions",
+            "rnacen.rnc_gene_status",
+            "rnacen.ontology_terms",
+            "rnacen.rnc_release",
+            "rnacen.ensembl_assembly",
+            "rnacen.rnc_sequence_regions",
+            "rnacen.ensembl_compara",
+            "rnacen.pipeline_tracking_genome_mapping",
+            "rnacen.rnc_accession_sequence_feature",
+            "rnacen.rnc_accession_sequence_region",
+            "rnacen.rnc_feedback_overlap",
+            "rnacen.rnc_interactions",
+            "rnacen.rnc_locus_members",
+            "rnacen.rnc_modifications",
+            "rnacen.rnc_related_sequences",
+            "rnacen.rnc_sequence_features",
+            "rnacen_django_test.rnc_modifications",
+            "rnacen_django_test.rnc_rna_precomputed",
+            "rnacen_django_test.rnc_rna_precomputed_data",
+            "rnacen_django_test.xref"
+          ]
+        }
+      }
+    },
+    {
+      "question": "precomputed RNA records with their assigned ontology term name",
+      "must_retrieve": [
+        "rnc_rna_precomputed",
+        "ontology_terms"
+      ],
+      "naive": {
+        "pipeline": "naive",
+        "question": "precomputed RNA records with their assigned ontology term name",
+        "sql": "SELECT rnc.id, rnc.urs, rnc.rna_type, ont.name AS assigned_ontology_name\nFROM rnacen.rnc_rna_precomputed rnc\nJOIN rnacen.ontology_terms ont ON rnc.assigned_so_rna_type = ont.ontology_term_id",
+        "referenced": [
+          "ontology_terms",
+          "rnc_rna_precomputed"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 3.067848042002879,
+        "extra": {}
+      },
+      "pq_v1": {
+        "pipeline": "pq_v1",
+        "question": "precomputed RNA records with their assigned ontology term name",
+        "sql": "SELECT \n  r.id, \n  r.description, \n  r.upi, \n  r.rna_type, \n  r.assigned_so_rna_type, \n  ot.name AS ontology_term_name\nFROM \n  rnacen.rnc_rna_precomputed r\nJOIN \n  rnacen.ontology_terms ot ON r.assigned_so_rna_type = ot.ontology_term_id",
+        "referenced": [
+          "ontology_terms",
+          "rnc_rna_precomputed"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 1.7450636250141542,
+        "extra": {
+          "retrieved": [
+            "rnacen.ontology_terms",
+            "rnacen.rnc_rna_precomputed",
+            "rnacen.go_term_annotations",
+            "rnacen_django_test.rnc_rna_precomputed",
+            "rnacen.rfam_go_terms",
+            "rnacen.insdc_so_term_mapping",
+            "rnacen.go_term_publication_map",
+            "rnacen_django_test.rnc_rna_precomputed_data",
+            "rnacen.r2dt_models",
+            "rnacen.rnc_accessions",
+            "rnacen.rfam_models",
+            "rnacen.rnc_references",
+            "rnacen.rnc_interactions",
+            "rnacen.rnc_related_sequences",
+            "rnacen.rnc_modifications",
+            "rnacen.rnc_release",
+            "rnacen_django_test.rna",
+            "rnacen.rfam_clans",
+            "rnacen.rnc_relationship_types",
+            "rnacen.cpat_results",
+            "rnacen.ensembl_compara",
+            "rnacen.pipeline_tracking_genome_mapping",
+            "rnacen.r2dt_model_extra_data",
+            "rnacen.r2dt_results",
+            "rnacen.rfam_model_hits"
+          ]
+        }
+      },
+      "pq_v2": {
+        "pipeline": "pq_v2",
+        "question": "precomputed RNA records with their assigned ontology term name",
+        "sql": "SELECT\n  rnc_rna_precomputed.id,\n  rnc_rna_precomputed.description,\n  rnc_rna_precomputed.upi,\n  rnc_rna_precomputed.rna_type,\n  ontology_terms.name AS assigned_ontology_term_name\nFROM\n  rnacen.rnc_rna_precomputed\nJOIN\n  rnacen.ontology_terms ON rnc_rna_precomputed.assigned_so_rna_type = ontology_terms.ontology_term_id",
+        "referenced": [
+          "ontology_terms",
+          "rnc_rna_precomputed"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 3.0716109170170967,
+        "extra": {
+          "retrieved": [
+            "rnacen_django_test.rnc_rna_precomputed",
+            "rnacen.ontology_terms",
+            "rnacen.go_term_annotations",
+            "rnacen_django_test.rna",
+            "rnacen.go_term_publication_map",
+            "rnacen.insdc_so_term_mapping",
+            "rnacen.r2dt_models",
+            "rnacen.rfam_go_terms",
+            "rnacen.rfam_models",
+            "rnacen.rnc_accessions",
+            "rnacen.rnc_rna_precomputed"
+          ]
+        }
+      }
+    },
+    {
+      "question": "Rfam models with the SO ontology term they map to",
+      "must_retrieve": [
+        "rfam_models",
+        "ontology_terms"
+      ],
+      "naive": {
+        "pipeline": "naive",
+        "question": "Rfam models with the SO ontology term they map to",
+        "sql": "SELECT \n  rm.rfam_model_id, \n  rm.short_name, \n  rm.long_name, \n  rm.description, \n  ot.ontology_term_id AS so_ontology_term_id\nFROM \n  rnacen.rfam_models rm\nJOIN \n  rnacen.ontology_terms ot ON rm.so_rna_type = ot.ontology_term_id",
+        "referenced": [
+          "ontology_terms",
+          "rfam_models"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 1.3285903329961002,
+        "extra": {}
+      },
+      "pq_v1": {
+        "pipeline": "pq_v1",
+        "question": "Rfam models with the SO ontology term they map to",
+        "sql": "SELECT \n    rm.rfam_model_id, \n    rm.short_name, \n    rm.long_name, \n    rm.description,\n    rm.so_rna_type,\n    ot.name AS so_term_name\nFROM \n    rnacen.rfam_models rm\nJOIN \n    rnacen.ontology_terms ot ON rm.so_rna_type = ot.ontology_term_id",
+        "referenced": [
+          "ontology_terms",
+          "rfam_models"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 2.976664209010778,
+        "extra": {
+          "retrieved": [
+            "rnacen.rfam_go_terms",
+            "rnacen.rfam_models",
+            "rnacen.ontology_terms",
+            "rnacen.r2dt_models",
+            "rnacen.insdc_so_term_mapping",
+            "rnacen.rfam_model_hits",
+            "rnacen.r2dt_models_backup",
+            "rnacen.go_term_annotations",
+            "rnacen.rnc_rna_precomputed",
+            "rnacen.go_term_publication_map",
+            "rnacen.rfam_clans",
+            "rnacen.validate_layout_hits",
+            "rnacen.rfam_analyzed_sequences",
+            "rnacen.r2dt_model_extra_data",
+            "rnacen.rnc_reference_map",
+            "rnacen.rnc_sequence_features",
+            "rnacen.rna",
+            "rnacen.rnc_release",
+            "rnacen.rnc_references",
+            "rnacen.cpat_results",
+            "rnacen.ensembl_compara",
+            "rnacen.pipeline_tracking_genome_mapping",
+            "rnacen.r2dt_results",
+            "rnacen.rnc_accessions",
+            "rnacen.rnc_feedback_overlap"
+          ]
+        }
+      },
+      "pq_v2": {
+        "pipeline": "pq_v2",
+        "question": "Rfam models with the SO ontology term they map to",
+        "sql": "SELECT rm.rfam_model_id, rm.short_name, rm.long_name, rm.so_rna_type, ot.name AS so_ontology_term\nFROM rnacen.rfam_models rm\nJOIN rnacen.ontology_terms ot ON rm.so_rna_type = ot.ontology_term_id",
+        "referenced": [
+          "ontology_terms",
+          "rfam_models"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 3.148790833016392,
+        "extra": {
+          "retrieved": [
+            "rnacen.rfam_models",
+            "rnacen.insdc_so_term_mapping",
+            "rnacen.ontology_terms",
+            "rnacen.rfam_clans",
+            "rnacen.go_term_annotations",
+            "rnacen.r2dt_models",
+            "rnacen.rfam_go_terms",
+            "rnacen.rfam_model_hits",
+            "rnacen.rnc_accessions",
+            "rnacen.rnc_rna_precomputed"
+          ]
+        }
+      }
+    },
+    {
+      "question": "R2DT models with their SO ontology term name",
+      "must_retrieve": [
+        "r2dt_models",
+        "ontology_terms"
+      ],
+      "naive": {
+        "pipeline": "naive",
+        "question": "R2DT models with their SO ontology term name",
+        "sql": "SELECT \n  models.model_name, \n  models.rna_type, \n  ontology.name AS so_ontology_term_name\nFROM \n  rnacen.r2dt_models AS models\nJOIN \n  rnacen.ontology_terms AS ontology \nON \n  models.so_term_id = ontology.ontology_term_id",
+        "referenced": [
+          "ontology_terms",
+          "r2dt_models"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 1.452832708018832,
+        "extra": {}
+      },
+      "pq_v1": {
+        "pipeline": "pq_v1",
+        "question": "R2DT models with their SO ontology term name",
+        "sql": "SELECT \n  rm.id AS model_id, \n  rm.model_name, \n  rm.rna_type, \n  so.name AS so_ontology_term_name\nFROM \n  rnacen.r2dt_models rm\nJOIN \n  rnacen.ontology_terms so ON rm.so_term_id = so.ontology_term_id",
+        "referenced": [
+          "ontology_terms",
+          "r2dt_models"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 1.4309077079815324,
+        "extra": {
+          "retrieved": [
+            "rnacen.ontology_terms",
+            "rnacen.r2dt_models",
+            "rnacen.insdc_so_term_mapping",
+            "rnacen.r2dt_models_backup",
+            "rnacen.rfam_go_terms",
+            "rnacen.go_term_annotations",
+            "rnacen.rnc_rna_precomputed",
+            "rnacen.rfam_models",
+            "rnacen.validate_layout_hits",
+            "rnacen.r2dt_model_extra_data",
+            "rnacen.rfam_model_hits",
+            "rnacen.r2dt_results",
+            "rnacen.go_term_publication_map",
+            "rnacen.rnc_accessions",
+            "rnacen.rnc_references",
+            "rnacen.rnc_release",
+            "rnacen.rfam_clans",
+            "rnacen.rnc_sequence_features",
+            "rnacen.rna",
+            "rnacen.cpat_results",
+            "rnacen.ensembl_compara",
+            "rnacen.pipeline_tracking_genome_mapping",
+            "rnacen.rnc_accession_sequence_feature",
+            "rnacen.rnc_accession_sequence_region",
+            "rnacen.rnc_database_references"
+          ]
+        }
+      },
+      "pq_v2": {
+        "pipeline": "pq_v2",
+        "question": "R2DT models with their SO ontology term name",
+        "sql": "SELECT \n  r2dt.id, \n  r2dt.model_name, \n  r2dt.rna_type, \n  r2dt.so_term_id, \n  r2dt.model_source, \n  r2dt.model_length, \n  r2dt.model_basepair_count, \n  ot.name AS so_term_name\nFROM \n  rnacen.r2dt_models r2dt\nJOIN \n  rnacen.ontology_terms ot ON r2dt.so_term_id = ot.ontology_term_id",
+        "referenced": [
+          "ontology_terms",
+          "r2dt_models"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 3.382842749997508,
+        "extra": {
+          "retrieved": [
+            "rnacen.r2dt_models",
+            "rnacen.insdc_so_term_mapping",
+            "rnacen.ontology_terms",
+            "rnacen.go_term_annotations",
+            "rnacen.r2dt_model_extra_data",
+            "rnacen.r2dt_results",
+            "rnacen.rfam_go_terms",
+            "rnacen.rfam_models",
+            "rnacen.rnc_accessions",
+            "rnacen.rnc_rna_precomputed"
+          ]
+        }
+      }
+    },
+    {
+      "question": "Rfam models with their clan name and any GO terms",
+      "must_retrieve": [
+        "rfam_models",
+        "rfam_clans",
+        "rfam_go_terms",
+        "ontology_terms"
+      ],
+      "naive": {
+        "pipeline": "naive",
+        "question": "Rfam models with their clan name and any GO terms",
+        "sql": "SELECT \n    rm.rfam_model_id, \n    rm.short_name, \n    rm.long_name, \n    rc.name AS clan_name, \n    go.ontology_term_id AS go_term_id\nFROM \n    rnacen.rfam_models rm\nLEFT JOIN \n    rnacen.rfam_clans rc ON rm.rfam_clan_id = rc.rfam_clan_id\nLEFT JOIN \n    rnacen.rfam_go_terms go ON rm.rfam_model_id = go.rfam_model_id",
+        "referenced": [
+          "rfam_clans",
+          "rfam_go_terms",
+          "rfam_models"
+        ],
+        "passed": false,
+        "reason": "missing: ontology_terms",
+        "elapsed_s": 2.2497605830139946,
+        "extra": {}
+      },
+      "pq_v1": {
+        "pipeline": "pq_v1",
+        "question": "Rfam models with their clan name and any GO terms",
+        "sql": "SELECT \n    rm.rfam_model_id, \n    rm.short_name, \n    rm.long_name, \n    rc.name AS clan_name, \n    ogt.ontology_term_id AS go_term_id\nFROM \n    rnacen.rfam_models rm\nLEFT JOIN \n    rnacen.rfam_clans rc ON rm.rfam_clan_id = rc.rfam_clan_id\nLEFT JOIN \n    rnacen.rfam_go_terms ogt ON rm.rfam_model_id = ogt.rfam_model_id",
+        "referenced": [
+          "rfam_clans",
+          "rfam_go_terms",
+          "rfam_models"
+        ],
+        "passed": false,
+        "reason": "missing: ontology_terms",
+        "elapsed_s": 1.9230635419953614,
+        "extra": {
+          "retrieved": [
+            "rnacen.rfam_go_terms",
+            "rnacen.rfam_clans",
+            "rnacen.rfam_models",
+            "rnacen.go_term_publication_map",
+            "rnacen.go_term_annotations",
+            "rnacen.rfam_model_hits",
+            "rnacen.r2dt_models",
+            "rnacen.r2dt_models_backup",
+            "rnacen.ontology_terms",
+            "rnacen.r2dt_model_extra_data",
+            "rnacen.rfam_analyzed_sequences",
+            "rnacen.validate_layout_hits",
+            "rnacen.insdc_so_term_mapping",
+            "rnacen.r2dt_results",
+            "rnacen.rnc_references",
+            "rnacen.rnc_sequence_features",
+            "rnacen.rna",
+            "rnacen.rnc_accessions",
+            "rnacen.rnc_database_references",
+            "rnacen.rnc_reference_map",
+            "rnacen.rnc_rna_precomputed"
+          ]
+        }
+      },
+      "pq_v2": {
+        "pipeline": "pq_v2",
+        "question": "Rfam models with their clan name and any GO terms",
+        "sql": "SELECT\n    rm.rfam_model_id,\n    rm.short_name,\n    rm.long_name,\n    rm.rna_type,\n    rc.name AS clan_name,\n    ot.name AS go_term_name\nFROM\n    rnacen.rfam_models rm\nLEFT JOIN rnacen.rfam_clans rc ON rm.rfam_clan_id = rc.rfam_clan_id\nLEFT JOIN rnacen.rfam_go_terms rgt ON rm.rfam_model_id = rgt.rfam_model_id\nLEFT JOIN rnacen.ontology_terms ot ON rgt.ontology_term_id = ot.ontology_term_id",
+        "referenced": [
+          "ontology_terms",
+          "rfam_clans",
+          "rfam_go_terms",
+          "rfam_models"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 4.436923665984068,
+        "extra": {
+          "retrieved": [
+            "rnacen.rfam_models",
+            "rnacen.rfam_clans",
+            "rnacen.rfam_go_terms",
+            "rnacen.go_term_annotations",
+            "rnacen.ontology_terms",
+            "rnacen.go_term_publication_map",
+            "rnacen.insdc_so_term_mapping",
+            "rnacen.r2dt_models",
+            "rnacen.rfam_model_hits",
+            "rnacen.rnc_accessions",
+            "rnacen.rnc_rna_precomputed"
+          ]
+        }
+      }
+    },
+    {
+      "question": "for each Ensembl assembly, the number of coordinate systems",
+      "must_retrieve": [
+        "ensembl_assembly",
+        "ensembl_coordinate_systems"
+      ],
+      "naive": {
+        "pipeline": "naive",
+        "question": "for each Ensembl assembly, the number of coordinate systems",
+        "sql": "SELECT ea.assembly_id, COUNT(ec.id) AS coordinate_system_count\nFROM rnacen.ensembl_assembly ea\nJOIN rnacen.ensembl_coordinate_systems ec ON ea.assembly_id = ec.assembly_id\nGROUP BY ea.assembly_id",
+        "referenced": [
+          "ensembl_assembly",
+          "ensembl_coordinate_systems"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 5.007565167004941,
+        "extra": {}
+      },
+      "pq_v1": {
+        "pipeline": "pq_v1",
+        "question": "for each Ensembl assembly, the number of coordinate systems",
+        "sql": "SELECT \n    ea.assembly_id, \n    COUNT(eacs.id) AS coordinate_system_count\nFROM \n    rnacen.ensembl_assembly ea\nJOIN \n    rnacen.ensembl_coordinate_systems eacs ON ea.assembly_id = eacs.assembly_id\nGROUP BY \n    ea.assembly_id",
+        "referenced": [
+          "ensembl_assembly",
+          "ensembl_coordinate_systems"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 1.7390075840230566,
+        "extra": {
+          "retrieved": [
+            "rnacen.ensembl_coordinate_systems",
+            "rnacen.ensembl_assembly",
+            "rnacen.rnc_feedback_target_assemblies",
+            "rnacen.ensembl_pseudogene_regions",
+            "rnacen_django_test.rnc_coordinates",
+            "rnacen.ensembl_compara",
+            "rnacen.litscan_ensembl_ids",
+            "rnacen.ensembl_pseudogene_exons",
+            "rnacen.ensembl_import_tracking",
+            "rnacen.rnc_gene_status",
+            "rnacen.rnc_sequence_regions",
+            "rnacen.ensembl_stable_prefixes",
+            "rnacen.rnc_feedback_overlap",
+            "rnacen.rnc_locus",
+            "rnacen_django_test.rnc_rna_precomputed_data",
+            "rnacen.rnc_database",
+            "rnacen_django_test.rnc_accessions",
+            "rnacen.rnc_rna_precomputed",
+            "rnacen_django_test.rna",
+            "rnacen.rnc_accession_sequence_region",
+            "rnacen.rnc_locus_members",
+            "rnacen.rnc_sequence_exons"
+          ]
+        }
+      },
+      "pq_v2": {
+        "pipeline": "pq_v2",
+        "question": "for each Ensembl assembly, the number of coordinate systems",
+        "sql": "SELECT \n  ea.assembly_id, \n  COUNT(ec.id) AS coordinate_system_count\nFROM \n  rnacen.ensembl_assembly ea\nLEFT JOIN \n  rnacen.ensembl_coordinate_systems ec ON ea.assembly_id = ec.assembly_id\nGROUP BY \n  ea.assembly_id",
+        "referenced": [
+          "ensembl_assembly",
+          "ensembl_coordinate_systems"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 4.362940541002899,
+        "extra": {
+          "retrieved": [
+            "rnacen.ensembl_coordinate_systems",
+            "rnacen.ensembl_assembly",
+            "rnacen.ensembl_pseudogene_regions",
+            "rnacen.rnc_feedback_overlap",
+            "rnacen.rnc_feedback_target_assemblies",
+            "rnacen.rnc_gene_status",
+            "rnacen.rnc_locus",
+            "rnacen.rnc_sequence_regions"
+          ]
+        }
+      }
+    },
+    {
+      "question": "count GO term annotations grouped by ontology term name",
+      "must_retrieve": [
+        "go_term_annotations",
+        "ontology_terms"
+      ],
+      "naive": {
+        "pipeline": "naive",
+        "question": "count GO term annotations grouped by ontology term name",
+        "sql": "SELECT ot.name AS ontology_term_name, COUNT(gta.go_term_annotation_id) AS annotation_count\nFROM rnacen.go_term_annotations gta\nJOIN rnacen.ontology_terms ot ON gta.ontology_term_id = ot.ontology_term_id\nGROUP BY ot.name",
+        "referenced": [
+          "go_term_annotations",
+          "ontology_terms"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 6.695351666014176,
+        "extra": {}
+      },
+      "pq_v1": {
+        "pipeline": "pq_v1",
+        "question": "count GO term annotations grouped by ontology term name",
+        "sql": "SELECT\n  ot.name AS ontology_term_name,\n  COUNT(gta.go_term_annotation_id) AS annotation_count\nFROM\n  rnacen.go_term_annotations gta\nJOIN\n  rnacen.ontology_terms ot ON gta.ontology_term_id = ot.ontology_term_id\nGROUP BY\n  ot.name",
+        "referenced": [
+          "go_term_annotations",
+          "ontology_terms"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 1.4889849579776637,
+        "extra": {
+          "retrieved": [
+            "rnacen.go_term_annotations",
+            "rnacen.go_term_publication_map",
+            "rnacen.ontology_terms",
+            "rnacen.rfam_go_terms",
+            "rnacen.insdc_so_term_mapping",
+            "rnacen.rnc_rna_precomputed",
+            "rnacen.xref_count",
+            "rnacen.r2dt_models",
+            "rnacen.rfam_models",
+            "rnacen.rnc_accessions",
+            "rnacen.validate_layout_counts",
+            "rnacen.litscan_sentence_id_counts",
+            "rnacen.sequence_region_urs_counts",
+            "rnacen.r2dt_models_backup",
+            "rnacen_django_test.rnc_rna_precomputed_data",
+            "rnacen.rnc_references",
+            "rnacen.rnc_release",
+            "rnacen.rfam_clans",
+            "rnacen.rna",
+            "rnacen_django_test.rna",
+            "rnacen.cpat_results",
+            "rnacen.ensembl_compara",
+            "rnacen.pipeline_tracking_genome_mapping",
+            "rnacen.r2dt_model_extra_data",
+            "rnacen.r2dt_results"
+          ]
+        }
+      },
+      "pq_v2": {
+        "pipeline": "pq_v2",
+        "question": "count GO term annotations grouped by ontology term name",
+        "sql": "SELECT \n    ot.name AS ontology_term_name, \n    COUNT(ga.go_term_annotation_id) AS annotation_count\nFROM \n    rnacen.go_term_annotations ga\nJOIN \n    rnacen.ontology_terms ot ON ga.ontology_term_id = ot.ontology_term_id\nGROUP BY \n    ot.name",
+        "referenced": [
+          "go_term_annotations",
+          "ontology_terms"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 5.063569374993676,
+        "extra": {
+          "retrieved": [
+            "rnacen.go_term_annotations",
+            "rnacen.ontology_terms",
+            "rnacen.go_term_publication_map",
+            "rnacen.insdc_so_term_mapping",
+            "rnacen.r2dt_models",
+            "rnacen.rfam_go_terms",
+            "rnacen.rfam_models",
+            "rnacen.rnc_accessions",
+            "rnacen.rnc_rna_precomputed"
+          ]
+        }
+      }
+    },
+    {
+      "question": "Rfam model hits together with the Rfam model and the RNA upi",
+      "must_retrieve": [
+        "rfam_model_hits",
+        "rfam_models",
+        "rna"
+      ],
+      "naive": {
+        "pipeline": "naive",
+        "question": "Rfam model hits together with the Rfam model and the RNA upi",
+        "sql": "SELECT rmh.rfam_hit_id, \n       rm.short_name AS rfam_model_short_name, \n       rm.long_name AS rfam_model_long_name, \n       rm.description AS rfam_model_description, \n       rmh.upi AS rna_upi\nFROM rnacen.rfam_model_hits AS rmh\nJOIN rnacen.rfam_models AS rm ON rmh.rfam_model_id = rm.rfam_model_id",
+        "referenced": [
+          "rfam_model_hits",
+          "rfam_models"
+        ],
+        "passed": false,
+        "reason": "missing: rna",
+        "elapsed_s": 2.1518115419894457,
+        "extra": {}
+      },
+      "pq_v1": {
+        "pipeline": "pq_v1",
+        "question": "Rfam model hits together with the Rfam model and the RNA upi",
+        "sql": "SELECT\n  rfam_model_hits.rfam_hit_id,\n  rfam_model_hits.sequence_start,\n  rfam_model_hits.sequence_stop,\n  rfam_model_hits.sequence_completeness,\n  rfam_model_hits.model_start,\n  rfam_model_hits.model_stop,\n  rfam_model_hits.model_completeness,\n  rfam_model_hits.overlap,\n  rfam_model_hits.e_value,\n  rfam_model_hits.score,\n  rfam_model_hits.rfam_model_id,\n  rfam_models.short_name,\n  rfam_models.long_name,\n  rfam_models.description,\n  rfam_models.seed_count,\n  rfam_models.full_count,\n  rfam_models.length,\n  rfam_models.is_suppressed,\n  rfam_models.domain,\n  rfam_models.rna_type,\n  rfam_models.rfam_clan_id,\n  rfam_models.rfam_rna_type,\n  rfam_models.so_rna_type,\n  rfam_model_hits.upi\nFROM rnacen.rfam_model_hits\nJOIN rnacen.rfam_models ON rfam_model_hits.rfam_model_id = rfam_models.rfam_model_id",
+        "referenced": [
+          "rfam_model_hits",
+          "rfam_models"
+        ],
+        "passed": false,
+        "reason": "missing: rna",
+        "elapsed_s": 2.565322041977197,
+        "extra": {
+          "retrieved": [
+            "rnacen.rfam_model_hits",
+            "rnacen.rfam_models",
+            "rnacen.rfam_go_terms",
+            "rnacen.r2dt_models",
+            "rnacen.validate_layout_hits",
+            "rnacen.r2dt_models_backup",
+            "rnacen.rfam_clans",
+            "rnacen.rfam_analyzed_sequences",
+            "rnacen.r2dt_model_extra_data",
+            "rnacen.r2dt_results",
+            "rnacen.qa_status",
+            "rnacen_django_test.django_content_type",
+            "rnacen.pipeline_tracking_qa_scan",
+            "rnacen_django_test.rnc_rna_precomputed",
+            "rnacen_django_test.rna",
+            "rnacen.rnc_sequence_features",
+            "rnacen.rna",
+            "rnacen.ontology_terms",
+            "rnacen_django_test.auth_permission",
+            "rnacen_django_test.rnc_modifications",
+            "rnacen_django_test.rnc_rna_precomputed_data",
+            "rnacen_django_test.xref"
+          ]
+        }
+      },
+      "pq_v2": {
+        "pipeline": "pq_v2",
+        "question": "Rfam model hits together with the Rfam model and the RNA upi",
+        "sql": "SELECT \n    rfam_hits.rfam_hit_id,\n    rfam_hits.sequence_start,\n    rfam_hits.sequence_stop,\n    rfam_hits.sequence_completeness,\n    rfam_hits.model_start,\n    rfam_hits.model_stop,\n    rfam_hits.model_completeness,\n    rfam_hits.overlap,\n    rfam_hits.e_value,\n    rfam_hits.score,\n    rfam_hits.rfam_model_id,\n    rfam_hits.upi,\n    rfam_models.short_name,\n    rfam_models.long_name,\n    rfam_models.description,\n    rfam_models.seed_count,\n    rfam_models.full_count,\n    rfam_models.length,\n    rfam_models.is_suppressed,\n    rfam_models.domain,\n    rfam_models.rna_type,\n    rfam_models.rfam_clan_id,\n    rfam_models.rfam_rna_type,\n    rfam_models.so_rna_type,\n    rna.crc64,\n    rna.len,\n    rna.seq_short,\n    rna.seq_long,\n    rna.md5\nFROM \n    rnacen.rfam_model_hits rfam_hits\nJOIN \n    rnacen.rfam_models rfam_models ON rfam_hits.rfam_model_id = rfam_models.rfam_model_id\nJOIN \n    rnacen.rna rna ON rfam_hits.upi = rna.upi",
+        "referenced": [
+          "rfam_model_hits",
+          "rfam_models",
+          "rna"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 6.466624541993951,
+        "extra": {
+          "retrieved": [
+            "rnacen.rfam_model_hits",
+            "rnacen.rfam_models",
+            "rnacen.rna",
+            "rnacen.rnc_sequence_features",
+            "rnacen.rfam_clans",
+            "rnacen.ontology_terms",
+            "rnacen.pipeline_tracking_qa_scan",
+            "rnacen.pipeline_tracking_traveler",
+            "rnacen.precompute_urs",
+            "rnacen.precompute_urs_taxid",
+            "rnacen.qa_status",
+            "rnacen.r2dt_results",
+            "rnacen.rfam_analyzed_sequences",
+            "rnacen.rfam_go_terms",
+            "rnacen.validate_layout_counts",
+            "rnacen.xref_p10_deleted",
+            "rnacen.xref_p10_not_deleted",
+            "rnacen.xref_p11_deleted",
+            "rnacen.xref_p11_not_deleted",
+            "rnacen.xref_p12_deleted",
+            "rnacen.xref_p12_not_deleted",
+            "rnacen.xref_p13_deleted",
+            "rnacen.xref_p13_not_deleted",
+            "rnacen.xref_p14_deleted",
+            "rnacen.xref_p14_not_deleted"
+          ]
+        }
+      }
+    },
+    {
+      "question": "for each Rfam clan, the number of Rfam models in it",
+      "must_retrieve": [
+        "rfam_clans",
+        "rfam_models"
+      ],
+      "naive": {
+        "pipeline": "naive",
+        "question": "for each Rfam clan, the number of Rfam models in it",
+        "sql": "SELECT \n  rfam_clans.rfam_clan_id, \n  rfam_clans.name, \n  COUNT(rfam_models.rfam_model_id) AS model_count\nFROM \n  rnacen.rfam_clans\nLEFT JOIN \n  rnacen.rfam_models ON rfam_clans.rfam_clan_id = rfam_models.rfam_clan_id\nGROUP BY \n  rfam_clans.rfam_clan_id, \n  rfam_clans.name",
+        "referenced": [
+          "rfam_clans",
+          "rfam_models"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 1.9228347500029486,
+        "extra": {}
+      },
+      "pq_v1": {
+        "pipeline": "pq_v1",
+        "question": "for each Rfam clan, the number of Rfam models in it",
+        "sql": "SELECT rc.rfam_clan_id, rc.name, COUNT(rm.rfam_model_id) AS model_count\nFROM rnacen.rfam_clans rc\nLEFT JOIN rnacen.rfam_models rm ON rc.rfam_clan_id = rm.rfam_clan_id\nGROUP BY rc.rfam_clan_id, rc.name",
+        "referenced": [
+          "rfam_clans",
+          "rfam_models"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 1.2795258340192959,
+        "extra": {
+          "retrieved": [
+            "rnacen.rfam_models",
+            "rnacen.rfam_clans",
+            "rnacen.rfam_model_hits",
+            "rnacen.rfam_go_terms",
+            "rnacen.rfam_analyzed_sequences",
+            "rnacen.r2dt_models",
+            "rnacen.r2dt_models_backup",
+            "rnacen.r2dt_model_extra_data",
+            "rnacen.validate_layout_hits",
+            "rnacen.r2dt_results",
+            "rnacen.qa_status",
+            "rnacen_django_test.django_content_type",
+            "rnacen.pipeline_tracking_qa_scan",
+            "rnacen.ontology_terms",
+            "rnacen.rnc_sequence_features",
+            "rnacen.rna",
+            "rnacen_django_test.auth_permission"
+          ]
+        }
+      },
+      "pq_v2": {
+        "pipeline": "pq_v2",
+        "question": "for each Rfam clan, the number of Rfam models in it",
+        "sql": "SELECT\n  rc.name AS clan_name,\n  COUNT(rm.rfam_model_id) AS model_count\nFROM\n  rnacen.rfam_clans rc\nLEFT JOIN\n  rnacen.rfam_models rm ON rc.rfam_clan_id = rm.rfam_clan_id\nGROUP BY\n  rc.name",
+        "referenced": [
+          "rfam_clans",
+          "rfam_models"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 4.253625999990618,
+        "extra": {
+          "retrieved": [
+            "rnacen.rfam_clans",
+            "rnacen.rfam_models",
+            "rnacen.ontology_terms",
+            "rnacen.rfam_go_terms",
+            "rnacen.rfam_model_hits"
+          ]
+        }
+      }
+    },
+    {
+      "question": "GO term annotations with the ontology term name and the publication they cite",
+      "must_retrieve": [
+        "go_term_annotations",
+        "ontology_terms",
+        "go_term_publication_map",
+        "rnc_references"
+      ],
+      "naive": {
+        "pipeline": "naive",
+        "question": "GO term annotations with the ontology term name and the publication they cite",
+        "sql": "SELECT \n  gta.rna_id, \n  gta.ontology_term_id, \n  ot.name AS ontology_term_name, \n  rp.title AS publication_title\nFROM \n  rnacen.go_term_annotations gta\nJOIN \n  rnacen.ontology_terms ot ON gta.ontology_term_id = ot.ontology_term_id\nJOIN \n  rnacen.go_term_publication_map gtp ON gta.go_term_annotation_id = gtp.go_term_annotation_id\nJOIN \n  rnacen.rnc_references rp ON gtp.reference_id = rp.id",
+        "referenced": [
+          "go_term_annotations",
+          "go_term_publication_map",
+          "ontology_terms",
+          "rnc_references"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 2.2802615420077927,
+        "extra": {}
+      },
+      "pq_v1": {
+        "pipeline": "pq_v1",
+        "question": "GO term annotations with the ontology term name and the publication they cite",
+        "sql": "SELECT \n    go.go_term_annotation_id,\n    go.rna_id,\n    go.qualifier,\n    go.ontology_term_id,\n    ont.name AS ontology_term_name,\n    pub.title AS publication_title\nFROM \n    rnacen.go_term_annotations go\nJOIN \n    rnacen.ontology_terms ont ON go.ontology_term_id = ont.ontology_term_id\nJOIN \n    rnacen.go_term_publication_map gtpm ON go.go_term_annotation_id = gtpm.go_term_annotation_id\nJOIN \n    rnacen.rnc_references pub ON gtpm.reference_id = pub.id",
+        "referenced": [
+          "go_term_annotations",
+          "go_term_publication_map",
+          "ontology_terms",
+          "rnc_references"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 7.148474374989746,
+        "extra": {
+          "retrieved": [
+            "rnacen.go_term_annotations",
+            "rnacen.go_term_publication_map",
+            "rnacen.ontology_terms",
+            "rnacen.rfam_go_terms",
+            "rnacen.insdc_so_term_mapping",
+            "rnacen.publications",
+            "rnacen.rnc_rna_precomputed",
+            "rnacen.r2dt_models",
+            "rnacen.rnc_accessions",
+            "rnacen.rfam_models",
+            "rnacen.r2dt_models_backup",
+            "rnacen.rnc_sequence_feature_types",
+            "rnacen.rnc_taxonomy",
+            "rnacen.ensembl_import_tracking",
+            "rnacen_django_test.auth_user",
+            "rnacen.rnc_references",
+            "rnacen.rnc_release",
+            "rnacen.rfam_clans",
+            "rnacen.cpat_results",
+            "rnacen.ensembl_compara",
+            "rnacen.pipeline_tracking_genome_mapping",
+            "rnacen.r2dt_model_extra_data",
+            "rnacen.r2dt_results",
+            "rnacen.rfam_model_hits",
+            "rnacen.rnc_accession_sequence_feature"
+          ]
+        }
+      },
+      "pq_v2": {
+        "pipeline": "pq_v2",
+        "question": "GO term annotations with the ontology term name and the publication they cite",
+        "sql": "SELECT \n    go_terms.go_term_annotation_id,\n    go_terms.rna_id,\n    ontology.name AS ontology_term_name,\n    publications.title AS publication_title\nFROM \n    rnacen.go_term_annotations go_terms\nJOIN \n    rnacen.ontology_terms ontology \nON \n    go_terms.ontology_term_id = ontology.ontology_term_id\nJOIN \n    rnacen.go_term_publication_map map \nON \n    go_terms.go_term_annotation_id = map.go_term_annotation_id\nJOIN \n    rnacen.rnc_references references \nON \n    map.reference_id = references.id\nJOIN \n    rnacen.publications publications\nON \n    references.id = publications.id",
+        "referenced": [
+          "go_term_annotations",
+          "go_term_publication_map",
+          "ontology_terms",
+          "publications",
+          "rnc_references"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 4.401603290985804,
+        "extra": {
+          "retrieved": [
+            "rnacen.go_term_annotations",
+            "rnacen.ontology_terms",
+            "rnacen.go_term_publication_map",
+            "rnacen.publications",
+            "rnacen.rnc_references",
+            "rnacen.insdc_so_term_mapping",
+            "rnacen.r2dt_models",
+            "rnacen.rfam_go_terms",
+            "rnacen.rfam_models",
+            "rnacen.rnc_accessions",
+            "rnacen.rnc_rna_precomputed"
+          ]
+        }
+      }
+    },
+    {
+      "question": "R2DT 2D-structure results with the model name and the matching RNA upi",
+      "must_retrieve": [
+        "r2dt_results",
+        "r2dt_models",
+        "rna"
+      ],
+      "naive": {
+        "pipeline": "naive",
+        "question": "R2DT 2D-structure results with the model name and the matching RNA upi",
+        "sql": "SELECT \n  rnacen.r2dt_results.urs AS rna_upi, \n  rnacen.r2dt_models.model_name \nFROM \n  rnacen.r2dt_results\nJOIN \n  rnacen.r2dt_models ON rnacen.r2dt_results.model_id = rnacen.r2dt_models.id",
+        "referenced": [
+          "r2dt_models",
+          "r2dt_results"
+        ],
+        "passed": false,
+        "reason": "missing: rna",
+        "elapsed_s": 2.3453177500050515,
+        "extra": {}
+      },
+      "pq_v1": {
+        "pipeline": "pq_v1",
+        "question": "R2DT 2D-structure results with the model name and the matching RNA upi",
+        "sql": "SELECT \n    r2dt_results.id,\n    r2dt_results.secondary_structure,\n    r2dt_results.urs AS rna_upi,\n    r2dt_models.model_name\nFROM \n    rnacen.r2dt_results\nJOIN \n    rnacen.r2dt_models ON r2dt_results.model_id = r2dt_models.id",
+        "referenced": [
+          "r2dt_models",
+          "r2dt_results"
+        ],
+        "passed": false,
+        "reason": "missing: rna",
+        "elapsed_s": 2.764093583013164,
+        "extra": {
+          "retrieved": [
+            "rnacen.r2dt_results",
+            "rnacen.rnc_secondary_structure",
+            "rnacen.r2dt_models",
+            "rnacen.r2dt_models_backup",
+            "rnacen.r2dt_model_extra_data",
+            "rnacen.validate_layout_hits",
+            "rnacen.rfam_model_hits",
+            "rnacen.cpat_results",
+            "rnacen.rfam_models",
+            "rnacen.publications",
+            "rnacen_django_test.rnc_rna_precomputed",
+            "rnacen.rfam_go_terms",
+            "rnacen_django_test.django_content_type",
+            "rnacen.rnc_sequence_feature_types",
+            "rnacen.old_summaries",
+            "rnacen.rna",
+            "rnacen.ontology_terms",
+            "rnacen.rnc_sequence_features",
+            "rnacen.rnc_rna_precomputed",
+            "rnacen.rfam_clans",
+            "rnacen_django_test.rna",
+            "rnacen_django_test.auth_permission"
+          ]
+        }
+      },
+      "pq_v2": {
+        "pipeline": "pq_v2",
+        "question": "R2DT 2D-structure results with the model name and the matching RNA upi",
+        "sql": "SELECT \n    rnacen.r2dt_results.id,\n    rnacen.r2dt_results.secondary_structure,\n    rnacen.r2dt_models.model_name,\n    rnacen.rna.upi\nFROM \n    rnacen.r2dt_results\nJOIN \n    rnacen.r2dt_models ON rnacen.r2dt_results.model_id = rnacen.r2dt_models.id\nJOIN \n    rnacen.rna ON rnacen.r2dt_results.urs = rnacen.rna.upi",
+        "referenced": [
+          "r2dt_models",
+          "r2dt_results",
+          "rna"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 3.3689466250070836,
+        "extra": {
+          "retrieved": [
+            "rnacen.r2dt_results",
+            "rnacen.r2dt_models",
+            "rnacen.rnc_rna_precomputed",
+            "rnacen.rna",
+            "rnacen.ontology_terms",
+            "rnacen.rnc_release",
+            "rnacen.cpat_results",
+            "rnacen.ensembl_compara",
+            "rnacen.pipeline_tracking_genome_mapping",
+            "rnacen.r2dt_model_extra_data",
+            "rnacen.rnc_feedback_overlap",
+            "rnacen.rnc_gene_status",
+            "rnacen.rnc_interactions",
+            "rnacen.rnc_locus_members",
+            "rnacen.rnc_related_sequences",
+            "rnacen.rnc_sequence_regions"
+          ]
+        }
+      }
+    },
+    {
+      "question": "cpat results joined to precomputed RNA with the RNA description",
+      "must_retrieve": [
+        "cpat_results",
+        "rnc_rna_precomputed"
+      ],
+      "naive": {
+        "pipeline": "naive",
+        "question": "cpat results joined to precomputed RNA with the RNA description",
+        "sql": "SELECT \n    cpat.urs_taxid, \n    cpat.fickett_score, \n    cpat.hexamer_score, \n    cpat.coding_probability, \n    cpat.is_protein_coding, \n    precomp.description AS rna_description\nFROM \n    rnacen.cpat_results AS cpat\nJOIN \n    rnacen.rnc_rna_precomputed AS precomp \nON \n    cpat.urs_taxid = precomp.id",
+        "referenced": [
+          "cpat_results",
+          "rnc_rna_precomputed"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 2.061379582999507,
+        "extra": {}
+      },
+      "pq_v1": {
+        "pipeline": "pq_v1",
+        "question": "cpat results joined to precomputed RNA with the RNA description",
+        "sql": "SELECT \n    cpat.urs_taxid, \n    cpat.fickett_score, \n    cpat.hexamer_score, \n    cpat.coding_probability, \n    cpat.is_protein_coding, \n    precomputed.description\nFROM \n    rnacen.cpat_results cpat\nJOIN \n    rnacen.rnc_rna_precomputed precomputed ON cpat.urs_taxid = precomputed.id",
+        "referenced": [
+          "cpat_results",
+          "rnc_rna_precomputed"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 1.8042307089781389,
+        "extra": {
+          "retrieved": [
+            "rnacen.cpat_results",
+            "rnacen_django_test.rnc_rna_precomputed",
+            "rnacen.rnc_rna_precomputed",
+            "rnacen_django_test.rnc_rna_precomputed_data",
+            "rnacen.r2dt_results",
+            "rnacen.publications",
+            "rnacen_django_test.auth_user",
+            "rnacen.rnc_related_sequences",
+            "rnacen.rnc_interactions",
+            "rnacen.ensembl_compara",
+            "rnacen_django_test.rna",
+            "rnacen.old_summaries",
+            "rnacen.rnc_gene_status",
+            "rnacen.litsumm_summaries",
+            "rnacen.rnc_sequence_regions",
+            "rnacen.ontology_terms",
+            "rnacen.rnc_release",
+            "rnacen.r2dt_models",
+            "rnacen.rna",
+            "rnacen.rnc_relationship_types",
+            "rnacen.rnc_accessions",
+            "rnacen.ensembl_assembly",
+            "rnacen.pipeline_tracking_genome_mapping",
+            "rnacen.rnc_accession_sequence_region",
+            "rnacen.rnc_feedback_overlap"
+          ]
+        }
+      },
+      "pq_v2": {
+        "pipeline": "pq_v2",
+        "question": "cpat results joined to precomputed RNA with the RNA description",
+        "sql": "SELECT \n    cpat.urs_taxid, \n    cpat.fickett_score, \n    cpat.hexamer_score, \n    cpat.coding_probability, \n    cpat.is_protein_coding,\n    precomputed.description\nFROM \n    rnacen.cpat_results cpat\nJOIN \n    rnacen.rnc_rna_precomputed precomputed ON cpat.urs_taxid = precomputed.id",
+        "referenced": [
+          "cpat_results",
+          "rnc_rna_precomputed"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 4.11766004099627,
+        "extra": {
+          "retrieved": [
+            "rnacen.cpat_results",
+            "rnacen.rnc_rna_precomputed",
+            "rnacen.ontology_terms",
+            "rnacen.rnc_release",
+            "rnacen.ensembl_compara",
+            "rnacen.pipeline_tracking_genome_mapping",
+            "rnacen.rnc_feedback_overlap",
+            "rnacen.rnc_gene_status",
+            "rnacen.rnc_interactions",
+            "rnacen.rnc_locus_members",
+            "rnacen.rnc_related_sequences",
+            "rnacen.rnc_sequence_regions"
+          ]
+        }
+      }
+    },
+    {
+      "question": "count Rfam model hits per RNA, top 20",
+      "must_retrieve": [
+        "rfam_model_hits",
+        "rna"
+      ],
+      "naive": {
+        "pipeline": "naive",
+        "question": "count Rfam model hits per RNA, top 20",
+        "sql": "SELECT rmh.upi, COUNT(rmh.rfam_hit_id) AS hit_count\nFROM rnacen.rfam_model_hits rmh\nGROUP BY rmh.upi\nORDER BY hit_count DESC\nLIMIT 20",
+        "referenced": [
+          "rfam_model_hits"
+        ],
+        "passed": false,
+        "reason": "missing: rna",
+        "elapsed_s": 2.620894916995894,
+        "extra": {}
+      },
+      "pq_v1": {
+        "pipeline": "pq_v1",
+        "question": "count Rfam model hits per RNA, top 20",
+        "sql": "SELECT\n    rmh.upi,\n    COUNT(rmh.rfam_hit_id) AS hit_count\nFROM\n    rnacen.rfam_model_hits rmh\nGROUP BY\n    rmh.upi\nORDER BY\n    hit_count DESC\nLIMIT 20",
+        "referenced": [
+          "rfam_model_hits"
+        ],
+        "passed": false,
+        "reason": "missing: rna",
+        "elapsed_s": 1.594407249998767,
+        "extra": {
+          "retrieved": [
+            "rnacen.rfam_model_hits",
+            "rnacen.rfam_models",
+            "rnacen.validate_layout_hits",
+            "rnacen.r2dt_models",
+            "rnacen.rfam_go_terms",
+            "rnacen.r2dt_models_backup",
+            "rnacen.rfam_clans",
+            "rnacen.xref_count",
+            "rnacen.r2dt_results",
+            "rnacen.rfam_analyzed_sequences",
+            "rnacen.r2dt_model_extra_data",
+            "rnacen.litscan_sentence_id_counts",
+            "rnacen.validate_layout_counts",
+            "rnacen.sequence_region_urs_counts",
+            "rnacen_django_test.rnc_rna_precomputed_data",
+            "rnacen.rnc_sequence_features",
+            "rnacen.rna",
+            "rnacen.ontology_terms",
+            "rnacen_django_test.rna"
+          ]
+        }
+      },
+      "pq_v2": {
+        "pipeline": "pq_v2",
+        "question": "count Rfam model hits per RNA, top 20",
+        "sql": "SELECT rnacen.rfam_model_hits.upi, COUNT(rnacen.rfam_model_hits.rfam_hit_id) AS hit_count\nFROM rnacen.rfam_model_hits\nGROUP BY rnacen.rfam_model_hits.upi\nORDER BY hit_count DESC\nLIMIT 20",
+        "referenced": [
+          "rfam_model_hits"
+        ],
+        "passed": false,
+        "reason": "missing: rna",
+        "elapsed_s": 2.766548416984733,
+        "extra": {
+          "retrieved": [
+            "rnacen.rfam_model_hits",
+            "rnacen.rfam_models",
+            "rnacen.rfam_analyzed_sequences",
+            "rnacen.r2dt_results",
+            "rnacen.rnc_sequence_features",
+            "rnacen.rna",
+            "rnacen.rfam_clans",
+            "rnacen.ontology_terms",
+            "rnacen.r2dt_models",
+            "rnacen.rfam_go_terms"
+          ]
+        }
+      }
+    },
+    {
+      "question": "Ensembl compara homologies mapped to their precomputed RNA description",
+      "must_retrieve": [
+        "ensembl_compara",
+        "rnc_rna_precomputed"
+      ],
+      "naive": {
+        "pipeline": "naive",
+        "question": "Ensembl compara homologies mapped to their precomputed RNA description",
+        "sql": "SELECT ec.ensembl_transcript_id, ec.homology_id, rr.description\nFROM rnacen.ensembl_compara ec\nJOIN rnacen.rnc_rna_precomputed rr ON ec.urs_taxid = rr.id",
+        "referenced": [
+          "ensembl_compara",
+          "rnc_rna_precomputed"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 1.531174582982203,
+        "extra": {}
+      },
+      "pq_v1": {
+        "pipeline": "pq_v1",
+        "question": "Ensembl compara homologies mapped to their precomputed RNA description",
+        "sql": "SELECT\n    ensembl_compara.homology_id,\n    rnacen.rnc_rna_precomputed.description\nFROM\n    rnacen.ensembl_compara\nJOIN \n    rnacen.rnc_rna_precomputed \nON \n    rnacen.ensembl_compara.urs_taxid = rnacen.rnc_rna_precomputed.id",
+        "referenced": [
+          "ensembl_compara",
+          "rnc_rna_precomputed"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 1.6442784169921651,
+        "extra": {
+          "retrieved": [
+            "rnacen.ensembl_compara",
+            "rnacen_django_test.rnc_rna_precomputed",
+            "rnacen.rnc_rna_precomputed",
+            "rnacen_django_test.rnc_rna_precomputed_data",
+            "rnacen.rnc_sequence_regions_active_mapped",
+            "rnacen.litscan_ensembl_ids",
+            "rnacen.rnc_sequence_regions",
+            "rnacen.ensembl_pseudogene_regions",
+            "rnacen.ensembl_pseudogene_exons",
+            "rnacen.ensembl_import_tracking",
+            "rnacen.ensembl_coordinate_systems",
+            "rnacen.ensembl_assembly",
+            "rnacen.ensembl_stable_prefixes",
+            "rnacen.rnc_references",
+            "rnacen.rnc_gene_status",
+            "rnacen_django_test.rna",
+            "rnacen.ontology_terms",
+            "rnacen.rnc_release",
+            "rnacen.cpat_results",
+            "rnacen.go_term_publication_map",
+            "rnacen.pipeline_tracking_genome_mapping",
+            "rnacen.rnc_accession_sequence_region",
+            "rnacen.rnc_database_references",
+            "rnacen.rnc_feedback_overlap",
+            "rnacen.rnc_feedback_target_assemblies"
+          ]
+        }
+      },
+      "pq_v2": {
+        "pipeline": "pq_v2",
+        "question": "Ensembl compara homologies mapped to their precomputed RNA description",
+        "sql": "SELECT ec.id AS homology_id, \n       ec.ensembl_transcript_id, \n       ec.urs_taxid, \n       rrp.description\nFROM rnacen.ensembl_compara AS ec\nJOIN rnacen.rnc_rna_precomputed AS rrp ON ec.urs_taxid = rrp.id",
+        "referenced": [
+          "ensembl_compara",
+          "rnc_rna_precomputed"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 6.24404054202023,
+        "extra": {
+          "retrieved": [
+            "rnacen.ensembl_compara",
+            "rnacen.rnc_rna_precomputed",
+            "rnacen_django_test.rnc_rna_precomputed_data",
+            "rnacen.ontology_terms",
+            "rnacen.rnc_release",
+            "rnacen_django_test.rna",
+            "rnacen.cpat_results",
+            "rnacen.pipeline_tracking_genome_mapping",
+            "rnacen.rnc_feedback_overlap",
+            "rnacen.rnc_gene_status",
+            "rnacen.rnc_interactions",
+            "rnacen.rnc_locus_members",
+            "rnacen.rnc_related_sequences",
+            "rnacen.rnc_sequence_regions"
+          ]
+        }
+      }
+    },
+    {
+      "question": "Rfam GO terms with both the Rfam model name and the ontology term name",
+      "must_retrieve": [
+        "rfam_go_terms",
+        "rfam_models",
+        "ontology_terms"
+      ],
+      "naive": {
+        "pipeline": "naive",
+        "question": "Rfam GO terms with both the Rfam model name and the ontology term name",
+        "sql": "SELECT \n  rm.short_name AS rfam_model_name, \n  ot.name AS ontology_term_name\nFROM \n  rnacen.rfam_go_terms rgt\nJOIN \n  rnacen.rfam_models rm ON rgt.rfam_model_id = rm.rfam_model_id\nJOIN \n  rnacen.ontology_terms ot ON rgt.ontology_term_id = ot.ontology_term_id",
+        "referenced": [
+          "ontology_terms",
+          "rfam_go_terms",
+          "rfam_models"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 19.772509917005664,
+        "extra": {}
+      },
+      "pq_v1": {
+        "pipeline": "pq_v1",
+        "question": "Rfam GO terms with both the Rfam model name and the ontology term name",
+        "sql": "SELECT \n  rm.rfam_model_id, \n  rm.long_name AS rfam_model_name, \n  ot.ontology_term_id, \n  ot.name AS ontology_term_name\nFROM \n  rnacen.rfam_go_terms rgt\nJOIN \n  rnacen.rfam_models rm ON rgt.rfam_model_id = rm.rfam_model_id\nJOIN \n  rnacen.ontology_terms ot ON rgt.ontology_term_id = ot.ontology_term_id",
+        "referenced": [
+          "ontology_terms",
+          "rfam_go_terms",
+          "rfam_models"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 2.345528625010047,
+        "extra": {
+          "retrieved": [
+            "rnacen.rfam_go_terms",
+            "rnacen.rfam_models",
+            "rnacen.go_term_annotations",
+            "rnacen.ontology_terms",
+            "rnacen.go_term_publication_map",
+            "rnacen.rfam_model_hits",
+            "rnacen.r2dt_models",
+            "rnacen.rfam_clans",
+            "rnacen.rfam_analyzed_sequences",
+            "rnacen.insdc_so_term_mapping",
+            "rnacen.r2dt_models_backup",
+            "rnacen.rnc_rna_precomputed",
+            "rnacen.r2dt_model_extra_data",
+            "rnacen.validate_layout_hits",
+            "rnacen.rnc_accessions",
+            "rnacen.rnc_references",
+            "rnacen.rnc_sequence_features",
+            "rnacen.rna",
+            "rnacen.rnc_release",
+            "rnacen.cpat_results",
+            "rnacen.ensembl_compara",
+            "rnacen.pipeline_tracking_genome_mapping",
+            "rnacen.r2dt_results",
+            "rnacen.rnc_accession_sequence_feature",
+            "rnacen.rnc_accession_sequence_region"
+          ]
+        }
+      },
+      "pq_v2": {
+        "pipeline": "pq_v2",
+        "question": "Rfam GO terms with both the Rfam model name and the ontology term name",
+        "sql": "SELECT \n  rnacen.rfam_go_terms.rfam_go_term_id,\n  rnacen.rfam_models.long_name AS rfam_model_name,\n  rnacen.ontology_terms.name AS ontology_term_name\nFROM \n  rnacen.rfam_go_terms\nJOIN \n  rnacen.rfam_models ON rnacen.rfam_go_terms.rfam_model_id = rnacen.rfam_models.rfam_model_id\nJOIN \n  rnacen.ontology_terms ON rnacen.rfam_go_terms.ontology_term_id = rnacen.ontology_terms.ontology_term_id",
+        "referenced": [
+          "ontology_terms",
+          "rfam_go_terms",
+          "rfam_models"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 6.728815999988001,
+        "extra": {
+          "retrieved": [
+            "rnacen.rfam_go_terms",
+            "rnacen.rfam_models",
+            "rnacen.ontology_terms",
+            "rnacen.rfam_clans",
+            "rnacen.go_term_annotations",
+            "rnacen.insdc_so_term_mapping",
+            "rnacen.r2dt_models",
+            "rnacen.rfam_model_hits",
+            "rnacen.rnc_accessions",
+            "rnacen.rnc_rna_precomputed"
+          ]
+        }
+      }
+    },
+    {
+      "question": "QA-flagged RNAs with possible contamination together with the RNA upi",
+      "must_retrieve": [
+        "qa_status",
+        "rna"
+      ],
+      "naive": {
+        "pipeline": "naive",
+        "question": "QA-flagged RNAs with possible contamination together with the RNA upi",
+        "sql": "SELECT qa.rna_id, rna.upi\nFROM rnacen.qa_status AS qa\nJOIN rnacen.rna AS rna ON qa.upi = rna.upi\nWHERE qa.possible_contamination = TRUE",
+        "referenced": [
+          "qa_status",
+          "rna"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 8.32750795801985,
+        "extra": {}
+      },
+      "pq_v1": {
+        "pipeline": "pq_v1",
+        "question": "QA-flagged RNAs with possible contamination together with the RNA upi",
+        "sql": "SELECT\n  qa.upi\nFROM\n  rnacen.qa_status qa\nWHERE\n  qa.possible_contamination = TRUE",
+        "referenced": [
+          "qa_status"
+        ],
+        "passed": false,
+        "reason": "missing: rna",
+        "elapsed_s": 1.7630568750028033,
+        "extra": {
+          "retrieved": [
+            "rnacen.qa_status",
+            "rnacen.pipeline_tracking_qa_scan",
+            "rnacen_django_test.rnc_rna_precomputed",
+            "rnacen.rnc_rna_precomputed",
+            "rnacen_django_test.rna",
+            "rnacen.rna",
+            "rnacen_django_test.rnc_rna_precomputed_data",
+            "rnacen_django_test.xref",
+            "rnacen.xref_p10_deleted",
+            "rnacen.xref_p11_deleted",
+            "rnacen.xref_p12_deleted",
+            "rnacen.xref_p13_deleted",
+            "rnacen.xref_p14_deleted",
+            "rnacen.xref_p15_deleted",
+            "rnacen.xref_p16_deleted",
+            "rnacen.ontology_terms",
+            "rnacen.rnc_release",
+            "rnacen_django_test.rnc_accessions",
+            "rnacen_django_test.rnc_release",
+            "rnacen_django_test.rnc_database",
+            "rnacen.rnc_database",
+            "rnacen.cpat_results",
+            "rnacen.ensembl_compara",
+            "rnacen.pipeline_tracking_genome_mapping",
+            "rnacen.pipeline_tracking_traveler"
+          ]
+        }
+      },
+      "pq_v2": {
+        "pipeline": "pq_v2",
+        "question": "QA-flagged RNAs with possible contamination together with the RNA upi",
+        "sql": "SELECT\n  rna.upi\nFROM\n  rnacen.qa_status\nJOIN rnacen.rna ON qa_status.upi = rna.upi\nWHERE\n  qa_status.possible_contamination = TRUE",
+        "referenced": [
+          "qa_status",
+          "rna"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 5.911100291996263,
+        "extra": {
+          "retrieved": [
+            "rnacen.qa_status",
+            "rnacen.rna",
+            "rnacen.pipeline_tracking_qa_scan",
+            "rnacen.pipeline_tracking_traveler",
+            "rnacen.precompute_urs",
+            "rnacen.precompute_urs_taxid",
+            "rnacen.r2dt_results",
+            "rnacen.rfam_analyzed_sequences",
+            "rnacen.rfam_model_hits",
+            "rnacen.rnc_sequence_features",
+            "rnacen.validate_layout_counts",
+            "rnacen.xref_p10_deleted",
+            "rnacen.xref_p10_not_deleted",
+            "rnacen.xref_p11_deleted",
+            "rnacen.xref_p11_not_deleted",
+            "rnacen.xref_p12_deleted",
+            "rnacen.xref_p12_not_deleted",
+            "rnacen.xref_p13_deleted",
+            "rnacen.xref_p13_not_deleted",
+            "rnacen.xref_p14_deleted",
+            "rnacen.xref_p14_not_deleted",
+            "rnacen.xref_p15_deleted",
+            "rnacen.xref_p15_not_deleted",
+            "rnacen.xref_p16_deleted",
+            "rnacen.xref_p16_not_deleted"
+          ]
+        }
+      }
+    },
+    {
+      "question": "count how many R2DT results exist per R2DT model",
+      "must_retrieve": [
+        "r2dt_results",
+        "r2dt_models"
+      ],
+      "naive": {
+        "pipeline": "naive",
+        "question": "count how many R2DT results exist per R2DT model",
+        "sql": "SELECT r2dt_results.model_id, COUNT(*) AS result_count\nFROM rnacen.r2dt_results\nGROUP BY r2dt_results.model_id",
+        "referenced": [
+          "r2dt_results"
+        ],
+        "passed": false,
+        "reason": "missing: r2dt_models",
+        "elapsed_s": 3.0725509580224752,
+        "extra": {}
+      },
+      "pq_v1": {
+        "pipeline": "pq_v1",
+        "question": "count how many R2DT results exist per R2DT model",
+        "sql": "SELECT r2dt_models.model_name, COUNT(r2dt_results.id) AS result_count\nFROM rnacen.r2dt_models\nJOIN rnacen.r2dt_results ON r2dt_models.id = r2dt_results.model_id\nGROUP BY r2dt_models.model_name",
+        "referenced": [
+          "r2dt_models",
+          "r2dt_results"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 1.535540500015486,
+        "extra": {
+          "retrieved": [
+            "rnacen.r2dt_results",
+            "rnacen.r2dt_models",
+            "rnacen.r2dt_models_backup",
+            "rnacen.xref_count",
+            "rnacen.rfam_model_hits",
+            "rnacen.r2dt_model_extra_data",
+            "rnacen.cpat_results",
+            "rnacen.validate_layout_hits",
+            "rnacen.rfam_models",
+            "rnacen.litscan_sentence_id_counts",
+            "rnacen.validate_layout_counts",
+            "rnacen.sequence_region_urs_counts",
+            "rnacen.publications",
+            "rnacen_django_test.rnc_rna_precomputed_data",
+            "rnacen.rfam_go_terms",
+            "rnacen.rna",
+            "rnacen.ontology_terms",
+            "rnacen.rnc_sequence_features",
+            "rnacen.rnc_rna_precomputed",
+            "rnacen.rfam_clans",
+            "rnacen_django_test.rna"
+          ]
+        }
+      },
+      "pq_v2": {
+        "pipeline": "pq_v2",
+        "question": "count how many R2DT results exist per R2DT model",
+        "sql": "SELECT \n  rnacen.r2dt_models.model_name, \n  COUNT(rnacen.r2dt_results.id) AS result_count\nFROM \n  rnacen.r2dt_models\nJOIN \n  rnacen.r2dt_results ON rnacen.r2dt_models.id = rnacen.r2dt_results.model_id\nGROUP BY \n  rnacen.r2dt_models.model_name",
+        "referenced": [
+          "r2dt_models",
+          "r2dt_results"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 5.981397833005758,
+        "extra": {
+          "retrieved": [
+            "rnacen.r2dt_results",
+            "rnacen.r2dt_models",
+            "rnacen.rna",
+            "rnacen.ontology_terms",
+            "rnacen.r2dt_model_extra_data"
+          ]
+        }
+      }
+    },
+    {
+      "question": "publications of GO annotations with their PMID",
+      "must_retrieve": [
+        "go_term_publication_map",
+        "rnc_references"
+      ],
+      "naive": {
+        "pipeline": "naive",
+        "question": "publications of GO annotations with their PMID",
+        "sql": "SELECT\n    gta.go_term_annotation_id,\n    gta.ontology_term_id,\n    gta.evidence_code,\n    gta.rna_id,\n    rr.pmid\nFROM\n    rnacen.go_term_annotations gta\nJOIN\n    rnacen.go_term_publication_map gtpm ON gta.go_term_annotation_id = gtpm.go_term_annotation_id\nJOIN\n    rnacen.rnc_references rr ON gtpm.reference_id = rr.id",
+        "referenced": [
+          "go_term_annotations",
+          "go_term_publication_map",
+          "rnc_references"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 1.559771832980914,
+        "extra": {}
+      },
+      "pq_v1": {
+        "pipeline": "pq_v1",
+        "question": "publications of GO annotations with their PMID",
+        "sql": "SELECT DISTINCT\n    rnc_references.pmid\nFROM\n    rnacen.go_term_publication_map\nJOIN\n    rnacen.rnc_references ON go_term_publication_map.reference_id = rnc_references.id\nWHERE\n    rnc_references.pmid IS NOT NULL",
+        "referenced": [
+          "go_term_publication_map",
+          "rnc_references"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 1.366147958993679,
+        "extra": {
+          "retrieved": [
+            "rnacen.go_term_publication_map",
+            "rnacen.publications",
+            "rnacen.go_term_annotations",
+            "rnacen.rfam_go_terms",
+            "rnacen.rnc_references",
+            "rnacen_django_test.rnc_references",
+            "rnacen.ontology_terms",
+            "rnacen.rfam_models",
+            "rnacen.rnc_database_references",
+            "rnacen.rnc_reference_map",
+            "rnacen_django_test.rnc_reference_map"
+          ]
+        }
+      },
+      "pq_v2": {
+        "pipeline": "pq_v2",
+        "question": "publications of GO annotations with their PMID",
+        "sql": "SELECT \n  rnacen.go_term_annotations.go_term_annotation_id,\n  rnacen_django_test.rnc_references.pmid\nFROM \n  rnacen.go_term_annotations\nJOIN \n  rnacen.go_term_publication_map \n  ON rnacen.go_term_annotations.go_term_annotation_id = rnacen.go_term_publication_map.go_term_annotation_id\nJOIN \n  rnacen_django_test.rnc_references \n  ON rnacen.go_term_publication_map.reference_id = rnacen_django_test.rnc_references.id",
+        "referenced": [
+          "go_term_annotations",
+          "go_term_publication_map",
+          "rnc_references"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 7.0615327910054475,
+        "extra": {
+          "retrieved": [
+            "rnacen.go_term_annotations",
+            "rnacen.publications",
+            "rnacen_django_test.rnc_references",
+            "rnacen.ontology_terms",
+            "rnacen.go_term_publication_map",
+            "rnacen_django_test.rnc_reference_map"
+          ]
+        }
+      }
+    },
+    {
+      "question": "RNA cross-references with the source database display name",
+      "must_retrieve": [
+        "rnc_accessions",
+        "rnc_database"
+      ],
+      "naive": {
+        "pipeline": "naive",
+        "question": "RNA cross-references with the source database display name",
+        "sql": "SELECT rx.dbid, rdb.display_name, rx.upi\nFROM rnacen.xref AS rx\nJOIN rnacen.rnc_database AS rdb ON rx.dbid = rdb.id",
+        "referenced": [
+          "rnc_database",
+          "xref"
+        ],
+        "passed": false,
+        "reason": "missing: rnc_accessions",
+        "elapsed_s": 4.507863915991038,
+        "extra": {}
+      },
+      "pq_v1": {
+        "pipeline": "pq_v1",
+        "question": "RNA cross-references with the source database display name",
+        "sql": "SELECT\n    rnacen.xref.upi,\n    rnacen.xref.ac,\n    rnacen.xref.version,\n    rnacen.xref.taxid,\n    rnacen.rnc_database.display_name\nFROM\n    rnacen.xref\nJOIN\n    rnacen.rnc_database ON rnacen.xref.dbid = rnacen.rnc_database.id",
+        "referenced": [
+          "rnc_database",
+          "xref"
+        ],
+        "passed": false,
+        "reason": "missing: rnc_accessions",
+        "elapsed_s": 3.1191640830074903,
+        "extra": {
+          "retrieved": [
+            "rnacen.xref",
+            "rnacen.rnc_database_references",
+            "rnacen.rnc_reference_map",
+            "rnacen.rnc_database",
+            "rnacen_django_test.rnc_reference_map",
+            "rnacen_django_test.rnc_references",
+            "rnacen.rnc_references",
+            "rnacen.rnc_release",
+            "rnacen_django_test.rnc_database",
+            "rnacen.rnc_related_sequences",
+            "rnacen.pipeline_tracking_qa_scan",
+            "rnacen.rnc_chemical_components",
+            "rnacen_django_test.rnc_chemical_components",
+            "rnacen.validate_layout_hits",
+            "rnacen.r2dt_models",
+            "rnacen_django_test.rnc_accessions",
+            "rnacen.rnc_relationship_types",
+            "rnacen.rnc_accessions",
+            "rnacen.rnc_rna_precomputed",
+            "rnacen.rna",
+            "rnacen.ontology_terms",
+            "rnacen.go_term_publication_map",
+            "rnacen.r2dt_model_extra_data",
+            "rnacen.r2dt_results",
+            "rnacen.rnc_feedback_target_assemblies"
+          ]
+        }
+      },
+      "pq_v2": {
+        "pipeline": "pq_v2",
+        "question": "RNA cross-references with the source database display name",
+        "sql": "SELECT\n  xref.ac,\n  rnc_database.display_name\nFROM\n  rnacen_django_test.xref\nJOIN\n  rnacen_django_test.rnc_database ON xref.dbid = rnc_database.id",
+        "referenced": [
+          "rnc_database",
+          "xref"
+        ],
+        "passed": false,
+        "reason": "missing: rnc_accessions",
+        "elapsed_s": 6.016104332986288,
+        "extra": {
+          "retrieved": [
+            "rnacen_django_test.xref",
+            "rnacen_django_test.rnc_database",
+            "rnacen.rnc_references",
+            "rnacen_django_test.rnc_accessions",
+            "rnacen_django_test.rnc_release",
+            "rnacen_django_test.rna",
+            "rnacen.go_term_publication_map",
+            "rnacen.rnc_database_references",
+            "rnacen.rnc_reference_map",
+            "rnacen_django_test.rnc_modifications"
+          ]
+        }
+      }
+    },
+    {
+      "question": "which RNA sequences are predicted to code for proteins",
+      "must_retrieve": [
+        "cpat_results"
+      ],
+      "naive": {
+        "pipeline": "naive",
+        "question": "which RNA sequences are predicted to code for proteins",
+        "sql": "SELECT urs_taxid \nFROM rnacen.cpat_results \nWHERE is_protein_coding = TRUE",
+        "referenced": [
+          "cpat_results"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 2.6056482499989215,
+        "extra": {}
+      },
+      "pq_v1": {
+        "pipeline": "pq_v1",
+        "question": "which RNA sequences are predicted to code for proteins",
+        "sql": "SELECT rnacen.rna.upi\nFROM rnacen.rna\nJOIN rnacen.rnc_sequence_features ON rnacen.rna.upi = rnacen.rnc_sequence_features.upi\nWHERE rnacen.rnc_sequence_features.feature_name = 'protein_coding'",
+        "referenced": [
+          "rna",
+          "rnc_sequence_features"
+        ],
+        "passed": false,
+        "reason": "missing: cpat_results",
+        "elapsed_s": 1.8816467500000726,
+        "extra": {
+          "retrieved": [
+            "rnacen.rna",
+            "rnacen.protein_info",
+            "rnacen.rnc_accession_sequence_feature",
+            "rnacen.rnc_sequence_exons",
+            "rnacen.rnc_sequence_features",
+            "rnacen.rnc_accession_sequence_region",
+            "rnacen.sequence_region_urs_counts",
+            "rnacen.rnc_sequence_feature_providers",
+            "rnacen.rnc_sequence_feature_types",
+            "rnacen.rnc_sequence_regions",
+            "rnacen.rfam_analyzed_sequences",
+            "rnacen.rnc_related_sequences",
+            "rnacen.rfam_model_hits",
+            "rnacen.rnc_sequence_regions_active",
+            "rnacen.rnc_chemical_components",
+            "rnacen.rnc_accessions",
+            "rnacen.rnc_taxonomy",
+            "rnacen.ensembl_assembly",
+            "rnacen.rnc_rna_precomputed",
+            "rnacen.rnc_relationship_types",
+            "rnacen.rfam_models",
+            "rnacen.pipeline_tracking_qa_scan",
+            "rnacen.pipeline_tracking_traveler",
+            "rnacen.precompute_urs",
+            "rnacen.precompute_urs_taxid"
+          ]
+        }
+      },
+      "pq_v2": {
+        "pipeline": "pq_v2",
+        "question": "which RNA sequences are predicted to code for proteins",
+        "sql": "SELECT rna.upi, rna.seq_short, rna.seq_long\nFROM rnacen.rna\nJOIN rnacen.qa_status ON rnacen.qa_status.upi = rna.upi\nJOIN rnacen.rnc_rna_precomputed ON rna.upi = rnacen.rnc_rna_precomputed.upi\nJOIN rnacen.cpat_results ON rnacen.cpat_results.urs_taxid = rnacen.rnc_rna_precomputed.id\nWHERE rnacen.cpat_results.is_protein_coding = TRUE",
+        "referenced": [
+          "cpat_results",
+          "qa_status",
+          "rna",
+          "rnc_rna_precomputed"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 8.595528083998943,
+        "extra": {
+          "retrieved": [
+            "rnacen_django_test.rna",
+            "rnacen.cpat_results",
+            "rnacen.rnc_rna_precomputed",
+            "rnacen.qa_status",
+            "rnacen.ontology_terms",
+            "rnacen.rnc_release",
+            "rnacen.rna",
+            "rnacen.ensembl_compara",
+            "rnacen.pipeline_tracking_genome_mapping",
+            "rnacen.rnc_feedback_overlap",
+            "rnacen.rnc_gene_status",
+            "rnacen.rnc_interactions",
+            "rnacen.rnc_locus_members",
+            "rnacen.rnc_related_sequences",
+            "rnacen.rnc_sequence_regions",
+            "rnacen_django_test.rnc_modifications",
+            "rnacen_django_test.rnc_rna_precomputed",
+            "rnacen_django_test.rnc_rna_precomputed_data",
+            "rnacen_django_test.xref"
+          ]
+        }
+      }
+    },
+    {
+      "question": "what 2D structures have been predicted for our RNAs",
+      "must_retrieve": [
+        "r2dt_results"
+      ],
+      "naive": {
+        "pipeline": "naive",
+        "question": "what 2D structures have been predicted for our RNAs",
+        "sql": "SELECT 'insufficient schema: missing 2D structures for RNAs' AS error",
+        "referenced": [],
+        "passed": false,
+        "reason": "no tables referenced",
+        "elapsed_s": 1.9493793750007171,
+        "extra": {}
+      },
+      "pq_v1": {
+        "pipeline": "pq_v1",
+        "question": "what 2D structures have been predicted for our RNAs",
+        "sql": "SELECT rnc_secondary_structure.secondary_structure\nFROM rnacen.rnc_secondary_structure",
+        "referenced": [
+          "rnc_secondary_structure"
+        ],
+        "passed": false,
+        "reason": "missing: r2dt_results",
+        "elapsed_s": 1.552984000009019,
+        "extra": {
+          "retrieved": [
+            "rnacen.rnc_secondary_structure",
+            "rnacen.r2dt_results",
+            "rnacen_django_test.rnc_rna_precomputed",
+            "rnacen.rnc_rna_precomputed",
+            "rnacen_django_test.rna",
+            "rnacen.rna",
+            "rnacen_django_test.rnc_rna_precomputed_data",
+            "rnacen_django_test.xref",
+            "rnacen.validate_layout_hits",
+            "rnacen.rfam_models",
+            "rnacen.qa_status",
+            "rnacen.validate_layout_counts",
+            "rnacen.rnc_related_sequences",
+            "rnacen.xref_p10_deleted",
+            "rnacen.xref_p11_deleted",
+            "rnacen.r2dt_models",
+            "rnacen.ontology_terms",
+            "rnacen.rnc_release",
+            "rnacen_django_test.rnc_accessions",
+            "rnacen_django_test.rnc_release",
+            "rnacen_django_test.rnc_database",
+            "rnacen.rfam_clans",
+            "rnacen.rnc_relationship_types",
+            "rnacen.rnc_accessions",
+            "rnacen.rnc_database"
+          ]
+        }
+      },
+      "pq_v2": {
+        "pipeline": "pq_v2",
+        "question": "what 2D structures have been predicted for our RNAs",
+        "sql": "SELECT r2dt.urs, r2dt.secondary_structure\nFROM rnacen.r2dt_results AS r2dt\nJOIN rnacen.rna AS rna ON r2dt.urs = rna.upi",
+        "referenced": [
+          "r2dt_results",
+          "rna"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 5.907536875020014,
+        "extra": {
+          "retrieved": [
+            "rnacen.rnc_secondary_structure",
+            "rnacen.rnc_rna_precomputed",
+            "rnacen.r2dt_results",
+            "rnacen.validate_layout_hits",
+            "rnacen.ontology_terms",
+            "rnacen.rnc_release",
+            "rnacen.r2dt_models",
+            "rnacen.rna",
+            "rnacen.cpat_results",
+            "rnacen.ensembl_compara",
+            "rnacen.pipeline_tracking_genome_mapping",
+            "rnacen.rnc_feedback_overlap",
+            "rnacen.rnc_gene_status",
+            "rnacen.rnc_interactions",
+            "rnacen.rnc_locus_members",
+            "rnacen.rnc_related_sequences",
+            "rnacen.rnc_sequence_regions"
+          ]
+        }
+      }
+    },
+    {
+      "question": "show me literature summaries written about RNA",
+      "must_retrieve": [
+        "litsumm_summaries"
+      ],
+      "naive": {
+        "pipeline": "naive",
+        "question": "show me literature summaries written about RNA",
+        "sql": "SELECT 'insufficient schema: missing literature summaries about RNA' AS error",
+        "referenced": [],
+        "passed": false,
+        "reason": "no tables referenced",
+        "elapsed_s": 1.4463577920105308,
+        "extra": {}
+      },
+      "pq_v1": {
+        "pipeline": "pq_v1",
+        "question": "show me literature summaries written about RNA",
+        "sql": "SELECT 'insufficient schema: missing literature summaries table' AS error",
+        "referenced": [],
+        "passed": false,
+        "reason": "no tables referenced",
+        "elapsed_s": 1.8435603750112932,
+        "extra": {
+          "retrieved": [
+            "rnacen.old_summaries",
+            "rnacen.litsumm_summaries",
+            "rnacen.rnc_references",
+            "pg_stat_statements",
+            "rnacen_django_test.rnc_rna_precomputed",
+            "rnacen.rnc_rna_precomputed",
+            "rnacen_django_test.rna",
+            "rnacen.rna",
+            "rnacen_django_test.rnc_rna_precomputed_data",
+            "rnacen_django_test.xref",
+            "rnacen.validate_layout_hits",
+            "rnacen.rfam_models",
+            "rnacen.qa_status",
+            "rnacen.validate_layout_counts",
+            "rnacen.rnc_related_sequences",
+            "rnacen.ontology_terms",
+            "rnacen.rnc_release",
+            "rnacen_django_test.rnc_accessions",
+            "rnacen_django_test.rnc_release",
+            "rnacen_django_test.rnc_database",
+            "rnacen.rfam_clans",
+            "rnacen.rnc_relationship_types",
+            "rnacen.rnc_accessions",
+            "rnacen.cpat_results",
+            "rnacen.ensembl_compara"
+          ]
+        }
+      },
+      "pq_v2": {
+        "pipeline": "pq_v2",
+        "question": "show me literature summaries written about RNA",
+        "sql": "SELECT o.summary\nFROM rnacen.old_summaries o\nWHERE o.context ILIKE '%literature%' AND o.context ILIKE '%RNA%'\nUNION\nSELECT l.summary\nFROM rnacen.litsumm_summaries l\nWHERE l.context ILIKE '%literature%' AND l.context ILIKE '%RNA%'",
+        "referenced": [
+          "litsumm_summaries",
+          "old_summaries"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 6.343471000000136,
+        "extra": {
+          "retrieved": [
+            "rnacen.old_summaries",
+            "rnacen.litsumm_summaries",
+            "rnacen.rnc_references",
+            "rnacen.go_term_publication_map",
+            "rnacen.rnc_database_references",
+            "rnacen.rnc_reference_map"
+          ]
+        }
+      }
+    },
+    {
+      "question": "what RNA families exist in the database",
+      "must_retrieve": [
+        "rfam_models"
+      ],
+      "naive": {
+        "pipeline": "naive",
+        "question": "what RNA families exist in the database",
+        "sql": "SELECT DISTINCT rfam_rna_type FROM rnacen.rfam_models",
+        "referenced": [
+          "rfam_models"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 1.6384747499832883,
+        "extra": {}
+      },
+      "pq_v1": {
+        "pipeline": "pq_v1",
+        "question": "what RNA families exist in the database",
+        "sql": "SELECT 'insufficient schema: missing RNA families information' AS error",
+        "referenced": [],
+        "passed": false,
+        "reason": "no tables referenced",
+        "elapsed_s": 1.0523735829920042,
+        "extra": {
+          "retrieved": [
+            "rnacen.rfam_clans",
+            "rnacen.rfam_analyzed_sequences",
+            "rnacen_django_test.rnc_rna_precomputed",
+            "rnacen.rnc_rna_precomputed",
+            "rnacen.rnc_database_references",
+            "rnacen.rnc_database",
+            "rnacen.rnc_database_json_stats",
+            "rnacen_django_test.rnc_database_json_stats",
+            "rnacen_django_test.xref",
+            "rnacen_django_test.rna",
+            "rnacen.rna",
+            "rnacen_django_test.rnc_rna_precomputed_data",
+            "rnacen.xref",
+            "rnacen_django_test.rnc_database",
+            "rnacen.rnc_release",
+            "rnacen.ontology_terms",
+            "rnacen.rnc_references",
+            "rnacen_django_test.rnc_accessions",
+            "rnacen_django_test.rnc_release",
+            "rnacen.cpat_results",
+            "rnacen.ensembl_compara",
+            "rnacen.pipeline_tracking_genome_mapping",
+            "rnacen.pipeline_tracking_qa_scan",
+            "rnacen.pipeline_tracking_traveler",
+            "rnacen.precompute_urs"
+          ]
+        }
+      },
+      "pq_v2": {
+        "pipeline": "pq_v2",
+        "question": "what RNA families exist in the database",
+        "sql": "SELECT DISTINCT rfam_rna_type FROM rnacen.rfam_models",
+        "referenced": [
+          "rfam_models"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 5.198806500004139,
+        "extra": {
+          "retrieved": [
+            "rnacen.rfam_clans",
+            "rnacen.rfam_analyzed_sequences",
+            "rnacen.rna",
+            "rnacen.rfam_models"
+          ]
+        }
+      }
+    },
+    {
+      "question": "show me genome assemblies known to RNAcentral",
+      "must_retrieve": [
+        "ensembl_assembly"
+      ],
+      "naive": {
+        "pipeline": "naive",
+        "question": "show me genome assemblies known to RNAcentral",
+        "sql": "SELECT assembly_id, assembly_full_name, gca_accession, assembly_ucsc, common_name, taxid, ensembl_url, division, subdomain, selected_genome\nFROM rnacen.ensembl_assembly",
+        "referenced": [
+          "ensembl_assembly"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 2.0053184170101304,
+        "extra": {}
+      },
+      "pq_v1": {
+        "pipeline": "pq_v1",
+        "question": "show me genome assemblies known to RNAcentral",
+        "sql": "SELECT ea.assembly_id, ea.assembly_full_name, ea.gca_accession, ea.assembly_ucsc, ea.common_name\nFROM rnacen.ensembl_assembly ea\nJOIN rnacen.pipeline_tracking_genome_mapping ptgm ON ea.assembly_id = ptgm.assembly_id",
+        "referenced": [
+          "ensembl_assembly",
+          "pipeline_tracking_genome_mapping"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 1.2736169999989215,
+        "extra": {
+          "retrieved": [
+            "rnacen.pipeline_tracking_genome_mapping",
+            "rnacen.ensembl_assembly",
+            "rnacen.rnc_feedback_target_assemblies",
+            "rnacen.rnc_gene_status",
+            "rnacen.rnc_sequence_regions",
+            "rnacen.rnc_feedback_overlap",
+            "rnacen.ensembl_pseudogene_regions",
+            "rnacen.rnc_locus",
+            "rnacen.ensembl_coordinate_systems",
+            "rnacen.rnc_sequence_regions_active",
+            "rnacen.sequence_region_urs_counts",
+            "rnacen.rnc_sequence_regions_active_provided",
+            "rnacen.rnc_sequence_regions_active_mapped",
+            "rnacen.rnc_rna_precomputed",
+            "rnacen.rnc_database",
+            "rnacen.ensembl_pseudogene_exons",
+            "rnacen.rnc_accession_sequence_region",
+            "rnacen.rnc_locus_members",
+            "rnacen.rnc_sequence_exons"
+          ]
+        }
+      },
+      "pq_v2": {
+        "pipeline": "pq_v2",
+        "question": "show me genome assemblies known to RNAcentral",
+        "sql": "SELECT assembly_id, assembly_full_name\nFROM rnacen.ensembl_assembly",
+        "referenced": [
+          "ensembl_assembly"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 5.9534850000054576,
+        "extra": {
+          "retrieved": [
+            "rnacen.ensembl_assembly",
+            "rnacen.rnc_gene_status",
+            "rnacen.rnc_locus",
+            "rnacen.pipeline_tracking_genome_mapping",
+            "rnacen.rnc_sequence_regions",
+            "rnacen.rnc_rna_precomputed",
+            "rnacen.ensembl_coordinate_systems",
+            "rnacen.ensembl_pseudogene_regions",
+            "rnacen.rnc_feedback_overlap",
+            "rnacen.rnc_feedback_target_assemblies",
+            "rnacen.rnc_locus_members"
+          ]
+        }
+      }
+    },
+    {
+      "question": "which RNAs have quality-control issues",
+      "must_retrieve": [
+        "qa_status"
+      ],
+      "naive": {
+        "pipeline": "naive",
+        "question": "which RNAs have quality-control issues",
+        "sql": "SELECT qa.rna_id\nFROM rnacen.qa_status AS qa\nWHERE qa.has_issue = true",
+        "referenced": [
+          "qa_status"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 1.0431042079871986,
+        "extra": {}
+      },
+      "pq_v1": {
+        "pipeline": "pq_v1",
+        "question": "which RNAs have quality-control issues",
+        "sql": "SELECT qa_status.rna_id, qa_status.upi\nFROM rnacen.qa_status\nWHERE qa_status.has_issue = TRUE",
+        "referenced": [
+          "qa_status"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 1.2959918749984354,
+        "extra": {
+          "retrieved": [
+            "rnacen.qa_status",
+            "rnacen_django_test.rnc_rna_precomputed",
+            "rnacen.rnc_rna_precomputed",
+            "rnacen_django_test.rna",
+            "rnacen.rna",
+            "rnacen_django_test.rnc_rna_precomputed_data",
+            "rnacen_django_test.xref",
+            "rnacen.validate_layout_hits",
+            "rnacen.rfam_models",
+            "rnacen.validate_layout_counts",
+            "rnacen.rnc_related_sequences",
+            "rnacen.xref_p10_deleted",
+            "rnacen.xref_p11_deleted",
+            "rnacen.xref_p12_deleted",
+            "rnacen.xref_p13_deleted",
+            "rnacen.ontology_terms",
+            "rnacen.rnc_release",
+            "rnacen_django_test.rnc_accessions",
+            "rnacen_django_test.rnc_release",
+            "rnacen_django_test.rnc_database",
+            "rnacen.rfam_clans",
+            "rnacen.rnc_relationship_types",
+            "rnacen.rnc_accessions",
+            "rnacen.rnc_database",
+            "rnacen.cpat_results"
+          ]
+        }
+      },
+      "pq_v2": {
+        "pipeline": "pq_v2",
+        "question": "which RNAs have quality-control issues",
+        "sql": "SELECT rna.upi\nFROM rnacen.qa_status\nJOIN rnacen.rna ON qa_status.upi = rna.upi\nWHERE has_issue = TRUE",
+        "referenced": [
+          "qa_status",
+          "rna"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 12.317326541990042,
+        "extra": {
+          "retrieved": [
+            "rnacen.qa_status",
+            "rnacen.rna",
+            "rnacen.pipeline_tracking_qa_scan",
+            "rnacen.pipeline_tracking_traveler",
+            "rnacen.precompute_urs",
+            "rnacen.precompute_urs_taxid",
+            "rnacen.r2dt_results",
+            "rnacen.rfam_analyzed_sequences",
+            "rnacen.rfam_model_hits",
+            "rnacen.rnc_sequence_features",
+            "rnacen.validate_layout_counts",
+            "rnacen.xref_p10_deleted",
+            "rnacen.xref_p10_not_deleted",
+            "rnacen.xref_p11_deleted",
+            "rnacen.xref_p11_not_deleted",
+            "rnacen.xref_p12_deleted",
+            "rnacen.xref_p12_not_deleted",
+            "rnacen.xref_p13_deleted",
+            "rnacen.xref_p13_not_deleted",
+            "rnacen.xref_p14_deleted",
+            "rnacen.xref_p14_not_deleted",
+            "rnacen.xref_p15_deleted",
+            "rnacen.xref_p15_not_deleted",
+            "rnacen.xref_p16_deleted",
+            "rnacen.xref_p16_not_deleted"
+          ]
+        }
+      }
+    },
+    {
+      "question": "list the scientific papers we have citations for",
+      "must_retrieve": [
+        "rnc_references"
+      ],
+      "naive": {
+        "pipeline": "naive",
+        "question": "list the scientific papers we have citations for",
+        "sql": "SELECT DISTINCT r.title\nFROM rnacen.rnc_references r",
+        "referenced": [
+          "rnc_references"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 1.6983590419986285,
+        "extra": {}
+      },
+      "pq_v1": {
+        "pipeline": "pq_v1",
+        "question": "list the scientific papers we have citations for",
+        "sql": "SELECT 'insufficient schema: missing scientific papers and citations tables' AS error",
+        "referenced": [],
+        "passed": false,
+        "reason": "no tables referenced",
+        "elapsed_s": 1.5709510830056388,
+        "extra": {
+          "retrieved": [
+            "pg_stat_statements",
+            "pg_stat_statements_info",
+            "rnacen.auth_permission",
+            "rnacen.bad_precompute",
+            "rnacen.blog"
+          ]
+        }
+      },
+      "pq_v2": {
+        "pipeline": "pq_v2",
+        "question": "list the scientific papers we have citations for",
+        "sql": "SELECT rnc_references.title\nFROM rnacen.rnc_references",
+        "referenced": [
+          "rnc_references"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 4.861901374999434,
+        "extra": {
+          "retrieved": [
+            "rnacen.publications",
+            "rnacen.go_term_publication_map",
+            "rnacen.go_term_annotations",
+            "rnacen.rnc_references"
+          ]
+        }
+      }
+    },
+    {
+      "question": "show homology mappings between species",
+      "must_retrieve": [
+        "ensembl_compara"
+      ],
+      "naive": {
+        "pipeline": "naive",
+        "question": "show homology mappings between species",
+        "sql": "SELECT ensembl_compara.urs_taxid, ensembl_compara.ensembl_transcript_id, ensembl_compara.homology_id, rnc_rna_precomputed.taxid\nFROM rnacen.ensembl_compara\nJOIN rnacen.rnc_rna_precomputed ON ensembl_compara.urs_taxid = rnc_rna_precomputed.id",
+        "referenced": [
+          "ensembl_compara",
+          "rnc_rna_precomputed"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 2.38427291699918,
+        "extra": {}
+      },
+      "pq_v1": {
+        "pipeline": "pq_v1",
+        "question": "show homology mappings between species",
+        "sql": "SELECT ec.ensembl_transcript_id, ec.urs_taxid, ec.homology_id\nFROM rnacen.ensembl_compara ec",
+        "referenced": [
+          "ensembl_compara"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 1.057100875012111,
+        "extra": {
+          "retrieved": [
+            "rnacen.pipeline_tracking_genome_mapping",
+            "rnacen.insdc_so_term_mapping",
+            "rnacen.ensembl_compara",
+            "rnacen_django_test.rnc_accessions",
+            "rnacen.precompute_urs_accession",
+            "rnacen.ensembl_assembly",
+            "rnacen.rnc_accessions",
+            "rnacen.go_term_publication_map",
+            "rnacen.rnc_rna_precomputed",
+            "rnacen.ontology_terms",
+            "rnacen.go_term_annotations",
+            "rnacen.rnc_references",
+            "rnacen.ensembl_coordinate_systems",
+            "rnacen.ensembl_pseudogene_regions",
+            "rnacen.rnc_accession_sequence_feature",
+            "rnacen.rnc_accession_sequence_region",
+            "rnacen.rnc_feedback_overlap",
+            "rnacen.rnc_feedback_target_assemblies",
+            "rnacen.rnc_gene_status",
+            "rnacen.rnc_locus",
+            "rnacen.rnc_modifications",
+            "rnacen.rnc_related_sequences",
+            "rnacen.rnc_sequence_features",
+            "rnacen.rnc_sequence_regions",
+            "rnacen_django_test.rnc_coordinates"
+          ]
+        }
+      },
+      "pq_v2": {
+        "pipeline": "pq_v2",
+        "question": "show homology mappings between species",
+        "sql": "SELECT ensembl_compara.homology_id, \n       ensembl_compara.ensembl_transcript_id, \n       ensembl_compara.urs_taxid AS urs_taxid_1, \n       rnc_rna_precomputed.taxid AS taxid_2\nFROM rnacen.ensembl_compara\nJOIN rnacen.rnc_rna_precomputed \nON ensembl_compara.urs_taxid = rnc_rna_precomputed.id",
+        "referenced": [
+          "ensembl_compara",
+          "rnc_rna_precomputed"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 5.910443083004793,
+        "extra": {
+          "retrieved": [
+            "rnacen.ensembl_compara",
+            "rnacen.precompute_urs_taxid",
+            "rnacen.ensembl_stable_prefixes",
+            "rnacen.ensembl_coordinate_systems",
+            "rnacen.rnc_rna_precomputed",
+            "rnacen.rna",
+            "rnacen.precompute_urs",
+            "rnacen.ensembl_assembly"
+          ]
+        }
+      }
+    },
+    {
+      "question": "show the lineage information for each species",
+      "must_retrieve": [
+        "rnc_taxonomy"
+      ],
+      "naive": {
+        "pipeline": "naive",
+        "question": "show the lineage information for each species",
+        "sql": "SELECT id, name, lineage \nFROM rnacen.rnc_taxonomy",
+        "referenced": [
+          "rnc_taxonomy"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 2.14646812499268,
+        "extra": {}
+      },
+      "pq_v1": {
+        "pipeline": "pq_v1",
+        "question": "show the lineage information for each species",
+        "sql": "SELECT species, lineage\nFROM rnacen.precompute_urs_accession",
+        "referenced": [
+          "precompute_urs_accession"
+        ],
+        "passed": false,
+        "reason": "missing: rnc_taxonomy",
+        "elapsed_s": 0.9263798340107314,
+        "extra": {
+          "retrieved": [
+            "rnacen.precompute_urs_accession",
+            "rnacen.rnc_database_json_stats",
+            "rnacen_django_test.rnc_database_json_stats",
+            "rnacen.rnc_taxonomy",
+            "rnacen_django_test.rnc_accessions",
+            "rnacen.rnc_accessions",
+            "rnacen.ontology_terms",
+            "rnacen.rnc_accession_sequence_feature",
+            "rnacen.rnc_accession_sequence_region",
+            "rnacen.rnc_modifications",
+            "rnacen.rnc_related_sequences",
+            "rnacen.rnc_sequence_features",
+            "rnacen_django_test.rnc_coordinates",
+            "rnacen_django_test.rnc_reference_map",
+            "rnacen_django_test.xref"
+          ]
+        }
+      },
+      "pq_v2": {
+        "pipeline": "pq_v2",
+        "question": "show the lineage information for each species",
+        "sql": "SELECT rnc_taxonomy.id, rnc_taxonomy.name, rnc_taxonomy.lineage\nFROM rnacen.rnc_taxonomy",
+        "referenced": [
+          "rnc_taxonomy"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 7.786709167005029,
+        "extra": {
+          "retrieved": [
+            "rnacen.rnc_taxonomy",
+            "rnacen_django_test.rnc_database_json_stats",
+            "rnacen.rnc_sequence_features"
+          ]
+        }
+      }
+    },
+    {
+      "question": "which RNAs have been mapped to genome coordinates",
+      "must_retrieve": [
+        "rnc_rna_precomputed"
+      ],
+      "naive": {
+        "pipeline": "naive",
+        "question": "which RNAs have been mapped to genome coordinates",
+        "sql": "SELECT urs_taxid \nFROM rnacen.rnc_rna_precomputed \nWHERE has_coordinates = true",
+        "referenced": [
+          "rnc_rna_precomputed"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 3.879727624997031,
+        "extra": {}
+      },
+      "pq_v1": {
+        "pipeline": "pq_v1",
+        "question": "which RNAs have been mapped to genome coordinates",
+        "sql": "SELECT DISTINCT p.urs_taxid\nFROM rnacen.pipeline_tracking_genome_mapping p\nJOIN rnacen.rnc_rna_precomputed r ON p.urs_taxid = r.id\nWHERE r.has_coordinates = TRUE",
+        "referenced": [
+          "pipeline_tracking_genome_mapping",
+          "rnc_rna_precomputed"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 2.254125125007704,
+        "extra": {
+          "retrieved": [
+            "rnacen.pipeline_tracking_genome_mapping",
+            "rnacen.ensembl_coordinate_systems",
+            "rnacen.rnc_sequence_regions_active_mapped",
+            "rnacen_django_test.rnc_coordinates",
+            "rnacen.rnc_rna_precomputed",
+            "rnacen_django_test.rnc_rna_precomputed_data",
+            "rnacen.rnc_sequence_regions",
+            "rnacen.ensembl_assembly",
+            "rnacen.rnc_sequence_regions_active",
+            "rnacen.sequence_region_urs_counts",
+            "rnacen_django_test.rnc_rna_precomputed",
+            "rnacen.rnc_sequence_regions_active_provided",
+            "rnacen_django_test.rna",
+            "rnacen.rna",
+            "rnacen_django_test.xref",
+            "rnacen_django_test.rnc_accessions",
+            "rnacen.ontology_terms",
+            "rnacen.rnc_release",
+            "rnacen_django_test.rnc_release",
+            "rnacen_django_test.rnc_database",
+            "rnacen.cpat_results",
+            "rnacen.ensembl_compara",
+            "rnacen.ensembl_pseudogene_regions",
+            "rnacen.pipeline_tracking_qa_scan",
+            "rnacen.pipeline_tracking_traveler"
+          ]
+        }
+      },
+      "pq_v2": {
+        "pipeline": "pq_v2",
+        "question": "which RNAs have been mapped to genome coordinates",
+        "sql": "SELECT rnc_rna_precomputed.id, rnc_rna_precomputed.upi\nFROM rnacen.rnc_rna_precomputed\nJOIN rnacen.rnc_sequence_regions ON rnc_rna_precomputed.id = rnacen.rnc_sequence_regions.urs_taxid\nWHERE rnacen.rnc_sequence_regions.was_mapped = true",
+        "referenced": [
+          "rnc_rna_precomputed",
+          "rnc_sequence_regions"
+        ],
+        "passed": true,
+        "reason": "ok",
+        "elapsed_s": 24.057284624985186,
+        "extra": {
+          "retrieved": [
+            "rnacen.rnc_sequence_regions",
+            "rnacen.rnc_sequence_regions_active",
+            "rnacen.rnc_sequence_regions_active_mapped",
+            "rnacen_django_test.rnc_rna_precomputed",
+            "rnacen.ensembl_assembly",
+            "rnacen.rnc_rna_precomputed",
+            "rnacen_django_test.rna",
+            "rnacen.rnc_accession_sequence_region",
+            "rnacen.rnc_gene_status",
+            "rnacen.rnc_locus_members",
+            "rnacen.rnc_sequence_exons"
+          ]
+        }
+      }
+    }
+  ]
+}

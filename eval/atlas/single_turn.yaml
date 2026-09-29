@@ -1,0 +1,480 @@
+# Single-turn evaluation set for the Atlas reporting bot.
+# Gold SQL is hand-written against the rpt views and verified by eval/atlas_eval.py --check-gold.
+# Evaluation date is fixed: TODAY = 2026-09-27 (ATLAS_TODAY).
+# Scoring = execution match: every gold column must be present in the prediction with the same
+# values (extra predicted columns allowed); row order checked only when `ordered: true`.
+
+# ---------------------------------------------------------------- sales (volume tenant)
+- id: s01
+  tenant: volume
+  category: sales
+  question: What were our total sales in 2024?
+  gold_sql: |
+    SELECT ROUND(SUM(total_amount),2) FROM sales_orders
+    WHERE status NOT IN ('DRAFT','CANCELLED','CREDIT_BLOCKED') AND order_date >= '2024-01-01' AND order_date < '2025-01-01'
+- id: s02
+  tenant: volume
+  category: sales
+  question: How many sales orders did we get in March 2025?
+  gold_sql: |
+    SELECT COUNT(*) FROM sales_orders
+    WHERE status NOT IN ('DRAFT','CANCELLED','CREDIT_BLOCKED') AND order_date >= '2025-03-01' AND order_date < '2025-04-01'
+- id: s03
+  tenant: volume
+  category: sales
+  question: Give me the 10 biggest customers by sales value in 2025
+  ordered: true
+  gold_sql: |
+    SELECT c.name, ROUND(SUM(so.total_amount),2) s FROM sales_orders so JOIN sales_customers c ON c.id=so.customer_id
+    WHERE so.status NOT IN ('DRAFT','CANCELLED','CREDIT_BLOCKED') AND so.order_date >= '2025-01-01' AND so.order_date < '2026-01-01'
+    GROUP BY c.id, c.name ORDER BY s DESC LIMIT 10
+- id: s04
+  tenant: volume
+  category: sales
+  question: Show sales by quarter for 2025
+  ordered: true
+  gold_sql: |
+    SELECT date_trunc('quarter', order_date)::date q, ROUND(SUM(total_amount),2) FROM sales_orders
+    WHERE status NOT IN ('DRAFT','CANCELLED','CREDIT_BLOCKED') AND order_date >= '2025-01-01' AND order_date < '2026-01-01'
+    GROUP BY 1 ORDER BY 1
+- id: s05
+  tenant: volume
+  category: sales
+  question: Which month of 2024 had the highest sales?
+  gold_sql: |
+    SELECT date_trunc('month', order_date)::date m, ROUND(SUM(total_amount),2) s FROM sales_orders
+    WHERE status NOT IN ('DRAFT','CANCELLED','CREDIT_BLOCKED') AND order_date >= '2024-01-01' AND order_date < '2025-01-01'
+    GROUP BY 1 ORDER BY s DESC LIMIT 1
+- id: s06
+  tenant: volume
+  category: sales
+  question: What is the average order value in 2025?
+  gold_sql: |
+    SELECT ROUND(AVG(total_amount),2) FROM sales_orders
+    WHERE status NOT IN ('DRAFT','CANCELLED','CREDIT_BLOCKED') AND order_date >= '2025-01-01' AND order_date < '2026-01-01'
+- id: s07
+  tenant: volume
+  category: sales
+  question: Which 3 customers bought the least in 2024?
+  ordered: true
+  gold_sql: |
+    SELECT c.name, ROUND(SUM(so.total_amount),2) s FROM sales_orders so JOIN sales_customers c ON c.id=so.customer_id
+    WHERE so.status NOT IN ('DRAFT','CANCELLED','CREDIT_BLOCKED') AND so.order_date >= '2024-01-01' AND so.order_date < '2025-01-01'
+    GROUP BY c.id, c.name ORDER BY s ASC LIMIT 3
+- id: s08
+  tenant: volume
+  category: sales
+  question: Total sales for Volume Customer 7 in 2025
+  gold_sql: |
+    SELECT ROUND(SUM(so.total_amount),2) FROM sales_orders so JOIN sales_customers c ON c.id=so.customer_id
+    WHERE c.name='Volume Customer 7' AND so.status NOT IN ('DRAFT','CANCELLED','CREDIT_BLOCKED')
+      AND so.order_date >= '2025-01-01' AND so.order_date < '2026-01-01'
+- id: s09
+  tenant: volume
+  category: sales
+  question: Sales year to date compared with the same period last year
+  gold_sql: |
+    SELECT ROUND(SUM(total_amount) FILTER (WHERE order_date >= '2026-01-01' AND order_date <= '2026-09-27'),2) ytd,
+           ROUND(SUM(total_amount) FILTER (WHERE order_date >= '2025-01-01' AND order_date <= '2025-09-27'),2) prior_ytd
+    FROM sales_orders WHERE status NOT IN ('DRAFT','CANCELLED','CREDIT_BLOCKED')
+- id: s10
+  tenant: volume
+  category: sales
+  question: How many distinct customers ordered in each year?
+  ordered: true
+  gold_sql: |
+    SELECT EXTRACT(YEAR FROM order_date)::int y, COUNT(DISTINCT customer_id) FROM sales_orders
+    WHERE status NOT IN ('DRAFT','CANCELLED','CREDIT_BLOCKED') GROUP BY 1 ORDER BY 1
+- id: s11
+  tenant: volume
+  category: sales
+  question: Top 5 items by sales revenue in 2025
+  ordered: true
+  gold_sql: |
+    SELECT i.name, ROUND(SUM(sol.line_amount),2) v FROM sales_order_lines sol JOIN sales_orders so ON so.id=sol.order_id JOIN inv_items i ON i.id=sol.item_id
+    WHERE so.status NOT IN ('DRAFT','CANCELLED','CREDIT_BLOCKED') AND so.order_date >= '2025-01-01' AND so.order_date < '2026-01-01'
+    GROUP BY i.id, i.name ORDER BY v DESC, i.name LIMIT 5
+- id: s12
+  tenant: volume
+  category: sales
+  question: How many units were sold in total in 2024?
+  gold_sql: |
+    SELECT SUM(sol.ordered_quantity) FROM sales_order_lines sol JOIN sales_orders so ON so.id=sol.order_id
+    WHERE so.status NOT IN ('DRAFT','CANCELLED','CREDIT_BLOCKED') AND so.order_date >= '2024-01-01' AND so.order_date < '2025-01-01'
+
+# ---------------------------------------------------------------- sales (acme tenant, edge statuses)
+- id: s13
+  tenant: acme
+  category: sales
+  question: What's the total value of our sales orders?
+  gold_sql: |
+    SELECT ROUND(SUM(total_amount),2) FROM sales_orders WHERE status NOT IN ('DRAFT','CANCELLED','CREDIT_BLOCKED')
+- id: s14
+  tenant: acme
+  category: sales
+  question: List our draft sales orders
+  gold_sql: |
+    SELECT order_number FROM sales_orders WHERE status = 'DRAFT'
+- id: s15
+  tenant: acme
+  category: sales
+  question: How many orders were cancelled?
+  gold_sql: |
+    SELECT COUNT(*) FROM sales_orders WHERE status = 'CANCELLED'
+- id: s16
+  tenant: acme
+  category: sales
+  question: Sales per customer
+  gold_sql: |
+    SELECT c.name, ROUND(SUM(so.total_amount),2) FROM sales_orders so JOIN sales_customers c ON c.id=so.customer_id
+    WHERE so.status NOT IN ('DRAFT','CANCELLED','CREDIT_BLOCKED') GROUP BY c.id, c.name
+- id: s17
+  tenant: acme
+  category: sales
+  question: What is the value of open sales orders?
+  gold_sql: |
+    SELECT ROUND(SUM(total_amount),2) FROM sales_orders WHERE status IN ('CONFIRMED','PARTIALLY_DELIVERED')
+- id: s18
+  tenant: acme
+  category: sales
+  question: How many units of Blue Widget have we sold?
+  gold_sql: |
+    SELECT SUM(sol.ordered_quantity) FROM sales_order_lines sol JOIN sales_orders so ON so.id=sol.order_id JOIN inv_items i ON i.id=sol.item_id
+    WHERE i.name='Blue Widget' AND so.status NOT IN ('DRAFT','CANCELLED','CREDIT_BLOCKED')
+- id: s19
+  tenant: acme
+  category: sales
+  question: What percentage of deliveries were on time?
+  gold_sql: |
+    SELECT ROUND(100.0*COUNT(*) FILTER (WHERE d.delivery_date <= so.requested_date)/NULLIF(COUNT(*),0),2)
+    FROM sales_deliveries d JOIN sales_orders so ON so.id=d.sales_order_id WHERE d.status='POSTED' AND so.requested_date IS NOT NULL
+- id: s20
+  tenant: acme
+  category: sales
+  question: How many units did customers return?
+  gold_sql: |
+    SELECT SUM(rl.quantity) FROM sales_return_lines rl JOIN sales_returns r ON r.id=rl.return_id WHERE r.status='POSTED'
+
+# ---------------------------------------------------------------- finance / GL
+- id: f01
+  tenant: volume
+  category: finance
+  question: What was total revenue in 2025?
+  gold_sql: |
+    SELECT ROUND(SUM(jl.functional_credit_amount-jl.functional_debit_amount),2) FROM fin_journal_lines jl JOIN fin_accounts a ON a.id=jl.account_id
+    WHERE jl.is_posted AND a.account_type='REVENUE' AND jl.posting_date >= '2025-01-01' AND jl.posting_date < '2026-01-01'
+- id: f02
+  tenant: volume
+  category: finance
+  question: Show revenue per year
+  ordered: true
+  gold_sql: |
+    SELECT EXTRACT(YEAR FROM jl.posting_date)::int, ROUND(SUM(jl.functional_credit_amount-jl.functional_debit_amount),2) FROM fin_journal_lines jl JOIN fin_accounts a ON a.id=jl.account_id
+    WHERE jl.is_posted AND a.account_type='REVENUE' GROUP BY 1 ORDER BY 1
+- id: f03
+  tenant: volume
+  category: finance
+  question: What was the cost of goods sold in 2024?
+  gold_sql: |
+    SELECT ROUND(SUM(jl.functional_debit_amount-jl.functional_credit_amount),2) FROM fin_journal_lines jl
+    WHERE jl.is_posted AND jl.account_id IN (SELECT cogs_account_id FROM inv_item_categories)
+      AND jl.posting_date >= '2024-01-01' AND jl.posting_date < '2025-01-01'
+- id: f04
+  tenant: volume
+  category: finance
+  question: What was our gross margin percentage in 2025?
+  gold_sql: |
+    SELECT ROUND(100.0*(SUM(jl.functional_credit_amount-jl.functional_debit_amount) FILTER (WHERE a.account_type='REVENUE')
+      - COALESCE(SUM(jl.functional_debit_amount-jl.functional_credit_amount) FILTER (WHERE a.id IN (SELECT cogs_account_id FROM inv_item_categories)),0))
+      / NULLIF(SUM(jl.functional_credit_amount-jl.functional_debit_amount) FILTER (WHERE a.account_type='REVENUE'),0),2)
+    FROM fin_journal_lines jl JOIN fin_accounts a ON a.id=jl.account_id
+    WHERE jl.is_posted AND jl.posting_date >= '2025-01-01' AND jl.posting_date < '2026-01-01'
+- id: f05
+  tenant: acme
+  category: finance
+  question: What is our current cash position?
+  gold_sql: |
+    SELECT ROUND(SUM(jl.functional_debit_amount-jl.functional_credit_amount),2) FROM fin_journal_lines jl JOIN fin_accounts a ON a.id=jl.account_id
+    WHERE jl.is_posted AND a.is_cash_equivalent
+- id: f06
+  tenant: acme
+  category: finance
+  question: How much revenue have we booked so far?
+  gold_sql: |
+    SELECT ROUND(SUM(jl.functional_credit_amount-jl.functional_debit_amount),2) FROM fin_journal_lines jl JOIN fin_accounts a ON a.id=jl.account_id
+    WHERE jl.is_posted AND a.account_type='REVENUE'
+- id: f07
+  tenant: acme
+  category: finance
+  question: Break down total expenses by account
+  gold_sql: |
+    SELECT a.name, ROUND(SUM(jl.functional_debit_amount-jl.functional_credit_amount),2) FROM fin_journal_lines jl JOIN fin_accounts a ON a.id=jl.account_id
+    WHERE jl.is_posted AND a.account_type='EXPENSE' GROUP BY a.id, a.name
+- id: f08
+  tenant: acme
+  category: finance
+  question: What is the net income so far this year?
+  gold_sql: |
+    SELECT ROUND(SUM(jl.functional_credit_amount-jl.functional_debit_amount),2) FROM fin_journal_lines jl JOIN fin_accounts a ON a.id=jl.account_id
+    WHERE jl.is_posted AND a.account_type IN ('REVENUE','EXPENSE') AND jl.posting_date >= '2026-01-01'
+- id: f09
+  tenant: acme
+  category: finance
+  question: Balance of the Accounts Payable account
+  gold_sql: |
+    SELECT ROUND(SUM(jl.functional_credit_amount-jl.functional_debit_amount),2) FROM fin_journal_lines jl JOIN fin_accounts a ON a.id=jl.account_id
+    WHERE jl.is_posted AND a.name='Accounts Payable'
+- id: f10
+  tenant: acme
+  category: finance
+  question: How many journal entries were reversed?
+  gold_sql: |
+    SELECT COUNT(*) FROM fin_journal_entries WHERE status='REVERSED'
+- id: f11
+  tenant: acme
+  category: finance
+  question: Total posted amount by journal document type
+  gold_sql:   # posted amount = the debit side (entries are balanced, so debit == credit)
+  - |
+    SELECT je.document_type, ROUND(SUM(jl.functional_debit_amount),2) FROM fin_journal_lines jl JOIN fin_journal_entries je ON je.id=jl.journal_entry_id
+    WHERE jl.is_posted GROUP BY je.document_type
+  - |
+    SELECT je.document_type, ROUND(SUM(jl.functional_debit_amount),2), ROUND(SUM(jl.functional_credit_amount),2)
+    FROM fin_journal_lines jl JOIN fin_journal_entries je ON je.id=jl.journal_entry_id
+    WHERE jl.is_posted GROUP BY je.document_type
+- id: f12
+  tenant: acme
+  category: finance
+  question: Revenue by month this year
+  ordered: true
+  gold_sql: |
+    SELECT date_trunc('month', jl.posting_date)::date, ROUND(SUM(jl.functional_credit_amount-jl.functional_debit_amount),2) FROM fin_journal_lines jl JOIN fin_accounts a ON a.id=jl.account_id
+    WHERE jl.is_posted AND a.account_type='REVENUE' AND jl.posting_date >= '2026-01-01' GROUP BY 1 ORDER BY 1
+- id: f13
+  tenant: manufacturing
+  category: finance
+  question: What is total revenue?
+  gold_sql: |
+    SELECT ROUND(SUM(jl.functional_credit_amount-jl.functional_debit_amount),2) FROM fin_journal_lines jl JOIN fin_accounts a ON a.id=jl.account_id
+    WHERE jl.is_posted AND a.account_type='REVENUE'
+
+# ---------------------------------------------------------------- receivables / payables
+- id: r01
+  tenant: acme
+  category: receivables
+  question: What is the total amount customers still owe us?
+  gold_sql: |
+    SELECT ROUND(SUM(open_amount),2) FROM fin_customer_invoices WHERE status IN ('POSTED','PARTIALLY_PAID') AND open_amount > 0
+- id: r02
+  tenant: acme
+  category: receivables
+  question: Which invoices are overdue?
+  gold_sql: |
+    SELECT invoice_number FROM fin_customer_invoices
+    WHERE status IN ('POSTED','PARTIALLY_PAID') AND open_amount > 0 AND due_date < '2026-09-27'
+- id: r03
+  tenant: acme
+  category: receivables
+  question: Which invoices are partially paid and how much is left on them?
+  gold_sql: |
+    SELECT invoice_number, ROUND(open_amount,2) FROM fin_customer_invoices WHERE status='PARTIALLY_PAID'
+- id: r04
+  tenant: acme
+  category: receivables
+  question: How much has Northwind Traders paid us?
+  gold_sql: |
+    SELECT ROUND(SUM(r.amount),2) FROM fin_customer_receipts r JOIN sales_customers c ON c.id=r.partner_id
+    WHERE c.name='Northwind Traders' AND r.status='POSTED'
+- id: r05
+  tenant: acme
+  category: receivables
+  question: Total credit notes issued
+  gold_sql:   # "total" may be read as the amount, the count, or both
+  - SELECT ROUND(SUM(net_amount),2) FROM fin_customer_invoices WHERE invoice_number LIKE 'CN-%' AND status NOT IN ('DRAFT','REVERSED')
+  - |
+    SELECT COUNT(*), ROUND(SUM(net_amount),2) FROM fin_customer_invoices
+    WHERE invoice_number LIKE 'CN-%' AND status NOT IN ('DRAFT','REVERSED')
+- id: r06
+  tenant: acme
+  category: receivables
+  question: Net invoiced revenue per customer after credit notes
+  gold_sql: |
+    SELECT partner_name, ROUND(SUM(CASE WHEN invoice_number LIKE 'CN-%' THEN -net_amount ELSE net_amount END),2)
+    FROM fin_customer_invoices WHERE status NOT IN ('DRAFT','REVERSED') GROUP BY partner_id, partner_name
+- id: r07
+  tenant: acme
+  category: receivables
+  question: Show the receivables aging report
+  gold_sql:   # accepted: totals per bucket, or per customer and bucket
+  - |
+    SELECT partner_name, CASE WHEN DATE '2026-09-27'-due_date <= 0 THEN 'current' WHEN DATE '2026-09-27'-due_date <= 30 THEN '1-30'
+      WHEN DATE '2026-09-27'-due_date <= 60 THEN '31-60' WHEN DATE '2026-09-27'-due_date <= 90 THEN '61-90' ELSE '90+' END b,
+      ROUND(SUM(open_amount),2)
+    FROM fin_customer_invoices WHERE status IN ('POSTED','PARTIALLY_PAID') AND open_amount > 0 GROUP BY 1, 2
+  - |
+    SELECT CASE WHEN DATE '2026-09-27'-due_date <= 0 THEN 'current' WHEN DATE '2026-09-27'-due_date <= 30 THEN '1-30'
+      WHEN DATE '2026-09-27'-due_date <= 60 THEN '31-60' WHEN DATE '2026-09-27'-due_date <= 90 THEN '61-90' ELSE '90+' END b,
+      ROUND(SUM(open_amount),2)
+    FROM fin_customer_invoices WHERE status IN ('POSTED','PARTIALLY_PAID') AND open_amount > 0 GROUP BY 1
+- id: r08
+  tenant: acme
+  category: receivables
+  question: How many invoices have been fully paid?
+  gold_sql: |
+    SELECT COUNT(*) FROM fin_customer_invoices WHERE status='PAID'
+- id: r09
+  tenant: acme
+  category: receivables
+  question: What's the total tax on customer invoices?
+  gold_sql: |
+    SELECT ROUND(SUM(tax_amount),2) FROM fin_customer_invoices WHERE status NOT IN ('DRAFT','REVERSED') AND invoice_number NOT LIKE 'CN-%'
+- id: r10
+  tenant: construction
+  category: receivables
+  question: Who owes us the most money?
+  gold_sql: |
+    SELECT partner_name, ROUND(SUM(open_amount),2) o FROM fin_customer_invoices WHERE status IN ('POSTED','PARTIALLY_PAID') AND open_amount > 0
+    GROUP BY partner_id, partner_name ORDER BY o DESC LIMIT 1
+- id: p01
+  tenant: acme
+  category: payables
+  question: How much do we still owe our vendors?
+  gold_sql: |
+    SELECT ROUND(SUM(open_amount),2) FROM fin_vendor_bills WHERE status IN ('POSTED','PARTIALLY_PAID') AND open_amount > 0
+- id: p02
+  tenant: acme
+  category: payables
+  question: Total payments made to suppliers
+  gold_sql: |
+    SELECT ROUND(SUM(amount),2) FROM fin_vendor_payments WHERE status='POSTED'
+- id: p03
+  tenant: acme
+  category: payables
+  question: Vendor bill amounts by vendor
+  gold_sql: |
+    SELECT partner_name, ROUND(SUM(net_amount),2) FROM fin_vendor_bills WHERE status NOT IN ('DRAFT','REVERSED') GROUP BY partner_id, partner_name
+
+# ---------------------------------------------------------------- procurement
+- id: c01
+  tenant: acme
+  category: procurement
+  question: How much have we spent on purchase orders with each supplier?
+  gold_sql: |
+    SELECT v.name, ROUND(SUM(po.total_amount),2) FROM proc_purchase_orders po JOIN proc_vendors v ON v.id=po.vendor_id
+    WHERE po.status NOT IN ('DRAFT','PENDING_APPROVAL','REJECTED','CANCELLED') GROUP BY v.id, v.name
+- id: c02
+  tenant: acme
+  category: procurement
+  question: How many purchase orders are fully received?
+  gold_sql:   # RECEIVED, or RECEIVED + CLOSED (closed POs were also fully received)
+  - SELECT COUNT(*) FROM proc_purchase_orders WHERE status='RECEIVED'
+  - SELECT COUNT(*) FROM proc_purchase_orders WHERE status IN ('RECEIVED','CLOSED')
+- id: c03
+  tenant: acme
+  category: procurement
+  question: Which items have we purchased the most units of?
+  ordered: true
+  gold_sql: |
+    SELECT i.name, SUM(pol.quantity) q FROM proc_purchase_order_lines pol JOIN proc_purchase_orders po ON po.id=pol.po_id JOIN inv_items i ON i.id=pol.item_id
+    WHERE po.status NOT IN ('DRAFT','PENDING_APPROVAL','REJECTED','CANCELLED') GROUP BY i.id, i.name ORDER BY q DESC
+- id: c04
+  tenant: manufacturing
+  category: procurement
+  question: Total purchase order value by month
+  ordered: true
+  gold_sql: |
+    SELECT date_trunc('month', order_date)::date, ROUND(SUM(total_amount),2) FROM proc_purchase_orders
+    WHERE status NOT IN ('DRAFT','PENDING_APPROVAL','REJECTED','CANCELLED') GROUP BY 1 ORDER BY 1
+
+# ---------------------------------------------------------------- inventory
+- id: i01
+  tenant: acme
+  category: inventory
+  question: How much stock do we have of each item?
+  gold_sql:   # stocked items only, or every item with 0 for the service item
+  - SELECT i.name, SUM(iv.on_hand_qty) FROM inv_item_valuations iv JOIN inv_items i ON i.id=iv.item_id GROUP BY i.id, i.name
+  - SELECT i.name, COALESCE(SUM(iv.on_hand_qty),0) FROM inv_items i LEFT JOIN inv_item_valuations iv ON iv.item_id=i.id GROUP BY i.id, i.name
+- id: i02
+  tenant: acme
+  category: inventory
+  question: What is our total inventory value?
+  gold_sql: |
+    SELECT ROUND(SUM(total_value),2) FROM inv_item_valuations
+- id: i03
+  tenant: acme
+  category: inventory
+  question: Which item has the highest stock value?
+  gold_sql: |
+    SELECT i.name, ROUND(SUM(iv.total_value),2) v FROM inv_item_valuations iv JOIN inv_items i ON i.id=iv.item_id
+    GROUP BY i.id, i.name ORDER BY v DESC LIMIT 1
+- id: i04
+  tenant: acme
+  category: inventory
+  question: How many stock movements of each type do we have?
+  gold_sql: |
+    SELECT move_type, COUNT(*) FROM inv_stock_moves GROUP BY move_type
+- id: i05
+  tenant: volume
+  category: inventory
+  question: How many units were issued from stock in 2025?
+  gold_sql: |
+    SELECT SUM(quantity) FROM inv_stock_moves WHERE move_type='ISSUE' AND posted AND move_date >= '2025-01-01' AND move_date < '2026-01-01'
+- id: i06
+  tenant: acme
+  category: inventory
+  question: How many items do we have that are services?
+  gold_sql: |
+    SELECT COUNT(*) FROM inv_items WHERE item_type='SERVICE'
+- id: i07
+  tenant: volume
+  category: inventory
+  question: Top 3 items by quantity on hand
+  ordered: true
+  gold_sql: |
+    SELECT i.item_code, SUM(iv.on_hand_qty) q FROM inv_item_valuations iv JOIN inv_items i ON i.id=iv.item_id
+    GROUP BY i.id, i.item_code ORDER BY q DESC, i.item_code LIMIT 3
+
+# ---------------------------------------------------------------- HR / CRM / projects / manufacturing
+- id: h01
+  tenant: acme
+  category: hr
+  question: How many employees do we have?
+  gold_sql: |
+    SELECT COUNT(*) FROM hr_employees WHERE status='ACTIVE'
+- id: h02
+  tenant: acme
+  category: hr
+  question: List employees with their department
+  gold_sql:   # separate or concatenated name columns
+  - SELECT e.first_name, e.last_name, d.name FROM hr_employees e LEFT JOIN hr_departments d ON d.id=e.department_id
+  - SELECT e.first_name || ' ' || e.last_name, d.name FROM hr_employees e LEFT JOIN hr_departments d ON d.id=e.department_id
+- id: h03
+  tenant: acme
+  category: hr
+  question: How many payroll runs have been posted?
+  gold_sql: |
+    SELECT COUNT(*) FROM hr_payroll_runs WHERE status='POSTED'
+- id: m01
+  tenant: acme
+  category: other
+  question: What is the value of our open sales pipeline?
+  gold_sql: |
+    SELECT ROUND(SUM(estimated_value),2) FROM crm_opportunities WHERE stage IN ('PROSPECTING','QUALIFICATION','PROPOSAL','NEGOTIATION')
+- id: m02
+  tenant: acme
+  category: other
+  question: What's the total budget of active projects?
+  gold_sql: |
+    SELECT ROUND(SUM(budget_amount),2) FROM ps_projects WHERE status='ACTIVE'
+- id: m03
+  tenant: acme
+  category: other
+  question: How many production orders have finished?
+  gold_sql: |
+    SELECT COUNT(*) FROM mfg_production_orders WHERE status='FINISHED'
+- id: m04
+  tenant: acme
+  category: other
+  question: How many new leads do we have?
+  gold_sql: |
+    SELECT COUNT(*) FROM crm_leads WHERE status='NEW'

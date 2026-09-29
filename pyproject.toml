@@ -1,0 +1,79 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "promptquery"
+version = "0.3.0"
+description = "Natural-language SQL for production-scale Postgres schemas"
+readme = "README.md"
+license = { text = "Apache-2.0" }
+requires-python = ">=3.10"
+authors = [{ name = "PromptQuery contributors" }]
+keywords = [
+    "text-to-sql", "natural-language-to-sql", "nl2sql", "postgres", "postgresql",
+    "sql", "database", "read-only", "llm", "cli", "sqlglot", "openai", "anthropic",
+    "data-engineering",
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Information Technology",
+    "License :: OSI Approved :: Apache Software License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Database",
+    "Topic :: Database :: Front-Ends",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+dependencies = [
+    "psycopg[binary]>=3.1",
+    "click>=8.1",
+    "rich>=13.0",
+    "prompt-toolkit>=3.0",
+    # exp.Grant / exp.Merge used by the safety layer are not present in early sqlglot releases.
+    "sqlglot>=25.0",
+    "anthropic>=0.40",
+    "pyyaml>=6.0",
+    "fastapi>=0.110",
+    "uvicorn>=0.29",
+]
+
+[project.optional-dependencies]
+openai = ["openai>=1.0"]
+dev = ["pytest>=8.0", "pytest-mock>=3.0", "tiktoken>=0.7", "ruff>=0.6", "httpx>=0.27"]
+
+[project.urls]
+Homepage = "https://github.com/Cyberfilo/promptquery"
+Repository = "https://github.com/Cyberfilo/promptquery"
+Issues = "https://github.com/Cyberfilo/promptquery/issues"
+Changelog = "https://github.com/Cyberfilo/promptquery/blob/main/CHANGELOG.md"
+
+[project.scripts]
+promptquery = "promptquery.cli:main"
+prq = "promptquery.cli:main"
+pquery = "promptquery.cli:main"
+atlas-bot = "promptquery.reporting.cli:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/promptquery"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.lint]
+# Ruff's default-ish ruleset (pyflakes + a curated pycodestyle subset). Keeps the
+# lint gate meaningful without churn; widen as the project grows.
+select = ["E4", "E7", "E9", "F"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["E702"]  # compact one-line stubs are fine in tests

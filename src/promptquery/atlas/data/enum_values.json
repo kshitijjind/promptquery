@@ -1,0 +1,531 @@
+{
+  "core_doc_links.link_type": [
+    "billed_by",
+    "converted_to",
+    "converted_to_quote",
+    "counts",
+    "credited_by",
+    "delivered_by",
+    "depleted_by",
+    "dispositioned_by",
+    "finished_to",
+    "generates",
+    "inspected_by",
+    "invoiced_by",
+    "invoiced_by_invoice",
+    "issued_to",
+    "matched_by",
+    "moved_by",
+    "ordered_by",
+    "pays",
+    "planned_to",
+    "posts",
+    "receipts",
+    "received_by",
+    "returned_by",
+    "revalues",
+    "reverses",
+    "seated_as",
+    "sourced_by"
+  ],
+  "core_documents.doc_type": [
+    "crm.opportunity",
+    "finance.allocation_run",
+    "finance.asset",
+    "finance.bank_statement",
+    "finance.customer_credit_note",
+    "finance.customer_invoice",
+    "finance.customer_receipt",
+    "finance.depreciation_run",
+    "finance.journal_entry",
+    "finance.vendor_bill",
+    "finance.vendor_payment",
+    "hospitality.order_ticket",
+    "hospitality.table_reservation",
+    "hr.payroll_run",
+    "inventory.stock_count",
+    "inventory.stock_move",
+    "maintenance.order",
+    "maintenance.plan",
+    "manufacturing.mrp_run",
+    "manufacturing.production_order",
+    "procurement.goods_receipt",
+    "procurement.invoice_match",
+    "procurement.purchase_order",
+    "procurement.requisition",
+    "procurement.rfq",
+    "quality.inspection_lot",
+    "sales.billing",
+    "sales.delivery",
+    "sales.order",
+    "sales.quote",
+    "sales.return"
+  ],
+  "core_documents.status": [
+    "ACCEPTED",
+    "ACTIVE",
+    "APPROVED",
+    "CANCELLED",
+    "CLOSED",
+    "COMPLETED",
+    "CONFIRMED",
+    "CONVERTED",
+    "COUNTING",
+    "CREDIT_BLOCKED",
+    "DELIVERED",
+    "DRAFT",
+    "EXCEPTION",
+    "EXPIRED",
+    "FAILED",
+    "FINISHED",
+    "FULLY_DEPRECIATED",
+    "IMPORTED",
+    "INACTIVE",
+    "INVOICED",
+    "IN_PREP",
+    "IN_PROGRESS",
+    "LOST",
+    "MATCHED",
+    "NEGOTIATION",
+    "NO_SHOW",
+    "OPEN",
+    "PAID",
+    "PARTIALLY_DELIVERED",
+    "PARTIALLY_PAID",
+    "PARTIALLY_RECEIVED",
+    "PARTIALLY_RECONCILED",
+    "PENDING_APPROVAL",
+    "POSTED",
+    "PROPOSAL",
+    "PROSPECTING",
+    "QUALIFICATION",
+    "QUOTED",
+    "READY",
+    "RECEIVED",
+    "RECONCILED",
+    "REJECTED",
+    "RELEASED",
+    "REVERSED",
+    "RUNNING",
+    "SCHEDULED",
+    "SEATED",
+    "SENT",
+    "SENT_TO_KITCHEN",
+    "SERVED",
+    "SETTLED",
+    "SUBMITTED",
+    "WON"
+  ],
+  "crm_activities.activity_type": [
+    "CALL",
+    "EMAIL",
+    "MEETING",
+    "TASK",
+    "NOTE"
+  ],
+  "crm_activities.status": [
+    "OPEN",
+    "COMPLETED",
+    "CANCELLED"
+  ],
+  "crm_leads.status": [
+    "NEW",
+    "CONTACTED",
+    "QUALIFIED",
+    "DISQUALIFIED",
+    "CONVERTED"
+  ],
+  "crm_opportunities.stage": [
+    "PROSPECTING",
+    "QUALIFICATION",
+    "PROPOSAL",
+    "NEGOTIATION",
+    "WON",
+    "LOST"
+  ],
+  "fin_accounts.account_type": [
+    "ASSET",
+    "LIABILITY",
+    "EQUITY",
+    "REVENUE",
+    "EXPENSE"
+  ],
+  "fin_accounts.cash_flow_category": [
+    "OPERATING",
+    "INVESTING",
+    "FINANCING"
+  ],
+  "fin_accounts.normal_balance": [
+    "DEBIT",
+    "CREDIT"
+  ],
+  "fin_allocation_rules.basis": [
+    "PERCENT",
+    "FIXED_WEIGHT"
+  ],
+  "fin_allocation_runs.status": [
+    "DRAFT",
+    "POSTED",
+    "REVERSED"
+  ],
+  "fin_assets.depreciation_method": [
+    "STRAIGHT_LINE",
+    "DECLINING_BALANCE"
+  ],
+  "fin_assets.status": [
+    "DRAFT",
+    "ACTIVE",
+    "FULLY_DEPRECIATED"
+  ],
+  "fin_bank_statement_lines.status": [
+    "UNMATCHED",
+    "SUGGESTED",
+    "MATCHED",
+    "CLEARED"
+  ],
+  "fin_bank_statements.status": [
+    "IMPORTED",
+    "PARTIALLY_RECONCILED",
+    "RECONCILED"
+  ],
+  "fin_customer_invoices.status": [
+    "DRAFT",
+    "POSTED",
+    "PARTIALLY_PAID",
+    "PAID",
+    "REVERSED"
+  ],
+  "fin_customer_receipts.status": [
+    "DRAFT",
+    "POSTED",
+    "REVERSED"
+  ],
+  "fin_depreciation_runs.status": [
+    "DRAFT",
+    "POSTED",
+    "REVERSED"
+  ],
+  "fin_exchange_rates.rate_type": [
+    "SPOT",
+    "CLOSING"
+  ],
+  "fin_fiscal_periods.status": [
+    "OPEN",
+    "CLOSED"
+  ],
+  "fin_fiscal_years.status": [
+    "OPEN",
+    "CLOSED"
+  ],
+  "fin_fx_revaluation_runs.status": [
+    "DRAFT",
+    "COMPLETED",
+    "REVERSED"
+  ],
+  "fin_journal_entries.document_type": [
+    "JOURNAL",
+    "AP_INVOICE",
+    "AR_INVOICE",
+    "AR_CREDIT_NOTE",
+    "PAYMENT",
+    "COGS",
+    "FX_REVAL",
+    "DEPRECIATION",
+    "PAYROLL"
+  ],
+  "fin_journal_entries.status": [
+    "DRAFT",
+    "POSTED",
+    "REVERSED"
+  ],
+  "fin_journal_lines.partner_type": [
+    "VENDOR",
+    "CUSTOMER"
+  ],
+  "fin_vendor_bills.status": [
+    "DRAFT",
+    "POSTED",
+    "PARTIALLY_PAID",
+    "PAID",
+    "REVERSED"
+  ],
+  "fin_vendor_payments.status": [
+    "DRAFT",
+    "POSTED",
+    "REVERSED"
+  ],
+  "hr_employees.employment_type": [
+    "FULL_TIME",
+    "PART_TIME",
+    "CONTRACT"
+  ],
+  "hr_employees.status": [
+    "ACTIVE",
+    "ON_LEAVE",
+    "TERMINATED"
+  ],
+  "hr_leave_requests.status": [
+    "DRAFT",
+    "SUBMITTED",
+    "APPROVED",
+    "REJECTED",
+    "CANCELLED"
+  ],
+  "hr_leave_types.accrual_frequency": [
+    "MONTHLY",
+    "ANNUAL"
+  ],
+  "hr_payroll_runs.status": [
+    "DRAFT",
+    "POSTED",
+    "CANCELLED"
+  ],
+  "hr_timesheets.status": [
+    "DRAFT",
+    "SUBMITTED",
+    "APPROVED",
+    "REJECTED"
+  ],
+  "hsp_menu_availability.source": [
+    "MANUAL",
+    "AUTO"
+  ],
+  "hsp_order_tickets.status": [
+    "OPEN",
+    "SENT_TO_KITCHEN",
+    "IN_PREP",
+    "READY",
+    "SERVED",
+    "SETTLED",
+    "CANCELLED"
+  ],
+  "hsp_table_reservations.status": [
+    "CONFIRMED",
+    "SEATED",
+    "COMPLETED",
+    "NO_SHOW",
+    "CANCELLED"
+  ],
+  "inv_item_categories.default_costing_method": [
+    "MOVING_AVERAGE",
+    "FIFO"
+  ],
+  "inv_items.costing_method": [
+    "MOVING_AVERAGE",
+    "FIFO"
+  ],
+  "inv_items.item_type": [
+    "STOCKED",
+    "NON_STOCKED",
+    "SERVICE"
+  ],
+  "inv_items.tracking_mode": [
+    "NONE",
+    "LOT",
+    "SERIAL"
+  ],
+  "inv_lots.status": [
+    "AVAILABLE",
+    "BLOCKED",
+    "CONSUMED"
+  ],
+  "inv_serials.status": [
+    "IN_STOCK",
+    "ISSUED",
+    "BLOCKED"
+  ],
+  "inv_stock_counts.count_type": [
+    "PHYSICAL",
+    "CYCLE"
+  ],
+  "inv_stock_counts.status": [
+    "DRAFT",
+    "COUNTING",
+    "POSTED",
+    "CANCELLED"
+  ],
+  "inv_stock_moves.move_type": [
+    "RECEIPT",
+    "ISSUE",
+    "TRANSFER",
+    "ADJUSTMENT"
+  ],
+  "mfg_boms.status": [
+    "DRAFT",
+    "ACTIVE",
+    "INACTIVE"
+  ],
+  "mfg_mrp_runs.status": [
+    "RUNNING",
+    "COMPLETED",
+    "FAILED"
+  ],
+  "mfg_planned_orders.order_type": [
+    "MAKE",
+    "BUY"
+  ],
+  "mfg_planned_orders.status": [
+    "PLANNED",
+    "FIRMED",
+    "CONVERTED",
+    "CANCELLED"
+  ],
+  "mfg_production_orders.status": [
+    "DRAFT",
+    "RELEASED",
+    "IN_PROGRESS",
+    "FINISHED",
+    "CANCELLED"
+  ],
+  "mfg_routings.status": [
+    "DRAFT",
+    "ACTIVE",
+    "INACTIVE"
+  ],
+  "pm_equipment.status": [
+    "ACTIVE",
+    "INACTIVE",
+    "RETIRED"
+  ],
+  "pm_maintenance_orders.order_type": [
+    "CORRECTIVE",
+    "PREVENTIVE"
+  ],
+  "pm_maintenance_orders.status": [
+    "DRAFT",
+    "SCHEDULED",
+    "IN_PROGRESS",
+    "COMPLETED",
+    "CANCELLED"
+  ],
+  "pm_maintenance_plans.status": [
+    "ACTIVE",
+    "INACTIVE"
+  ],
+  "proc_approval_rules.document_type": [
+    "REQUISITION",
+    "PURCHASE_ORDER"
+  ],
+  "proc_goods_receipts.status": [
+    "DRAFT",
+    "POSTED",
+    "CANCELLED"
+  ],
+  "proc_invoice_matches.status": [
+    "DRAFT",
+    "MATCHED",
+    "EXCEPTION",
+    "POSTED",
+    "CANCELLED"
+  ],
+  "proc_purchase_orders.status": [
+    "DRAFT",
+    "PENDING_APPROVAL",
+    "APPROVED",
+    "REJECTED",
+    "SENT",
+    "PARTIALLY_RECEIVED",
+    "RECEIVED",
+    "CLOSED",
+    "CANCELLED"
+  ],
+  "proc_requisitions.status": [
+    "DRAFT",
+    "SUBMITTED",
+    "APPROVED",
+    "REJECTED",
+    "CONVERTED",
+    "CANCELLED"
+  ],
+  "proc_rfqs.status": [
+    "DRAFT",
+    "SENT",
+    "QUOTED",
+    "CLOSED",
+    "CANCELLED"
+  ],
+  "proc_vendors.status": [
+    "ACTIVE",
+    "BLOCKED",
+    "INACTIVE"
+  ],
+  "ps_projects.status": [
+    "PLANNING",
+    "ACTIVE",
+    "CLOSED",
+    "CANCELLED"
+  ],
+  "ps_wbs_elements.status": [
+    "OPEN",
+    "CLOSED"
+  ],
+  "qm_inspection_lots.source": [
+    "GOODS_RECEIPT"
+  ],
+  "qm_inspection_lots.status": [
+    "OPEN",
+    "ACCEPTED",
+    "REJECTED",
+    "CANCELLED"
+  ],
+  "sales_billing_lines.discount_type": [
+    "PERCENT",
+    "AMOUNT"
+  ],
+  "sales_billings.status": [
+    "DRAFT",
+    "POSTED",
+    "CANCELLED"
+  ],
+  "sales_customers.status": [
+    "ACTIVE",
+    "BLOCKED",
+    "INACTIVE"
+  ],
+  "sales_deliveries.status": [
+    "DRAFT",
+    "POSTED",
+    "CANCELLED"
+  ],
+  "sales_order_lines.discount_type": [
+    "PERCENT",
+    "AMOUNT"
+  ],
+  "sales_orders.credit_check_status": [
+    "PASSED",
+    "BLOCKED",
+    "RELEASED"
+  ],
+  "sales_orders.status": [
+    "DRAFT",
+    "CONFIRMED",
+    "CREDIT_BLOCKED",
+    "PARTIALLY_DELIVERED",
+    "DELIVERED",
+    "INVOICED",
+    "CLOSED",
+    "CANCELLED"
+  ],
+  "sales_price_lists.status": [
+    "ACTIVE",
+    "INACTIVE"
+  ],
+  "sales_quote_lines.discount_type": [
+    "PERCENT",
+    "AMOUNT"
+  ],
+  "sales_quotes.status": [
+    "DRAFT",
+    "SENT",
+    "ACCEPTED",
+    "REJECTED",
+    "EXPIRED",
+    "CONVERTED",
+    "CANCELLED"
+  ],
+  "sales_returns.status": [
+    "DRAFT",
+    "POSTED",
+    "CANCELLED"
+  ]
+}

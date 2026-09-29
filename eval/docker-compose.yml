@@ -1,0 +1,17 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: promptquery-eval-pg
+    environment:
+      POSTGRES_USER: promptquery
+      POSTGRES_PASSWORD: promptquery
+      POSTGRES_DB: shop
+    ports:
+      - "55432:5432"
+    tmpfs:
+      - /var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U promptquery -d shop"]
+      interval: 2s
+      timeout: 2s
+      retries: 30

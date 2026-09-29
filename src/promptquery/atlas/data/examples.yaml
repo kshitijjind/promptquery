@@ -1,0 +1,329 @@
+# Verified question -> SQL examples (few-shot bank). Retrieved by similarity at query time.
+# Every SQL here is executed by tests/test_atlas_examples.py against the live reporting views.
+# Keep these DISJOINT from eval/atlas/*.yaml questions so the eval measures generalisation.
+
+- q: What is the total sales amount this year?
+  sql: |
+    SELECT ROUND(SUM(so.total_amount), 2) AS total_sales
+    FROM sales_orders so
+    WHERE so.status NOT IN ('DRAFT', 'CANCELLED', 'CREDIT_BLOCKED')
+      AND so.order_date >= date_trunc('year', DATE '{today}')
+      AND so.order_date < date_trunc('year', DATE '{today}') + INTERVAL '1 year'
+
+- q: Sales per customer in 2025
+  sql: |
+    SELECT c.name AS customer, ROUND(SUM(so.total_amount), 2) AS total_sales
+    FROM sales_orders so
+    JOIN sales_customers c ON c.id = so.customer_id
+    WHERE so.status NOT IN ('DRAFT', 'CANCELLED', 'CREDIT_BLOCKED')
+      AND so.order_date >= DATE '2025-01-01' AND so.order_date < DATE '2026-01-01'
+    GROUP BY c.id, c.name
+    ORDER BY total_sales DESC
+
+- q: Compare each customer's sales in 2025 with 2024 and show the growth percentage
+  sql: |
+    SELECT c.name AS customer,
+           ROUND(COALESCE(SUM(so.total_amount) FILTER (WHERE so.order_date >= DATE '2024-01-01' AND so.order_date < DATE '2025-01-01'), 0), 2) AS sales_2024,
+           ROUND(COALESCE(SUM(so.total_amount) FILTER (WHERE so.order_date >= DATE '2025-01-01' AND so.order_date < DATE '2026-01-01'), 0), 2) AS sales_2025,
+           ROUND(100.0 * (COALESCE(SUM(so.total_amount) FILTER (WHERE so.order_date >= DATE '2025-01-01' AND so.order_date < DATE '2026-01-01'), 0)
+                        - COALESCE(SUM(so.total_amount) FILTER (WHERE so.order_date >= DATE '2024-01-01' AND so.order_date < DATE '2025-01-01'), 0))
+                 / NULLIF(SUM(so.total_amount) FILTER (WHERE so.order_date >= DATE '2024-01-01' AND so.order_date < DATE '2025-01-01'), 0), 2) AS growth_pct
+    FROM sales_orders so
+    JOIN sales_customers c ON c.id = so.customer_id
+    WHERE so.status NOT IN ('DRAFT', 'CANCELLED', 'CREDIT_BLOCKED')
+      AND so.order_date >= DATE '2024-01-01' AND so.order_date < DATE '2026-01-01'
+    GROUP BY c.id, c.name
+    ORDER BY sales_2025 DESC
+
+- q: Monthly sales trend for 2025
+  sql: |
+    SELECT date_trunc('month', so.order_date)::date AS month,
+           ROUND(SUM(so.total_amount), 2) AS total_sales,
+           COUNT(*) AS orders
+    FROM sales_orders so
+    WHERE so.status NOT IN ('DRAFT', 'CANCELLED', 'CREDIT_BLOCKED')
+      AND so.order_date >= DATE '2025-01-01' AND so.order_date < DATE '2026-01-01'
+    GROUP BY 1
+    ORDER BY 1
+
+- q: Top 5 products by quantity sold
+  sql: |
+    SELECT i.item_code, i.name AS item, SUM(sol.ordered_quantity) AS quantity_sold,
+           ROUND(SUM(sol.line_amount), 2) AS sales_value
+    FROM sales_order_lines sol
+    JOIN sales_orders so ON so.id = sol.order_id
+    JOIN inv_items i ON i.id = sol.item_id
+    WHERE so.status NOT IN ('DRAFT', 'CANCELLED', 'CREDIT_BLOCKED')
+    GROUP BY i.id, i.item_code, i.name
+    ORDER BY quantity_sold DESC
+    LIMIT 5
+
+- q: How many sales orders are still open?
+  sql: |
+    SELECT COUNT(*) AS open_orders, ROUND(SUM(so.total_amount), 2) AS open_order_value
+    FROM sales_orders so
+    WHERE so.status IN ('CONFIRMED', 'PARTIALLY_DELIVERED')
+
+- q: Number of sales orders by status
+  sql: |
+    SELECT so.status, COUNT(*) AS orders, ROUND(SUM(so.total_amount), 2) AS total_amount
+    FROM sales_orders so
+    GROUP BY so.status
+    ORDER BY orders DESC
+
+- q: Which customer placed the most orders last quarter?
+  sql: |
+    SELECT c.name AS customer, COUNT(*) AS orders
+    FROM sales_orders so
+    JOIN sales_customers c ON c.id = so.customer_id
+    WHERE so.status NOT IN ('DRAFT', 'CANCELLED', 'CREDIT_BLOCKED')
+      AND so.order_date >= date_trunc('quarter', DATE '{today}') - INTERVAL '3 months'
+      AND so.order_date < date_trunc('quarter', DATE '{today}')
+    GROUP BY c.id, c.name
+    ORDER BY orders DESC
+    LIMIT 1
+
+- q: Average order value per customer
+  sql: |
+    SELECT c.name AS customer, ROUND(AVG(so.total_amount), 2) AS avg_order_value, COUNT(*) AS orders
+    FROM sales_orders so
+    JOIN sales_customers c ON c.id = so.customer_id
+    WHERE so.status NOT IN ('DRAFT', 'CANCELLED', 'CREDIT_BLOCKED')
+    GROUP BY c.id, c.name
+    ORDER BY avg_order_value DESC
+
+- q: What was our total revenue last year?
+  sql: |
+    SELECT ROUND(SUM(jl.functional_credit_amount - jl.functional_debit_amount), 2) AS revenue
+    FROM fin_journal_lines jl
+    JOIN fin_accounts a ON a.id = jl.account_id
+    WHERE jl.is_posted
+      AND a.account_type = 'REVENUE'
+      AND jl.posting_date >= date_trunc('year', DATE '{today}') - INTERVAL '1 year'
+      AND jl.posting_date < date_trunc('year', DATE '{today}')
+
+- q: Revenue by month
+  sql: |
+    SELECT date_trunc('month', jl.posting_date)::date AS month,
+           ROUND(SUM(jl.functional_credit_amount - jl.functional_debit_amount), 2) AS revenue
+    FROM fin_journal_lines jl
+    JOIN fin_accounts a ON a.id = jl.account_id
+    WHERE jl.is_posted AND a.account_type = 'REVENUE'
+    GROUP BY 1
+    ORDER BY 1
+
+- q: Show gross profit (revenue minus cost of goods sold) per year
+  sql: |
+    SELECT EXTRACT(YEAR FROM jl.posting_date)::int AS year,
+           ROUND(SUM(jl.functional_credit_amount - jl.functional_debit_amount) FILTER (WHERE a.account_type = 'REVENUE'), 2) AS revenue,
+           ROUND(SUM(jl.functional_debit_amount - jl.functional_credit_amount) FILTER (WHERE a.id IN (SELECT cogs_account_id FROM inv_item_categories)), 2) AS cogs,
+           ROUND(COALESCE(SUM(jl.functional_credit_amount - jl.functional_debit_amount) FILTER (WHERE a.account_type = 'REVENUE'), 0)
+               - COALESCE(SUM(jl.functional_debit_amount - jl.functional_credit_amount) FILTER (WHERE a.id IN (SELECT cogs_account_id FROM inv_item_categories)), 0), 2) AS gross_profit
+    FROM fin_journal_lines jl
+    JOIN fin_accounts a ON a.id = jl.account_id
+    WHERE jl.is_posted
+    GROUP BY 1
+    ORDER BY 1
+
+- q: Total expenses by account for the current year
+  sql: |
+    SELECT a.code, a.name AS account,
+           ROUND(SUM(jl.functional_debit_amount - jl.functional_credit_amount), 2) AS amount
+    FROM fin_journal_lines jl
+    JOIN fin_accounts a ON a.id = jl.account_id
+    WHERE jl.is_posted
+      AND a.account_type = 'EXPENSE'
+      AND jl.posting_date >= date_trunc('year', DATE '{today}')
+    GROUP BY a.id, a.code, a.name
+    ORDER BY a.code
+
+- q: Trial balance
+  sql: |
+    SELECT a.code, a.name AS account, a.account_type,
+           ROUND(SUM(jl.functional_debit_amount), 2) AS total_debit,
+           ROUND(SUM(jl.functional_credit_amount), 2) AS total_credit,
+           ROUND(SUM(jl.functional_debit_amount - jl.functional_credit_amount), 2) AS balance
+    FROM fin_journal_lines jl
+    JOIN fin_accounts a ON a.id = jl.account_id
+    WHERE jl.is_posted
+    GROUP BY a.id, a.code, a.name, a.account_type
+    ORDER BY a.code
+
+- q: What is our cash balance?
+  sql: |
+    SELECT ROUND(SUM(jl.functional_debit_amount - jl.functional_credit_amount), 2) AS cash_balance
+    FROM fin_journal_lines jl
+    JOIN fin_accounts a ON a.id = jl.account_id
+    WHERE jl.is_posted AND a.is_cash_equivalent
+
+- q: How much do customers owe us in total?
+  sql: |
+    SELECT ROUND(SUM(ci.open_amount), 2) AS total_outstanding, COUNT(*) AS open_invoices
+    FROM fin_customer_invoices ci
+    WHERE ci.status IN ('POSTED', 'PARTIALLY_PAID') AND ci.open_amount > 0
+
+- q: Outstanding balance per customer
+  sql: |
+    SELECT ci.partner_name AS customer, ROUND(SUM(ci.open_amount), 2) AS outstanding
+    FROM fin_customer_invoices ci
+    WHERE ci.status IN ('POSTED', 'PARTIALLY_PAID') AND ci.open_amount > 0
+    GROUP BY ci.partner_id, ci.partner_name
+    ORDER BY outstanding DESC
+
+- q: List overdue invoices with days overdue
+  sql: |
+    SELECT ci.invoice_number, ci.partner_name AS customer, ci.due_date,
+           ROUND(ci.open_amount, 2) AS open_amount,
+           (DATE '{today}' - ci.due_date) AS days_overdue
+    FROM fin_customer_invoices ci
+    WHERE ci.status IN ('POSTED', 'PARTIALLY_PAID') AND ci.open_amount > 0
+      AND ci.due_date < DATE '{today}'
+    ORDER BY days_overdue DESC
+
+- q: Accounts receivable aging buckets
+  sql: |
+    SELECT CASE
+             WHEN DATE '{today}' - ci.due_date <= 0 THEN 'current'
+             WHEN DATE '{today}' - ci.due_date <= 30 THEN '1-30'
+             WHEN DATE '{today}' - ci.due_date <= 60 THEN '31-60'
+             WHEN DATE '{today}' - ci.due_date <= 90 THEN '61-90'
+             ELSE '90+'
+           END AS bucket,
+           COUNT(*) AS invoices,
+           ROUND(SUM(ci.open_amount), 2) AS outstanding
+    FROM fin_customer_invoices ci
+    WHERE ci.status IN ('POSTED', 'PARTIALLY_PAID') AND ci.open_amount > 0
+    GROUP BY 1
+    ORDER BY MIN(DATE '{today}' - ci.due_date)
+
+- q: Net invoiced amount per customer after credit notes
+  sql: |
+    SELECT ci.partner_name AS customer,
+           ROUND(SUM(CASE WHEN ci.invoice_number LIKE 'CN-%' THEN -ci.net_amount ELSE ci.net_amount END), 2) AS net_invoiced
+    FROM fin_customer_invoices ci
+    WHERE ci.status NOT IN ('DRAFT', 'REVERSED')
+    GROUP BY ci.partner_id, ci.partner_name
+    ORDER BY net_invoiced DESC
+
+- q: How much did we collect from customers each month?
+  sql: |
+    SELECT date_trunc('month', r.receipt_date)::date AS month, ROUND(SUM(r.amount), 2) AS collected
+    FROM fin_customer_receipts r
+    WHERE r.status = 'POSTED'
+    GROUP BY 1
+    ORDER BY 1
+
+- q: How much do we owe each supplier?
+  sql: |
+    SELECT vb.partner_name AS vendor, ROUND(SUM(vb.open_amount), 2) AS amount_owed
+    FROM fin_vendor_bills vb
+    WHERE vb.status IN ('POSTED', 'PARTIALLY_PAID') AND vb.open_amount > 0
+    GROUP BY vb.partner_id, vb.partner_name
+    ORDER BY amount_owed DESC
+
+- q: Purchase order spend by vendor
+  sql: |
+    SELECT v.name AS vendor, COUNT(*) AS purchase_orders, ROUND(SUM(po.total_amount), 2) AS total_spend
+    FROM proc_purchase_orders po
+    JOIN proc_vendors v ON v.id = po.vendor_id
+    WHERE po.status NOT IN ('DRAFT', 'PENDING_APPROVAL', 'REJECTED', 'CANCELLED')
+    GROUP BY v.id, v.name
+    ORDER BY total_spend DESC
+
+- q: Which purchase orders are still open?
+  sql: |
+    SELECT po.po_number, v.name AS vendor, po.order_date, po.expected_date, po.status,
+           ROUND(po.total_amount, 2) AS total_amount
+    FROM proc_purchase_orders po
+    JOIN proc_vendors v ON v.id = po.vendor_id
+    WHERE po.status IN ('APPROVED', 'SENT', 'PARTIALLY_RECEIVED')
+    ORDER BY po.order_date
+
+- q: Current stock on hand per item and warehouse
+  sql: |
+    SELECT i.item_code, i.name AS item, w.name AS warehouse,
+           iv.on_hand_qty, ROUND(iv.total_value, 2) AS stock_value
+    FROM inv_item_valuations iv
+    JOIN inv_items i ON i.id = iv.item_id
+    JOIN inv_warehouses w ON w.id = iv.warehouse_id
+    ORDER BY i.item_code, w.name
+
+- q: What is the total inventory value by warehouse?
+  sql: |
+    SELECT w.name AS warehouse, ROUND(SUM(iv.total_value), 2) AS inventory_value
+    FROM inv_item_valuations iv
+    JOIN inv_warehouses w ON w.id = iv.warehouse_id
+    GROUP BY w.id, w.name
+    ORDER BY inventory_value DESC
+
+- q: Items below their reorder point
+  sql: |
+    SELECT i.item_code, i.name AS item, i.reorder_point, COALESCE(SUM(iv.on_hand_qty), 0) AS on_hand
+    FROM inv_items i
+    LEFT JOIN inv_item_valuations iv ON iv.item_id = i.id
+    WHERE i.reorder_point IS NOT NULL
+    GROUP BY i.id, i.item_code, i.name, i.reorder_point
+    HAVING COALESCE(SUM(iv.on_hand_qty), 0) < i.reorder_point
+    ORDER BY i.item_code
+
+- q: Quantity received and issued per item in 2025
+  sql: |
+    SELECT i.item_code, i.name AS item,
+           SUM(sm.quantity) FILTER (WHERE sm.move_type = 'RECEIPT') AS received_qty,
+           SUM(sm.quantity) FILTER (WHERE sm.move_type = 'ISSUE') AS issued_qty
+    FROM inv_stock_moves sm
+    JOIN inv_items i ON i.id = sm.item_id
+    WHERE sm.posted
+      AND sm.move_date >= DATE '2025-01-01' AND sm.move_date < DATE '2026-01-01'
+    GROUP BY i.id, i.item_code, i.name
+    ORDER BY i.item_code
+
+- q: How many active employees are in each department?
+  sql: |
+    SELECT d.name AS department, COUNT(*) AS active_employees
+    FROM hr_employees e
+    JOIN hr_departments d ON d.id = e.department_id
+    WHERE e.status = 'ACTIVE'
+    GROUP BY d.id, d.name
+    ORDER BY active_employees DESC
+
+- q: What is John's salary?
+  sql: |
+    SELECT 'not available: salary/PII data is restricted' AS message
+
+- q: Open opportunity pipeline value by stage
+  sql: |
+    SELECT o.stage, COUNT(*) AS opportunities, ROUND(SUM(o.estimated_value), 2) AS pipeline_value,
+           ROUND(SUM(o.estimated_value * o.probability_percent / 100), 2) AS weighted_value
+    FROM crm_opportunities o
+    WHERE o.stage IN ('PROSPECTING', 'QUALIFICATION', 'PROPOSAL', 'NEGOTIATION')
+    GROUP BY o.stage
+    ORDER BY pipeline_value DESC
+
+- q: Customers who have not placed any order
+  sql: |
+    SELECT c.customer_code, c.name AS customer
+    FROM sales_customers c
+    WHERE NOT EXISTS (
+      SELECT 1 FROM sales_orders so
+      WHERE so.customer_id = c.id AND so.status NOT IN ('DRAFT', 'CANCELLED', 'CREDIT_BLOCKED'))
+    ORDER BY c.name
+
+- q: Share of total sales by customer in percent
+  sql: |
+    SELECT c.name AS customer, ROUND(SUM(so.total_amount), 2) AS total_sales,
+           ROUND(100.0 * SUM(so.total_amount) / NULLIF(SUM(SUM(so.total_amount)) OVER (), 0), 2) AS pct_of_total
+    FROM sales_orders so
+    JOIN sales_customers c ON c.id = so.customer_id
+    WHERE so.status NOT IN ('DRAFT', 'CANCELLED', 'CREDIT_BLOCKED')
+    GROUP BY c.id, c.name
+    ORDER BY total_sales DESC
+
+- q: Delivery on-time rate
+  sql: |
+    SELECT COUNT(*) AS deliveries,
+           COUNT(*) FILTER (WHERE d.delivery_date <= so.requested_date) AS on_time,
+           ROUND(100.0 * COUNT(*) FILTER (WHERE d.delivery_date <= so.requested_date) / NULLIF(COUNT(*), 0), 2) AS on_time_pct
+    FROM sales_deliveries d
+    JOIN sales_orders so ON so.id = d.sales_order_id
+    WHERE d.status = 'POSTED' AND so.requested_date IS NOT NULL

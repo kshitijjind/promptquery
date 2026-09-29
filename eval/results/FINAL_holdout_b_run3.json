@@ -1,0 +1,744 @@
+{
+  "summary": {
+    "confidence": {
+      "high": 26,
+      "verified": 3,
+      "majority": 1
+    },
+    "avg_sql_candidates_per_turn": 1.17,
+    "turn_accuracy": "29/30 = 96.7%",
+    "by_category": {
+      "finance": "2/3",
+      "inventory": "2/2",
+      "multi_turn": "14/14",
+      "other": "1/1",
+      "payables": "1/1",
+      "procurement": "1/1",
+      "receivables": "3/3",
+      "sales": "5/5"
+    },
+    "multi_turn_by_position": {
+      "1": "3/3",
+      "2": "3/3",
+      "3": "3/3",
+      "4": "3/3",
+      "5": "1/1",
+      "6": "1/1"
+    },
+    "multi_turn_conversations_fully_correct": "3/3",
+    "seconds": 117.4,
+    "model": "openai/gpt-6-luna"
+  },
+  "results": [
+    {
+      "id": "b_s01",
+      "tenant": "manufacturing",
+      "kind": "single",
+      "category": "sales",
+      "turns": [
+        {
+          "turn": 1,
+          "question": "What are total sales per customer?",
+          "resolved": "What are total sales per customer across all available dates?",
+          "intent": "report",
+          "sql": "SELECT\n  c.name AS customer,\n  ROUND(SUM(so.total_amount), 2) AS total_sales\nFROM sales_orders so\nJOIN sales_customers c ON c.id = so.customer_id\nWHERE so.status NOT IN ('DRAFT', 'CANCELLED', 'CREDIT_BLOCKED')\nGROUP BY c.id, c.name\nORDER BY total_sales DESC",
+          "error": null,
+          "row_count": 3,
+          "repairs": 0,
+          "confidence": "high",
+          "confidence_reasons": [],
+          "candidates": 1,
+          "seconds": 6.1,
+          "pass": true,
+          "reason": "match"
+        }
+      ],
+      "pass": true
+    },
+    {
+      "id": "b_s02",
+      "tenant": "manufacturing",
+      "kind": "single",
+      "category": "sales",
+      "turns": [
+        {
+          "turn": 1,
+          "question": "How many Centrifugal Pumps have we sold?",
+          "resolved": "How many Centrifugal Pumps have we sold across all time?",
+          "intent": "report",
+          "sql": "SELECT i.item_code,\n       i.name AS item,\n       SUM(sol.ordered_quantity) AS quantity_sold\nFROM sales_order_lines sol\nJOIN sales_orders so ON so.id = sol.order_id\nJOIN inv_items i ON i.id = sol.item_id\nWHERE so.status NOT IN ('DRAFT', 'CANCELLED', 'CREDIT_BLOCKED')\n  AND i.name ILIKE '%centrifugal pump%'\nGROUP BY i.id, i.item_code, i.name\nORDER BY quantity_sold DESC",
+          "error": null,
+          "row_count": 1,
+          "repairs": 0,
+          "confidence": "high",
+          "confidence_reasons": [],
+          "candidates": 1,
+          "seconds": 9.3,
+          "pass": true,
+          "reason": "match"
+        }
+      ],
+      "pass": true
+    },
+    {
+      "id": "b_s03",
+      "tenant": "volume",
+      "kind": "single",
+      "category": "sales",
+      "turns": [
+        {
+          "turn": 1,
+          "question": "Average number of lines per sales order in 2025",
+          "resolved": "What was the average number of lines per sales order from January 1 through December 31, 2025?",
+          "intent": "report",
+          "sql": "SELECT ROUND(AVG(order_line_count), 2) AS average_lines_per_sales_order\nFROM (\n    SELECT so.id, COUNT(sol.id) AS order_line_count\n    FROM sales_orders so\n    LEFT JOIN sales_order_lines sol ON sol.order_id = so.id\n    WHERE so.status NOT IN ('DRAFT', 'CANCELLED', 'CREDIT_BLOCKED')\n      AND so.order_date >= DATE '2025-01-01'\n      AND so.order_date < DATE '2026-01-01'\n    GROUP BY so.id\n) order_line_counts",
+          "error": null,
+          "row_count": 1,
+          "repairs": 0,
+          "confidence": "high",
+          "confidence_reasons": [],
+          "candidates": 1,
+          "seconds": 7.2,
+          "pass": true,
+          "reason": "match"
+        }
+      ],
+      "pass": true
+    },
+    {
+      "id": "b_s04",
+      "tenant": "volume",
+      "kind": "single",
+      "category": "sales",
+      "turns": [
+        {
+          "turn": 1,
+          "question": "Sales in December 2024 versus December 2025",
+          "resolved": "Compare sales for Volume Perf from December 1\u201331, 2024, with sales from December 1\u201331, 2025.",
+          "intent": "report",
+          "sql": "SELECT\n  ROUND(COALESCE(SUM(so.total_amount) FILTER (\n    WHERE so.order_date >= DATE '2024-12-01'\n      AND so.order_date < DATE '2025-01-01'\n  ), 0), 2) AS sales_december_2024,\n  ROUND(COALESCE(SUM(so.total_amount) FILTER (\n    WHERE so.order_date >= DATE '2025-12-01'\n      AND so.order_date < DATE '2026-01-01'\n  ), 0), 2) AS sales_december_2025\nFROM sales_orders so\nWHERE so.status NOT IN ('DRAFT', 'CANCELLED', 'CREDIT_BLOCKED')\n  AND (\n    (so.order_date >= DATE '2024-12-01' AND so.order_date < DATE '2025-01-01')\n    OR\n    (so.order_date >= DATE '2025-12-01' AND so.order_date < DATE '2026-01-01')\n  )",
+          "error": null,
+          "row_count": 1,
+          "repairs": 0,
+          "confidence": "high",
+          "confidence_reasons": [],
+          "candidates": 1,
+          "seconds": 6.8,
+          "pass": true,
+          "reason": "match"
+        }
+      ],
+      "pass": true
+    },
+    {
+      "id": "b_s05",
+      "tenant": "volume",
+      "kind": "single",
+      "category": "sales",
+      "turns": [
+        {
+          "turn": 1,
+          "question": "Which weekday gets the most orders?",
+          "resolved": "Which weekday has the most sales orders across all available data?",
+          "intent": "report",
+          "sql": "SELECT\n  EXTRACT(DOW FROM so.order_date)::int AS weekday_number,\n  TO_CHAR(so.order_date, 'FMDay') AS weekday,\n  COUNT(*) AS order_count\nFROM sales_orders so\nWHERE so.status NOT IN ('DRAFT', 'CANCELLED', 'CREDIT_BLOCKED')\nGROUP BY EXTRACT(DOW FROM so.order_date), TO_CHAR(so.order_date, 'FMDay')\nORDER BY order_count DESC\nLIMIT 1",
+          "error": null,
+          "row_count": 1,
+          "repairs": 0,
+          "confidence": "high",
+          "confidence_reasons": [],
+          "candidates": 1,
+          "seconds": 5.4,
+          "pass": true,
+          "reason": "match"
+        }
+      ],
+      "pass": true
+    },
+    {
+      "id": "b_f01",
+      "tenant": "volume",
+      "kind": "single",
+      "category": "finance",
+      "turns": [
+        {
+          "turn": 1,
+          "question": "What was revenue in the last quarter of 2025?",
+          "resolved": "What was revenue for Volume Perf from October 1 through December 31, 2025?",
+          "intent": "report",
+          "sql": "SELECT ROUND(SUM(jl.functional_credit_amount - jl.functional_debit_amount), 2) AS revenue\nFROM fin_journal_lines jl\nJOIN fin_accounts a ON a.id = jl.account_id\nWHERE jl.is_posted\n  AND a.account_type = 'REVENUE'\n  AND jl.posting_date >= DATE '2025-10-01'\n  AND jl.posting_date < DATE '2026-01-01'",
+          "error": null,
+          "row_count": 1,
+          "repairs": 0,
+          "confidence": "high",
+          "confidence_reasons": [],
+          "candidates": 1,
+          "seconds": 5.5,
+          "pass": true,
+          "reason": "match"
+        }
+      ],
+      "pass": true
+    },
+    {
+      "id": "b_f02",
+      "tenant": "construction",
+      "kind": "single",
+      "category": "finance",
+      "turns": [
+        {
+          "turn": 1,
+          "question": "What's our cash balance?",
+          "resolved": "What is Stonebridge Construction's cash balance as of 2026-09-27?",
+          "intent": "report",
+          "sql": "SELECT ROUND(COALESCE(SUM(jl.functional_debit_amount - jl.functional_credit_amount), 0), 2) AS cash_balance\nFROM fin_journal_lines jl\nJOIN fin_accounts a ON a.id = jl.account_id\nWHERE jl.is_posted\n  AND a.is_cash_equivalent\n  AND jl.posting_date <= DATE '2026-09-27'",
+          "error": null,
+          "row_count": 1,
+          "repairs": 0,
+          "confidence": "high",
+          "confidence_reasons": [],
+          "candidates": 1,
+          "seconds": 6.6,
+          "pass": true,
+          "reason": "match"
+        }
+      ],
+      "pass": true
+    },
+    {
+      "id": "b_f03",
+      "tenant": "acme",
+      "kind": "single",
+      "category": "finance",
+      "turns": [
+        {
+          "turn": 1,
+          "question": "List all revenue and expense accounts with their balances",
+          "resolved": "List all revenue and expense accounts with their balances as of 2026-09-27.",
+          "intent": "report",
+          "sql": "SELECT a.code AS account_code,\n       a.name AS account_name,\n       a.account_type,\n       ROUND(\n           COALESCE(\n               CASE\n                   WHEN a.account_type = 'REVENUE' THEN b.total_credit - b.total_debit\n                   ELSE b.total_debit - b.total_credit\n               END,\n               0\n           ),\n           2\n       ) AS balance\nFROM fin_accounts a\nLEFT JOIN (\n    SELECT jl.account_id,\n           COALESCE(SUM(jl.functional_debit_amount), 0) AS total_debit,\n           COALESCE(SUM(jl.functional_credit_amount), 0) AS total_credit\n    FROM fin_journal_lines jl\n    WHERE jl.is_posted\n      AND jl.posting_date <= DATE '2026-09-27'\n    GROUP BY jl.account_id\n) b ON b.account_id = a.id\nWHERE a.account_type IN ('REVENUE', 'EXPENSE')\nORDER BY a.code",
+          "error": null,
+          "row_count": 5,
+          "repairs": 0,
+          "confidence": "high",
+          "confidence_reasons": [],
+          "candidates": 1,
+          "seconds": 12.1,
+          "pass": false,
+          "reason": "row count 5 != gold 4",
+          "gold_preview": [
+            [
+              "6000",
+              "-17020.00"
+            ],
+            [
+              "5000",
+              "3962.50"
+            ],
+            [
+              "6100",
+              "46500.00"
+            ],
+            [
+              "4000",
+              "9185.00"
+            ]
+          ],
+          "pred_preview": [
+            [
+              "4000",
+              "Sales Revenue",
+              "REVENUE",
+              "9185.0"
+            ],
+            [
+              "5000",
+              "Cost of Goods Sold",
+              "EXPENSE",
+              "3962.5"
+            ],
+            [
+              "5100",
+              "Production Variance",
+              "EXPENSE",
+              "0.0"
+            ],
+            [
+              "6000",
+              "Operating Expenses",
+              "EXPENSE",
+              "-17020.0"
+            ],
+            [
+              "6100",
+              "Salaries Expense",
+              "EXPENSE",
+              "46500.0"
+            ]
+          ]
+        }
+      ],
+      "pass": false
+    },
+    {
+      "id": "b_r01",
+      "tenant": "manufacturing",
+      "kind": "single",
+      "category": "receivables",
+      "turns": [
+        {
+          "turn": 1,
+          "question": "How much are we owed in total?",
+          "resolved": "How much is owed to Vertex Manufacturing in total, as of 2026-09-27?",
+          "intent": "report",
+          "sql": "SELECT ROUND(COALESCE(SUM(ci.open_amount), 0), 2) AS total_owed\nFROM fin_customer_invoices ci\nWHERE ci.status IN ('POSTED', 'PARTIALLY_PAID')\n  AND ci.open_amount > 0",
+          "error": null,
+          "row_count": 1,
+          "repairs": 0,
+          "confidence": "high",
+          "confidence_reasons": [],
+          "candidates": 1,
+          "seconds": 7.6,
+          "pass": true,
+          "reason": "match"
+        }
+      ],
+      "pass": true
+    },
+    {
+      "id": "b_r02",
+      "tenant": "acme",
+      "kind": "single",
+      "category": "receivables",
+      "turns": [
+        {
+          "turn": 1,
+          "question": "Which customers have received credit notes and for how much?",
+          "resolved": "Which Acme customers have received credit notes, and what is the total amount of credit notes for each customer?",
+          "intent": "report",
+          "sql": "SELECT ci.partner_name AS customer_name,\n       ROUND(SUM(ci.gross_amount), 2) AS total_credit_note_amount\nFROM fin_customer_invoices ci\nWHERE ci.invoice_number LIKE 'CN-%'\n  AND ci.status NOT IN ('DRAFT', 'REVERSED')\nGROUP BY ci.partner_id, ci.partner_name\nORDER BY total_credit_note_amount DESC",
+          "error": null,
+          "row_count": 1,
+          "repairs": 0,
+          "confidence": "high",
+          "confidence_reasons": [],
+          "candidates": 1,
+          "seconds": 7.6,
+          "pass": true,
+          "reason": "match"
+        }
+      ],
+      "pass": true
+    },
+    {
+      "id": "b_r03",
+      "tenant": "acme",
+      "kind": "single",
+      "category": "receivables",
+      "turns": [
+        {
+          "turn": 1,
+          "question": "What's the average number of days invoices are overdue?",
+          "resolved": "What is the average number of days overdue for currently outstanding invoices as of 2026-09-27?",
+          "intent": "report",
+          "sql": "SELECT ROUND(AVG(DATE '2026-09-27' - ci.due_date), 2) AS average_days_overdue\nFROM fin_customer_invoices ci\nWHERE ci.status IN ('POSTED', 'PARTIALLY_PAID')\n  AND ci.open_amount > 0\n  AND ci.due_date < DATE '2026-09-27'",
+          "error": null,
+          "row_count": 1,
+          "repairs": 0,
+          "confidence": "high",
+          "confidence_reasons": [],
+          "candidates": 1,
+          "seconds": 8.7,
+          "pass": true,
+          "reason": "match"
+        }
+      ],
+      "pass": true
+    },
+    {
+      "id": "b_p01",
+      "tenant": "retail",
+      "kind": "single",
+      "category": "payables",
+      "turns": [
+        {
+          "turn": 1,
+          "question": "How many vendor bills are unpaid?",
+          "resolved": "How many vendor bills are unpaid for Brightside Retail?",
+          "intent": "report",
+          "sql": "SELECT COUNT(*) AS unpaid_vendor_bills\nFROM fin_vendor_bills\nWHERE fin_vendor_bills.status IN ('POSTED', 'PARTIALLY_PAID')\n  AND fin_vendor_bills.open_amount > 0",
+          "error": null,
+          "row_count": 1,
+          "repairs": 0,
+          "confidence": "high",
+          "confidence_reasons": [],
+          "candidates": 1,
+          "seconds": 5.9,
+          "pass": true,
+          "reason": "match"
+        }
+      ],
+      "pass": true
+    },
+    {
+      "id": "b_c01",
+      "tenant": "retail",
+      "kind": "single",
+      "category": "procurement",
+      "turns": [
+        {
+          "turn": 1,
+          "question": "Total spend with Harborline Roasters",
+          "resolved": "What is the total spend with Harborline Roasters across all available dates?",
+          "intent": "report",
+          "sql": "SELECT v.name AS vendor,\n       ROUND(SUM(po.total_amount), 2) AS total_spend\nFROM proc_purchase_orders po\nJOIN proc_vendors v ON v.id = po.vendor_id\nWHERE v.name ILIKE '%harborline roaster%'\n  AND po.status NOT IN ('DRAFT', 'PENDING_APPROVAL', 'REJECTED', 'CANCELLED')\nGROUP BY v.id, v.name",
+          "error": null,
+          "row_count": 1,
+          "repairs": 0,
+          "confidence": "high",
+          "confidence_reasons": [],
+          "candidates": 1,
+          "seconds": 7.2,
+          "pass": true,
+          "reason": "match"
+        }
+      ],
+      "pass": true
+    },
+    {
+      "id": "b_i01",
+      "tenant": "manufacturing",
+      "kind": "single",
+      "category": "inventory",
+      "turns": [
+        {
+          "turn": 1,
+          "question": "Which item has the least stock on hand?",
+          "resolved": "Which item has the least stock on hand across all warehouses?",
+          "intent": "report",
+          "sql": "SELECT i.item_code, i.name AS item, SUM(iv.on_hand_qty) AS stock_on_hand\nFROM inv_item_valuations iv\nJOIN inv_items i ON i.id = iv.item_id\nGROUP BY i.id, i.item_code, i.name\nORDER BY stock_on_hand ASC\nLIMIT 1",
+          "error": null,
+          "row_count": 1,
+          "repairs": 0,
+          "confidence": "high",
+          "confidence_reasons": [],
+          "candidates": 1,
+          "seconds": 5.6,
+          "pass": true,
+          "reason": "match"
+        }
+      ],
+      "pass": true
+    },
+    {
+      "id": "b_i02",
+      "tenant": "acme",
+      "kind": "single",
+      "category": "inventory",
+      "turns": [
+        {
+          "turn": 1,
+          "question": "Total value of stock adjustments",
+          "resolved": "What is the total value of stock adjustments across all available dates for Acme?",
+          "intent": "report",
+          "sql": "SELECT ROUND(COALESCE(SUM(sm.quantity * sm.unit_cost), 0), 2) AS total_stock_adjustment_value\nFROM inv_stock_moves sm\nWHERE sm.move_type = 'ADJUSTMENT'",
+          "error": null,
+          "row_count": 1,
+          "repairs": 0,
+          "confidence": "verified",
+          "confidence_reasons": [
+            "does not use the tables of metric 'inventory'"
+          ],
+          "candidates": 2,
+          "seconds": 10.3,
+          "pass": true,
+          "reason": "match"
+        }
+      ],
+      "pass": true
+    },
+    {
+      "id": "b_o01",
+      "tenant": "volume",
+      "kind": "single",
+      "category": "other",
+      "turns": [
+        {
+          "turn": 1,
+          "question": "How many opportunities are open in the CRM?",
+          "resolved": "How many open opportunities are in the CRM for Volume Perf?",
+          "intent": "report",
+          "sql": "SELECT COUNT(*) AS open_opportunities\nFROM crm_opportunities o\nWHERE o.stage IN ('PROSPECTING', 'QUALIFICATION', 'PROPOSAL', 'NEGOTIATION')",
+          "error": null,
+          "row_count": 1,
+          "repairs": 0,
+          "confidence": "verified",
+          "confidence_reasons": [
+            "empty or all-zero result"
+          ],
+          "candidates": 2,
+          "seconds": 11.4,
+          "pass": true,
+          "reason": "match"
+        }
+      ],
+      "pass": true
+    },
+    {
+      "id": "b_mt01",
+      "tenant": "manufacturing",
+      "kind": "multi",
+      "category": "multi_turn",
+      "turns": [
+        {
+          "turn": 1,
+          "question": "Show sales by customer",
+          "resolved": "Show sales by customer for Vertex Manufacturing across all time.",
+          "intent": "report",
+          "sql": "SELECT c.customer_code AS customer_code,\n       c.name AS customer_name,\n       ROUND(SUM(so.total_amount), 2) AS total_sales\nFROM sales_orders so\nJOIN sales_customers c ON c.id = so.customer_id\nWHERE so.status NOT IN ('DRAFT', 'CANCELLED', 'CREDIT_BLOCKED')\nGROUP BY c.id, c.customer_code, c.name\nORDER BY total_sales DESC",
+          "error": null,
+          "row_count": 3,
+          "repairs": 0,
+          "confidence": "high",
+          "confidence_reasons": [],
+          "candidates": 1,
+          "seconds": 5.5,
+          "pass": true,
+          "reason": "match"
+        },
+        {
+          "turn": 2,
+          "question": "Who is the smallest?",
+          "resolved": "Show the customer with the smallest sales for Vertex Manufacturing across all time.",
+          "intent": "report",
+          "sql": "SELECT c.customer_code AS customer_code,\n       c.name AS customer_name,\n       ROUND(SUM(so.total_amount), 2) AS total_sales\nFROM sales_orders so\nJOIN sales_customers c ON c.id = so.customer_id\nWHERE so.status NOT IN ('DRAFT', 'CANCELLED', 'CREDIT_BLOCKED')\nGROUP BY c.id, c.customer_code, c.name\nORDER BY total_sales ASC\nLIMIT 1",
+          "error": null,
+          "row_count": 1,
+          "repairs": 0,
+          "confidence": "high",
+          "confidence_reasons": [],
+          "candidates": 1,
+          "seconds": 5.9,
+          "pass": true,
+          "reason": "match"
+        },
+        {
+          "turn": 3,
+          "question": "What have they bought, by item?",
+          "resolved": "Show which items Delta Process Systems has bought from Vertex Manufacturing across all time, broken down by item.",
+          "intent": "report",
+          "sql": "SELECT i.item_code AS item_code,\n       i.name AS item_name,\n       SUM(sol.ordered_quantity) AS quantity_bought,\n       ROUND(SUM(sol.line_amount), 2) AS purchase_amount\nFROM sales_order_lines sol\nJOIN sales_orders so ON so.id = sol.order_id\nJOIN sales_customers c ON c.id = so.customer_id\nJOIN inv_items i ON i.id = sol.item_id\nWHERE so.status NOT IN ('DRAFT', 'CANCELLED', 'CREDIT_BLOCKED')\n  AND c.name ILIKE '%delta process system%'\nGROUP BY i.id, i.item_code, i.name\nORDER BY i.item_code",
+          "error": null,
+          "row_count": 1,
+          "repairs": 0,
+          "confidence": "high",
+          "confidence_reasons": [],
+          "candidates": 1,
+          "seconds": 9.9,
+          "pass": true,
+          "reason": "match"
+        },
+        {
+          "turn": 4,
+          "question": "How much do they owe us?",
+          "resolved": "How much does Delta Process Systems owe Vertex Manufacturing as of 2026-09-27?",
+          "intent": "report",
+          "sql": "SELECT ROUND(COALESCE(SUM(ci.open_amount), 0), 2) AS outstanding_owed\nFROM fin_customer_invoices ci\nJOIN sales_customers c ON c.id = ci.partner_id\nWHERE ci.status IN ('POSTED', 'PARTIALLY_PAID')\n  AND ci.open_amount > 0\n  AND c.name ILIKE '%delta process system%'",
+          "error": null,
+          "row_count": 1,
+          "repairs": 0,
+          "confidence": "verified",
+          "confidence_reasons": [
+            "does not use the tables of metric 'production'"
+          ],
+          "candidates": 2,
+          "seconds": 12.2,
+          "pass": true,
+          "reason": "match"
+        }
+      ],
+      "pass": true
+    },
+    {
+      "id": "b_mt02",
+      "tenant": "volume",
+      "kind": "multi",
+      "category": "multi_turn",
+      "turns": [
+        {
+          "turn": 1,
+          "question": "What was revenue each month in 2025?",
+          "resolved": "What was revenue for Volume Perf in each month from January 1, 2025 through December 31, 2025?",
+          "intent": "report",
+          "sql": "WITH months AS (\n    SELECT generate_series(\n        DATE '2025-01-01',\n        DATE '2025-12-01',\n        INTERVAL '1 month'\n    )::date AS month\n),\nmonthly_revenue AS (\n    SELECT date_trunc('month', jl.posting_date)::date AS month,\n           SUM(jl.functional_credit_amount - jl.functional_debit_amount) AS revenue\n    FROM fin_journal_lines jl\n    JOIN fin_accounts a ON a.id = jl.account_id\n    WHERE jl.is_posted\n      AND a.account_type = 'REVENUE'\n      AND jl.posting_date >= DATE '2025-01-01'\n      AND jl.posting_date < DATE '2026-01-01'\n    GROUP BY date_trunc('month', jl.posting_date)::date\n)\nSELECT m.month,\n       ROUND(COALESCE(mr.revenue, 0), 2) AS revenue\nFROM months m\nLEFT JOIN monthly_revenue mr ON mr.month = m.month\nORDER BY m.month",
+          "error": null,
+          "row_count": 12,
+          "repairs": 0,
+          "confidence": "high",
+          "confidence_reasons": [],
+          "candidates": 1,
+          "seconds": 8.1,
+          "pass": true,
+          "reason": "match"
+        },
+        {
+          "turn": 2,
+          "question": "Only the second half of the year",
+          "resolved": "What was revenue for Volume Perf in each month from July 1, 2025 through December 31, 2025?",
+          "intent": "report",
+          "sql": "WITH months AS (\n    SELECT generate_series(\n        DATE '2025-07-01',\n        DATE '2025-12-01',\n        INTERVAL '1 month'\n    )::date AS month\n),\nmonthly_revenue AS (\n    SELECT date_trunc('month', jl.posting_date)::date AS month,\n           SUM(jl.functional_credit_amount - jl.functional_debit_amount) AS revenue\n    FROM fin_journal_lines jl\n    JOIN fin_accounts a ON a.id = jl.account_id\n    WHERE jl.is_posted\n      AND a.account_type = 'REVENUE'\n      AND jl.posting_date >= DATE '2025-07-01'\n      AND jl.posting_date < DATE '2026-01-01'\n    GROUP BY date_trunc('month', jl.posting_date)::date\n)\nSELECT m.month,\n       ROUND(COALESCE(mr.revenue, 0), 2) AS revenue\nFROM months m\nLEFT JOIN monthly_revenue mr ON mr.month = m.month\nORDER BY m.month",
+          "error": null,
+          "row_count": 6,
+          "repairs": 0,
+          "confidence": "high",
+          "confidence_reasons": [],
+          "candidates": 1,
+          "seconds": 5.4,
+          "pass": true,
+          "reason": "match"
+        },
+        {
+          "turn": 3,
+          "question": "Add the cost of goods sold next to it",
+          "resolved": "What were revenue and cost of goods sold for Volume Perf in each month from July 1, 2025 through December 31, 2025?",
+          "intent": "report",
+          "sql": "WITH months AS (\n    SELECT generate_series(\n        DATE '2025-07-01',\n        DATE '2025-12-01',\n        INTERVAL '1 month'\n    )::date AS month\n),\nmonthly_totals AS (\n    SELECT date_trunc('month', jl.posting_date)::date AS month,\n           SUM(jl.functional_credit_amount - jl.functional_debit_amount)\n               FILTER (WHERE a.account_type = 'REVENUE') AS revenue,\n           SUM(jl.functional_debit_amount - jl.functional_credit_amount)\n               FILTER (WHERE a.id IN (\n                   SELECT iic.cogs_account_id\n                   FROM inv_item_categories iic\n               )) AS cost_of_goods_sold\n    FROM fin_journal_lines jl\n    JOIN fin_accounts a ON a.id = jl.account_id\n    WHERE jl.is_posted\n      AND jl.posting_date >= DATE '2025-07-01'\n      AND jl.posting_date < DATE '2026-01-01'\n    GROUP BY date_trunc('month', jl.posting_date)::date\n)\nSELECT m.month,\n       ROUND(COALESCE(mt.revenue, 0), 2) AS revenue,\n       ROUND(COALESCE(mt.cost_of_goods_sold, 0), 2) AS cost_of_goods_sold\nFROM months m\nLEFT JOIN monthly_totals mt ON mt.month = m.month\nORDER BY m.month",
+          "error": null,
+          "row_count": 6,
+          "repairs": 0,
+          "confidence": "high",
+          "confidence_reasons": [],
+          "candidates": 1,
+          "seconds": 6.7,
+          "pass": true,
+          "reason": "match"
+        },
+        {
+          "turn": 4,
+          "question": "Which of those months had the best margin?",
+          "resolved": "Which month from July 1, 2025 through December 31, 2025 had the best margin for Volume Perf, based on revenue and cost of goods sold?",
+          "intent": "report",
+          "sql": "WITH months AS (\n    SELECT generate_series(\n        DATE '2025-07-01',\n        DATE '2025-12-01',\n        INTERVAL '1 month'\n    )::date AS month\n),\nmonthly_totals AS (\n    SELECT date_trunc('month', jl.posting_date)::date AS month,\n           SUM(jl.functional_credit_amount - jl.functional_debit_amount)\n               FILTER (WHERE a.account_type = 'REVENUE') AS revenue,\n           SUM(jl.functional_debit_amount - jl.functional_credit_amount)\n               FILTER (WHERE a.id IN (\n                   SELECT iic.cogs_account_id\n                   FROM inv_item_categories iic\n               )) AS cost_of_goods_sold\n    FROM fin_journal_lines jl\n    JOIN fin_accounts a ON a.id = jl.account_id\n    WHERE jl.is_posted\n      AND jl.posting_date >= DATE '2025-07-01'\n      AND jl.posting_date < DATE '2026-01-01'\n    GROUP BY date_trunc('month', jl.posting_date)::date\n),\nmonthly_margins AS (\n    SELECT m.month,\n           COALESCE(mt.revenue, 0) AS revenue,\n           COALESCE(mt.cost_of_goods_sold, 0) AS cost_of_goods_sold,\n           ROUND(\n               100.0 * (\n                   COALESCE(mt.revenue, 0) - COALESCE(mt.cost_of_goods_sold, 0)\n               ) / NULLIF(COALESCE(mt.revenue, 0), 0),\n               2\n           ) AS gross_margin_percent\n    FROM months m\n    LEFT JOIN monthly_totals mt ON mt.month = m.month\n)\nSELECT mm.month,\n       ROUND(mm.revenue, 2) AS revenue,\n       ROUND(mm.cost_of_goods_sold, 2) AS cost_of_goods_sold,\n       mm.gross_margin_percent\nFROM monthly_margins mm\nORDER BY mm.gross_margin_percent DESC NULLS LAST\nLIMIT 1",
+          "error": null,
+          "row_count": 1,
+          "repairs": 0,
+          "confidence": "high",
+          "confidence_reasons": [],
+          "candidates": 1,
+          "seconds": 14.3,
+          "pass": true,
+          "reason": "match"
+        }
+      ],
+      "pass": true
+    },
+    {
+      "id": "b_mt03",
+      "tenant": "acme",
+      "kind": "multi",
+      "category": "multi_turn",
+      "turns": [
+        {
+          "turn": 1,
+          "question": "Show me all unpaid invoices",
+          "resolved": "Show all unpaid customer invoices for Acme, including their outstanding balances and customer names.",
+          "intent": "report",
+          "sql": "SELECT ci.invoice_number AS invoice_number,\n       ci.partner_name AS customer_name,\n       ROUND(ci.open_amount, 2) AS outstanding_balance\nFROM fin_customer_invoices ci\nWHERE ci.status IN ('POSTED', 'PARTIALLY_PAID')\n  AND ci.open_amount > 0\nORDER BY ci.invoice_number",
+          "error": null,
+          "row_count": 12,
+          "repairs": 0,
+          "confidence": "high",
+          "confidence_reasons": [],
+          "candidates": 1,
+          "seconds": 7.6,
+          "pass": true,
+          "reason": "match"
+        },
+        {
+          "turn": 2,
+          "question": "Group them by customer",
+          "resolved": "Show all unpaid customer invoices for Acme, grouped by customer, including outstanding balances and customer names.",
+          "intent": "report",
+          "sql": "SELECT ci.partner_name AS customer_name,\n       COUNT(*) AS unpaid_invoice_count,\n       ROUND(SUM(ci.open_amount), 2) AS outstanding_balance\nFROM fin_customer_invoices ci\nWHERE ci.status IN ('POSTED', 'PARTIALLY_PAID')\n  AND ci.open_amount > 0\nGROUP BY ci.partner_id, ci.partner_name\nORDER BY outstanding_balance DESC",
+          "error": null,
+          "row_count": 3,
+          "repairs": 0,
+          "confidence": "high",
+          "confidence_reasons": [],
+          "candidates": 1,
+          "seconds": 8.5,
+          "pass": true,
+          "reason": "match"
+        },
+        {
+          "turn": 3,
+          "question": "Just Northwind",
+          "resolved": "Show unpaid customer invoices for Acme, limited to Northwind Traders and grouped by customer, including the unpaid invoice count and total outstanding balance.",
+          "intent": "report",
+          "sql": "SELECT ci.partner_name AS customer_name,\n       COUNT(*) AS unpaid_invoice_count,\n       ROUND(SUM(ci.open_amount), 2) AS outstanding_balance\nFROM fin_customer_invoices ci\nWHERE ci.status IN ('POSTED', 'PARTIALLY_PAID')\n  AND ci.open_amount > 0\n  AND ci.partner_name ILIKE '%northwind trader%'\nGROUP BY ci.partner_id, ci.partner_name\nORDER BY outstanding_balance DESC",
+          "error": null,
+          "row_count": 1,
+          "repairs": 0,
+          "confidence": "high",
+          "confidence_reasons": [],
+          "candidates": 1,
+          "seconds": 9.4,
+          "pass": true,
+          "reason": "match"
+        },
+        {
+          "turn": 4,
+          "question": "What's their oldest unpaid invoice?",
+          "resolved": "Show Northwind Traders' oldest unpaid customer invoice for Acme, including its invoice date, invoice number, and outstanding balance.",
+          "intent": "report",
+          "sql": "SELECT ci.invoice_date,\n       ci.invoice_number,\n       ROUND(ci.open_amount, 2) AS outstanding_balance\nFROM fin_customer_invoices ci\nWHERE ci.status IN ('POSTED', 'PARTIALLY_PAID')\n  AND ci.open_amount > 0\n  AND ci.partner_name ILIKE '%northwind trader%'\nORDER BY ci.invoice_date ASC\nLIMIT 1",
+          "error": null,
+          "row_count": 1,
+          "repairs": 0,
+          "confidence": "high",
+          "confidence_reasons": [],
+          "candidates": 1,
+          "seconds": 7.7,
+          "pass": true,
+          "reason": "match"
+        },
+        {
+          "turn": 5,
+          "question": "And what about Fabrikam?",
+          "resolved": "Show Fabrikam Inc's oldest unpaid customer invoice for Acme, including its invoice date, invoice number, and outstanding balance.",
+          "intent": "report",
+          "sql": "SELECT ci.invoice_date,\n       ci.invoice_number,\n       ROUND(ci.open_amount, 2) AS outstanding_balance\nFROM fin_customer_invoices ci\nWHERE ci.status IN ('POSTED', 'PARTIALLY_PAID')\n  AND ci.open_amount > 0\n  AND ci.partner_name ILIKE '%fabrikam%'\nORDER BY ci.invoice_date ASC\nLIMIT 1",
+          "error": null,
+          "row_count": 1,
+          "repairs": 0,
+          "confidence": "high",
+          "confidence_reasons": [],
+          "candidates": 1,
+          "seconds": 5.5,
+          "pass": true,
+          "reason": "match"
+        },
+        {
+          "turn": 6,
+          "question": "How much have they paid us?",
+          "resolved": "How much has Fabrikam Inc paid Acme in customer payments received?",
+          "intent": "report",
+          "sql": "SELECT ROUND(COALESCE(SUM(fcr.amount), 0), 2) AS total_paid\nFROM fin_customer_receipts fcr\nWHERE fcr.status = 'POSTED'\n  AND fcr.partner_name ILIKE '%fabrikam%'",
+          "error": null,
+          "row_count": 1,
+          "repairs": 0,
+          "confidence": "majority",
+          "confidence_reasons": [
+            "needed 1 repair/review round(s)",
+            "empty or all-zero result"
+          ],
+          "candidates": 3,
+          "seconds": 32.4,
+          "pass": true,
+          "reason": "match"
+        }
+      ],
+      "pass": true
+    }
+  ]
+}
